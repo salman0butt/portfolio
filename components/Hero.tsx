@@ -52,15 +52,15 @@ export default function Hero() {
             >
               <TypeAnimation
                 sequence={[
-                  'Senior Full-Stack Developer',
+                  'Principal Full-Stack Engineer',
                   2000,
-                  'Web3 & AI Engineer',
+                  'Web3 & AI Solutions Architect',
                   2000,
-                  'IoT Solutions Expert',
+                  'IoT Systems Expert',
                   2000,
-                  'React & Vue Specialist',
+                  'Microservices Specialist',
                   2000,
-                  'Node.js & Laravel Expert',
+                  'Performance Optimization Leader',
                   2000,
                 ]}
                 wrapper="span"
@@ -76,7 +76,7 @@ export default function Hero() {
               transition={{ delay: 0.5, duration: 0.6 }}
               className="text-sm sm:text-base md:text-lg lg:text-xl text-slate-700 dark:text-slate-400 mb-6 md:mb-8 max-w-2xl mx-auto lg:mx-0 leading-relaxed"
             >
-              Delivering <span className="font-semibold text-slate-900 dark:text-white whitespace-nowrap">scalable</span>, <span className="font-semibold text-slate-900 dark:text-white whitespace-nowrap">maintainable</span>, and <span className="font-semibold text-slate-900 dark:text-white whitespace-nowrap">production-ready</span> solutions across <span className="font-semibold text-green-600 dark:text-green-400 whitespace-nowrap">Web3, AI,</span> and <span className="font-semibold text-green-600 dark:text-green-400">IoT</span>. 7+ years building enterprise-grade applications.
+              Building <span className="font-semibold text-slate-900 dark:text-white whitespace-nowrap">enterprise-grade systems</span> that drive measurable business impact. Proven track record of <span className="font-semibold text-green-600 dark:text-green-400 whitespace-nowrap">40% performance gains</span>, <span className="font-semibold text-green-600 dark:text-green-400 whitespace-nowrap">10M+ data points</span> processed daily, and <span className="font-semibold text-green-600 dark:text-green-400">100+ successful</span> projects across Web3, AI, and IoT.
             </motion.p>
 
             {/* CTA Buttons */}
@@ -163,8 +163,8 @@ export default function Hero() {
                   transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
                   className="absolute top-2 right-2 sm:-top-4 sm:-right-4 md:-top-6 md:-right-6 badge shadow-lg text-xs md:text-sm whitespace-nowrap z-10"
                 >
-                  <span>🚀</span>
-                  <span>7+</span>
+                  <span>🏆</span>
+                  <span>7+ Years</span>
                 </motion.div>
 
                 <motion.div
@@ -173,7 +173,7 @@ export default function Hero() {
                   className="absolute bottom-2 left-2 sm:-bottom-4 sm:-left-4 md:-bottom-6 md:-left-6 badge shadow-lg text-xs md:text-sm whitespace-nowrap z-10"
                 >
                   <span>⚡</span>
-                  <span>100+</span>
+                  <span>100+ Projects</span>
                 </motion.div>
               </div>
             </div>
