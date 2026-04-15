@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+
+Disallow: /Salman_Butt_Resume.pdf
+
+Sitemap: https://salman0butt.github.io/portfolio/sitemap.xml

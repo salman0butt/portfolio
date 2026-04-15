@@ -38,8 +38,8 @@ const experiences = [
       'Designed scalable data pipelines with InfluxDB, MongoDB, and PostgreSQL',
     ],
     tech: [
-      'Node.js', 'Express.js', 'Laravel', 'React.js', 'Vue.js', 'RabbitMQ',
-      'MQTT', 'InfluxDB', 'MongoDB', 'PostgreSQL',
+      'Next.js', 'React.js', 'Node.js', 'Express.js', 'Laravel', 'Vue.js',
+      'RabbitMQ', 'MQTT', 'InfluxDB', 'MongoDB', 'PostgreSQL',
     ],
   },
   {

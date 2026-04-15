@@ -27,10 +27,10 @@ const item = {
 };
 
 const stats = [
-  { label: '7+ Years', icon: Briefcase },
-  { label: '50+ Projects', icon: Code },
-  { label: '5 Countries', icon: Globe },
-  { label: '30-40% Faster APIs', icon: Zap },
+  { value: '7+', label: 'Years', icon: Briefcase },
+  { value: '50+', label: 'Projects', icon: Code },
+  { value: '5', label: 'Countries', icon: Globe },
+  { value: '40%', label: 'Faster APIs', icon: Zap },
 ];
 
 export default function Hero() {
@@ -110,20 +110,22 @@ export default function Hero() {
             {/* Stats row */}
             <motion.div
               variants={item}
-              className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8"
+              className="grid grid-cols-4 gap-2 md:gap-3 mb-8"
             >
               {stats.map((stat) => {
                 const Icon = stat.icon;
                 return (
                   <div
                     key={stat.label}
-                    className="flex items-center gap-2 px-3 py-2 rounded-lg bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-white/10"
+                    className="glass rounded-xl px-2 py-3 md:px-4 md:py-4 text-center"
                   >
-                    <Icon
-                      size={16}
-                      className="text-emerald-500 shrink-0"
-                    />
-                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300 whitespace-nowrap">
+                    <div className="flex items-center justify-center gap-1 mb-1">
+                      <Icon size={14} className="text-emerald-500" />
+                      <span className="text-lg md:text-xl font-bold text-gray-900 dark:text-white">
+                        {stat.value}
+                      </span>
+                    </div>
+                    <span className="text-[10px] md:text-xs text-gray-500 dark:text-gray-400 font-medium">
                       {stat.label}
                     </span>
                   </div>
@@ -254,7 +256,7 @@ export default function Hero() {
         transition={{ delay: 1.2, duration: 0.6 }}
       >
         <a
-          href="#skills"
+          href="#about"
           className="text-gray-400 dark:text-gray-500 hover:text-emerald-500 dark:hover:text-emerald-400 transition-colors"
           aria-label="Scroll down"
         >

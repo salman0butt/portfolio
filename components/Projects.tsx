@@ -1,16 +1,17 @@
 'use client';
 
+import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { useInView } from 'react-intersection-observer';
 import { Github } from 'lucide-react';
 
 const projects = [
   {
     title: 'Conversational AI Agent Platform',
     gradient: 'from-emerald-500 to-teal-500',
+    badgeClass: 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-900/20 dark:text-emerald-300 dark:border-emerald-800',
     category: 'Generative AI',
     tech: [
-      'React', 'TypeScript', 'Node.js', 'Express.js', 'Python',
+      'React', 'Next.js', 'TypeScript', 'Node.js', 'Express.js', 'Python',
       'LangChain', 'LangGraph', 'LangSmith', 'Google ADK', 'Firebase',
     ],
     highlights: [
@@ -22,9 +23,10 @@ const projects = [
   {
     title: 'Permission ASK Platform — Web3 Earnings & Search Engine',
     gradient: 'from-blue-500 to-purple-500',
+    badgeClass: 'bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-900/20 dark:text-blue-300 dark:border-blue-800',
     category: 'Web3',
     tech: [
-      'React', 'NestJS', 'Node.js', 'Moralis', 'Firebase',
+      'React', 'Next.js', 'NestJS', 'Node.js', 'Moralis', 'Firebase',
       'ShuftiPro', 'Brevo', 'RabbitMQ', 'PostgreSQL', 'Redis',
     ],
     highlights: [
@@ -36,20 +38,22 @@ const projects = [
   {
     title: 'OffGrid IoT Monitoring & Device Control System',
     gradient: 'from-orange-500 to-red-500',
+    badgeClass: 'bg-orange-50 text-orange-700 border-orange-200 dark:bg-orange-900/20 dark:text-orange-300 dark:border-orange-800',
     category: 'IoT',
     tech: [
-      'Node.js', 'Express.js', 'Laravel', 'Vue.js', 'React.js',
+      'Next.js', 'React.js', 'Node.js', 'Express.js', 'Laravel', 'Vue.js',
       'RabbitMQ', 'MQTT', 'InfluxDB', 'MongoDB', 'PostgreSQL',
     ],
     highlights: [
       'End-to-end IoT software processing real-time telemetry from embedded devices across distributed solar installations',
+      'Next.js dashboard with server-side rendering for real-time device monitoring and analytics visualisations',
       'High-throughput data pipelines: InfluxDB for time-series analytics, RabbitMQ/MQTT for device communication at scale',
-      'Interactive dashboards with live charts, device status monitoring, automation controls, and customisable alerts',
     ],
   },
   {
     title: 'MindManager — Corel Corporation',
     gradient: 'from-violet-500 to-indigo-500',
+    badgeClass: 'bg-violet-50 text-violet-700 border-violet-200 dark:bg-violet-900/20 dark:text-violet-300 dark:border-violet-800',
     category: 'Enterprise',
     tech: [
       'JavaScript', 'Backbone.js', 'Joint.js', 'Node.js', 'MySQL', 'Docker',
@@ -63,6 +67,7 @@ const projects = [
   {
     title: 'Switcher Multi-Tenant SaaS ERP & POS',
     gradient: 'from-cyan-500 to-blue-500',
+    badgeClass: 'bg-cyan-50 text-cyan-700 border-cyan-200 dark:bg-cyan-900/20 dark:text-cyan-300 dark:border-cyan-800',
     category: 'SaaS',
     tech: [
       'Laravel', 'Vue.js', 'MySQL', 'MongoDB', 'Socket.IO',
@@ -77,6 +82,7 @@ const projects = [
   {
     title: 'CodeSync — Real-Time Collaborative Code Editor',
     gradient: 'from-pink-500 to-rose-500',
+    badgeClass: 'bg-pink-50 text-pink-700 border-pink-200 dark:bg-pink-900/20 dark:text-pink-300 dark:border-pink-800',
     category: 'Real-Time',
     tech: [
       'React.js', 'Node.js', 'Express.js', 'Socket.IO', 'MongoDB',
@@ -89,6 +95,7 @@ const projects = [
   {
     title: 'NorgsHandle — Real Estate & Jobs Portal',
     gradient: 'from-amber-500 to-orange-500',
+    badgeClass: 'bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-900/20 dark:text-amber-300 dark:border-amber-800',
     category: 'Laravel',
     tech: [
       'Laravel', 'PHP', 'MySQL', 'JavaScript', 'jQuery', 'Bootstrap', 'REST API', 'Postal API',
@@ -102,6 +109,7 @@ const projects = [
   {
     title: 'E-Commerce Platform Suite — 50+ WordPress Projects',
     gradient: 'from-indigo-500 to-purple-500',
+    badgeClass: 'bg-indigo-50 text-indigo-700 border-indigo-200 dark:bg-indigo-900/20 dark:text-indigo-300 dark:border-indigo-800',
     category: 'WordPress',
     tech: [
       'WordPress', 'WooCommerce', 'PHP', 'MySQL', 'JavaScript', 'jQuery', 'REST API', 'Stripe', 'PayPal',
@@ -115,6 +123,7 @@ const projects = [
   {
     title: 'Eaksept — E-Accounting Web Application',
     gradient: 'from-teal-500 to-emerald-500',
+    badgeClass: 'bg-teal-50 text-teal-700 border-teal-200 dark:bg-teal-900/20 dark:text-teal-300 dark:border-teal-800',
     category: 'Laravel',
     tech: [
       'Laravel', 'PHP', 'Vue.js', 'MySQL', 'REST API', 'Bootstrap', 'jQuery',
@@ -127,63 +136,94 @@ const projects = [
   },
 ];
 
+const filters = [
+  'All',
+  ...Array.from(new Set(projects.map((p) => p.category))),
+];
+
 export default function Projects() {
-  const [ref] = useInView({
-    triggerOnce: true,
-    threshold: 0.05,
-  });
+  const [activeFilter, setActiveFilter] = useState('All');
+  const [showAll, setShowAll] = useState(false);
+
+  const filtered =
+    activeFilter === 'All'
+      ? projects
+      : projects.filter((p) => p.category === activeFilter);
+
+  const visible = showAll ? filtered : filtered.slice(0, 6);
 
   return (
     <section id="projects" className="py-20 px-4 relative overflow-hidden">
-      {/* Background decoration */}
       <div className="absolute bottom-0 left-0 w-96 h-96 bg-green-500 rounded-full blur-3xl opacity-5" />
 
-      <div className="max-w-6xl mx-auto" ref={ref}>
+      <div className="max-w-6xl mx-auto">
         {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="text-center mb-12"
         >
           <span className="section-label">PORTFOLIO</span>
           <h2 className="text-4xl md:text-5xl font-bold font-[family-name:var(--font-space-grotesk)] gradient-text mb-4">
             Key Projects
           </h2>
           <div className="section-divider" />
-          <p className="text-lg text-gray-700 dark:text-gray-300 max-w-2xl mx-auto mt-2">
+          <p className="text-base text-gray-600 dark:text-gray-400 max-w-2xl mx-auto mt-2">
             Production platforms and systems I&apos;ve architected and built
           </p>
         </motion.div>
 
+        {/* Filter Tabs */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.4, delay: 0.2 }}
+          className="flex flex-wrap justify-center gap-2 mb-10"
+        >
+          {filters.map((filter) => (
+            <button
+              key={filter}
+              onClick={() => {
+                setActiveFilter(filter);
+                setShowAll(false);
+              }}
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
+                activeFilter === filter
+                  ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/25'
+                  : 'bg-gray-100 dark:bg-white/5 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-white/10 border border-gray-200 dark:border-white/10'
+              }`}
+            >
+              {filter}
+            </button>
+          ))}
+        </motion.div>
+
         {/* Projects Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {projects.map((project, index) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {visible.map((project, index) => (
             <motion.div
               key={project.title}
-              initial={{ opacity: 0, y: 50 }}
+              initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
+              transition={{ duration: 0.4, delay: index * 0.08 }}
               className="glass rounded-2xl overflow-hidden group"
             >
-              {/* Gradient header strip */}
               <div className={`h-2 rounded-t-2xl bg-gradient-to-r ${project.gradient}`} />
 
               <div className="p-6 relative">
-                {/* Category badge */}
-                <span className="absolute top-4 right-4 badge">
+                <span className={`absolute top-4 right-4 inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold border ${project.badgeClass}`}>
                   {project.category}
                 </span>
 
-                {/* Project name */}
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white pr-24 mb-4 font-[family-name:var(--font-space-grotesk)]">
+                <h3 className="text-lg font-bold text-gray-900 dark:text-white pr-24 mb-3 font-[family-name:var(--font-space-grotesk)]">
                   {project.title}
                 </h3>
 
-                {/* Tech stack pills */}
-                <div className="flex flex-wrap gap-1.5 mb-4">
+                <div className="flex flex-wrap gap-1.5 mb-3">
                   {project.tech.map((t) => (
                     <span
                       key={t}
@@ -194,7 +234,6 @@ export default function Projects() {
                   ))}
                 </div>
 
-                {/* Highlights */}
                 <div className="space-y-2 mb-4">
                   {project.highlights.map((h) => (
                     <div
@@ -207,7 +246,6 @@ export default function Projects() {
                   ))}
                 </div>
 
-                {/* GitHub link */}
                 <a
                   href="https://github.com/salman0butt"
                   target="_blank"
@@ -221,6 +259,23 @@ export default function Projects() {
             </motion.div>
           ))}
         </div>
+
+        {/* Show All / Show Less */}
+        {filtered.length > 6 && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            className="text-center mt-8"
+          >
+            <button
+              onClick={() => setShowAll(!showAll)}
+              className="btn-secondary text-sm px-6 py-2"
+            >
+              {showAll ? 'Show Less' : `View All ${filtered.length} Projects`}
+            </button>
+          </motion.div>
+        )}
       </div>
     </section>
   );

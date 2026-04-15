@@ -13,6 +13,7 @@ const spaceGrotesk = Space_Grotesk({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://salman0butt.github.io/portfolio"),
   title: "Salman Butt — Senior Full Stack & Generative AI Engineer",
   description: "Senior Full Stack Engineer with 7+ years building scalable platforms across Web3, IoT, SaaS, and Generative AI. Expert in React, Next.js, Node.js, NestJS, LangChain, LangGraph, and Kubernetes. 50+ projects delivered across 5 countries.",
   keywords: "Senior Full Stack Engineer, Generative AI, LangChain, LangGraph, React, Next.js, Node.js, NestJS, Web3, IoT, Microservices, Kubernetes, TypeScript, Software Engineer",
@@ -55,6 +56,12 @@ export default function RootLayout({
         className={`${inter.variable} ${spaceGrotesk.variable} antialiased`}
         suppressHydrationWarning
       >
+        <a
+          href="#hero"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-emerald-500 focus:text-white focus:rounded-lg focus:text-sm focus:font-medium"
+        >
+          Skip to main content
+        </a>
         {children}
       </body>
     </html>
