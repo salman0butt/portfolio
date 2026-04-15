@@ -50,16 +50,18 @@ export default function Hero() {
           >
             {/* Section label */}
             <motion.span variants={item} className="section-label">
-              Hello, I&apos;m
+              SENIOR FULL STACK &amp; GENAI ENGINEER
             </motion.span>
 
-            {/* Name */}
-            <motion.h1
-              variants={item}
-              className="font-[family-name:var(--font-space-grotesk)] text-4xl md:text-6xl font-bold text-gray-900 dark:text-white mb-4"
-            >
-              Salman Butt
-            </motion.h1>
+            {/* Name with avatar */}
+            <motion.div variants={item} className="flex items-center gap-4 justify-center md:justify-start mb-4">
+              <div className="w-14 h-14 md:w-16 md:h-16 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center text-white font-bold text-lg md:text-xl shadow-lg shadow-emerald-500/20 shrink-0">
+                SB
+              </div>
+              <h1 className="font-[family-name:var(--font-space-grotesk)] text-4xl md:text-6xl font-bold text-gray-900 dark:text-white">
+                Salman Butt
+              </h1>
+            </motion.div>
 
             {/* Typed subtitle */}
             <motion.div

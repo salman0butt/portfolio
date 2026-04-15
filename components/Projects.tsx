@@ -14,9 +14,9 @@ const projects = [
       'LangChain', 'LangGraph', 'LangSmith', 'Google ADK', 'Firebase',
     ],
     highlights: [
-      'Architected a full ChatGPT-style conversational AI with multi-turn context retention and real-time dialogue',
-      'Python-based AI engine using Google ADK orchestrating LangChain agents with LangGraph state machines',
-      'LangSmith observability for production monitoring',
+      'Designed a multi-agent conversational AI with multi-turn context retention, greeting flows, and real-time offer logic',
+      'Python AI engine using Google ADK orchestrating LangChain agents via LangGraph state machines with streaming responses',
+      'LangSmith observability tracking latency, token usage, and conversation quality in production',
     ],
   },
   {
@@ -28,9 +28,9 @@ const projects = [
       'ShuftiPro', 'Brevo', 'RabbitMQ', 'PostgreSQL', 'Redis',
     ],
     highlights: [
-      'Unified platform combining search engine interactions, referral mechanics, and Web3 wallet integration',
-      'Users earn ASK tokens through referrals and search activity',
-      'Integrated Moralis (Web3), ShuftiPro (KYC), Firebase, CAPTCHA for security',
+      'Unified platform serving thousands of active users — search engine interactions, referral mechanics, and Web3 wallet integration',
+      'Complex token issuance, withdrawal, and balance reconciliation flows with full transaction security',
+      'Integrated Moralis (Web3), ShuftiPro (KYC), Firebase, Brevo, RabbitMQ, and CAPTCHA for bot protection',
     ],
   },
   {
@@ -42,9 +42,9 @@ const projects = [
       'RabbitMQ', 'MQTT', 'InfluxDB', 'MongoDB', 'PostgreSQL',
     ],
     highlights: [
-      'End-to-end IoT software for embedded devices in remote off-grid solar energy installations',
-      'Real-time data pipelines using InfluxDB for time-series analytics and RabbitMQ/MQTT for device communication',
-      'Interactive dashboards with live charts and device control interfaces',
+      'End-to-end IoT software processing real-time telemetry from embedded devices across distributed solar installations',
+      'High-throughput data pipelines: InfluxDB for time-series analytics, RabbitMQ/MQTT for device communication at scale',
+      'Interactive dashboards with live charts, device status monitoring, automation controls, and customisable alerts',
     ],
   },
   {
@@ -55,9 +55,9 @@ const projects = [
       'JavaScript', 'Backbone.js', 'Joint.js', 'Node.js', 'MySQL', 'Docker',
     ],
     highlights: [
-      'Large-scale enterprise mind mapping application used by global corporations',
-      'Built with pure JavaScript, Joint.js, and Backbone.js',
-      'Developed feature modules, resolved complex rendering bugs, improved performance for large diagrams',
+      'Large-scale enterprise mind mapping app used by global corporations — complex canvas rendering with 1000+ node diagrams',
+      'Built with pure JavaScript, Joint.js, and Backbone.js — no frameworks, deep DOM and event system mastery',
+      'Resolved complex rendering bugs, optimised canvas performance, and maintained cross-browser compatibility (WCAG)',
     ],
   },
   {
@@ -69,9 +69,9 @@ const projects = [
       'Redis', 'AWS S3', 'Kubernetes',
     ],
     highlights: [
-      'Full multi-tenant SaaS ERP for retail and service businesses across the Middle East',
-      'Real-time POS with Socket.IO, multi-attribute products, inventory tracking, and payment processing',
-      'Modular, scalable, single-instance multi-tenancy model',
+      'Full multi-tenant SaaS ERP onboarding 50+ retail and service businesses across the Middle East on a single instance',
+      'Real-time POS with Socket.IO, multi-attribute products, inventory tracking, and Stripe/PayPal payment processing',
+      'Deployed on AWS with Kubernetes — zero-downtime rollouts, Redis caching, and automated CI/CD pipelines',
     ],
   },
   {

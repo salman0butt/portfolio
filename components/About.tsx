@@ -56,22 +56,22 @@ export default function About() {
             transition={{ duration: 0.6, delay: 0.2 }}
           >
             <p className="text-base leading-relaxed text-gray-700 dark:text-gray-300 mb-4">
-              Senior Full Stack Engineer with 7+ years of experience building scalable,
-              high-performance web and mobile applications across IoT, SaaS ERP, and
-              Generative AI platforms. Proven track record of improving API response times by
-              30-40%, engineering 5+ production-grade platforms serving thousands of global users,
-              and leading full-cycle delivery from architecture to production across teams in 5
-              countries. Now specialising in Generative AI engineering — designing agentic systems,
-              RAG pipelines, and LLM-powered platforms using LangChain, LangGraph, and LangSmith.
+              I&apos;ve spent 7+ years shipping production systems across 5 countries — from
+              multi-tenant SaaS ERPs and real-time IoT platforms to AI-powered conversational
+              agents used by thousands. My sweet spot is the intersection of scalable backend
+              architecture and cutting-edge GenAI integration, using LangChain, LangGraph,
+              LangSmith, and modern cloud infrastructure. I&apos;ve improved API response times
+              by 30-40%, delivered 50+ projects, and earned Employee of the Year for consistent
+              on-time delivery.
             </p>
             <p className="text-base leading-relaxed text-gray-600 dark:text-gray-400">
-              Strong System Design foundation covering distributed systems, microservices,
-              event-driven architecture, Redis caching, load balancing, sharding, CQRS, and
-              Kafka/RabbitMQ messaging at scale. Experienced in architecting multi-tenant SaaS
-              platforms, real-time IoT data pipelines, and containerised deployments on Kubernetes.
-              Also delivered 50+ WordPress &amp; WooCommerce solutions for European clients — from
-              e-commerce stores and real estate portals to custom business applications with
-              payment gateway integrations, RESTful APIs, and SEO-optimised themes.
+              Strong System Design foundation — distributed systems, microservices, event-driven
+              architecture, Redis caching, CQRS, and Kafka/RabbitMQ messaging at scale. Deep
+              PHP/Laravel expertise: architected multi-tenant SaaS platforms, built 5+ complex
+              Laravel applications with REST APIs, and delivered 50+ WordPress &amp; WooCommerce
+              solutions for European clients — e-commerce stores, real estate portals, and custom
+              business applications with payment gateways, admin panels, and SEO-optimised themes.
+              Also experienced with containerised Kubernetes deployments and CI/CD pipelines.
             </p>
           </motion.div>
 
