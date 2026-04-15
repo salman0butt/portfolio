@@ -2,263 +2,254 @@
 
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
-import { Briefcase, Award, Sparkles, TrendingUp } from 'lucide-react';
+import { Briefcase, MapPin, Calendar, Trophy, TrendingUp, Globe } from 'lucide-react';
 
 const experiences = [
   {
-    title: 'Software Engineer (Web3 & AI)',
-    company: 'Permission.io (USA - Remote)',
-    period: '10/2023 - Present',
-    description: 'Core engineering team member building scalable Web3 applications and AI-driven integrations for advertising platforms.',
+    role: 'Software Engineer',
+    company: 'Permission.io',
+    period: 'Aug 2023 – Present',
+    location: 'United States — Remote',
+    description:
+      'Part of the core engineering team delivering Web3 and AI-driven products used by thousands of active users globally across 5+ platforms.',
     achievements: [
-      'Architected and shipped 5 production platforms serving 5,000+ active users with 99.8% uptime',
-      'Optimized database performance: eliminated N+1 queries, reduced API response time by 40%',
-      'Built scalable microservices infrastructure with Kubernetes, handling 100K+ daily transactions',
-      'Led Web3 integration: Moralis APIs, KYC compliance (ShuftiPro), blockchain transaction processing',
-      'Implemented AI chat platform with Python & Google ADK, processing 10K+ conversations monthly'
-    ]
+      'Engineered 5+ production platforms — Permission AI, Browser Extension, Permission Connect, Permission ASK, and Admin Portal',
+      'Improved API response times by 30-40% by resolving N+1 query bottlenecks',
+      'Built scalable microservices using React, Next.js, Node.js, NestJS, and RabbitMQ; deployed with Kubernetes',
+      'Built a conversational AI agent platform using LangChain, LangGraph, LangSmith, and Google ADK',
+      'Developed Chrome browser extension embedding AI widgets, Web3 wallet operations, and transactional flows',
+    ],
+    tech: [
+      'React', 'Next.js', 'NestJS', 'Node.js', 'TypeScript', 'RabbitMQ',
+      'Kubernetes', 'LangChain', 'LangGraph', 'Web3', 'MongoDB', 'PostgreSQL',
+    ],
   },
   {
-    title: 'Senior Full Stack Developer (IoT)',
-    company: 'OffgridEurope (Germany - Remote)',
-    period: '10/2023 - Present',
-    description: 'Developing IoT software solutions for renewable energy systems with real-time monitoring and device control.',
+    role: 'Senior Full Stack Developer',
+    company: 'OffGrid Europe',
+    period: 'Jul 2023 – Jun 2024',
+    location: 'Germany — Remote',
+    description:
+      'Built end-to-end IoT software for a German renewable energy company specialising in off-grid solar and mini-grid systems deployed in remote environments.',
     achievements: [
-      'Designed IoT architecture processing 10M+ daily sensor readings with 99.5% uptime',
-      'Built time-series data pipeline with InfluxDB reducing query latency to <2 seconds',
-      'Created real-time dashboards with React/Vue handling 50+ concurrent data streams',
-      'Implemented device control system managing 500+ remote installations across Europe',
-      'Achieved 25% energy efficiency improvement through predictive analytics and automation'
-    ]
+      'Designed and developed IoT software deployed on embedded devices for real-time data acquisition',
+      'Built high-performance backend services using Node.js, Express.js, Laravel, and RabbitMQ',
+      'Implemented MQTT-based messaging for real-time telemetry and remote device control',
+      'Designed scalable data pipelines with InfluxDB, MongoDB, and PostgreSQL',
+    ],
+    tech: [
+      'Node.js', 'Express.js', 'Laravel', 'React.js', 'Vue.js', 'RabbitMQ',
+      'MQTT', 'InfluxDB', 'MongoDB', 'PostgreSQL',
+    ],
   },
   {
-    title: 'Full Stack JavaScript Engineer',
-    company: 'Client.IO (Czech Republic)',
-    period: '05/2022 - 05/2023',
-    description: 'Agile team member working on Joint.js, App Mixer, and Mind Manager (Corel Corporation) products.',
+    role: 'Full Stack JavaScript Engineer',
+    company: 'client IO s.r.o.',
+    period: 'Jun 2022 – May 2023',
+    location: 'Prague, Czech Republic — Remote',
+    description:
+      'Member of the product team building Joint.js, AppMixer, and MindManager (Corel Corporation) — enterprise-grade visual diagramming, workflow automation, and mind mapping platforms.',
     achievements: [
-      'Contributed to enterprise application (Mind Manager) used by Fortune 500 companies',
-      'Resolved 50+ critical bugs, improved code quality score by 35% through refactoring',
-      'Maintained 95%+ code review approval rating, mentored 2 junior developers',
-      'Delivered 15+ major features on time across 12-month agile sprint cycles'
-    ]
+      'Built robust, responsive UI components for MindManager — a large-scale enterprise mind mapping application',
+      'Developed features for AppMixer, a visual workflow automation platform',
+      'Contributed to Joint.js/Rappid — a web-based diagramming framework used in ETL tools and IT architecture builders',
+    ],
+    tech: [
+      'JavaScript', 'Node.js', 'Backbone.js', 'Joint.js', 'Lodash.js',
+      'HTML5', 'CSS3', 'Git', 'WCAG',
+    ],
   },
   {
-    title: 'Full Stack Web Developer',
-    company: 'Switcher Solutions ERP (Bahrain)',
-    period: '05/2021 - 05/2022',
-    description: 'Built multi-tenant SaaS ERP system with Laravel API backend and Vue.js SPA frontend.',
+    role: 'Full Stack Developer',
+    company: 'Switcher Solutions',
+    period: 'May 2021 – May 2022',
+    location: 'Bahrain — Remote',
+    description:
+      'Built and maintained a multi-tenant SaaS ERP platform serving retail and service businesses across the Middle East.',
     achievements: [
-      'Built complete multi-tenant SaaS ERP from scratch: onboarded 50+ businesses in 12 months',
-      'Architected secure data isolation system: zero security incidents across all tenants',
-      'Developed 80+ RESTful API endpoints processing 100K+ monthly transactions',
-      'Achieved <100ms average API response time through Redis caching and query optimization',
-      'Delivered 60% cost reduction vs traditional ERP, driving rapid customer adoption'
-    ]
+      'Architected a modular multi-tenant SaaS ERP using Laravel REST API and Vue.js SPA',
+      'Built a full-featured POS system with multi-attribute products, inventory, and payment integrations',
+      'Mentored junior developers; implemented tests using Cypress, Jest, and PHPUnit with TDD',
+    ],
+    tech: [
+      'Laravel', 'Vue.js', 'PHP', 'MySQL', 'MongoDB', 'Socket.IO',
+      'AWS S3', 'Cypress', 'Jest',
+    ],
   },
   {
-    title: 'Full Stack Web Developer',
-    company: 'Digital MedieXpert (Norway)',
-    period: '03/2018 - 05/2021',
-    description: 'Completed 50+ projects including e-commerce, real estate portals, and business web solutions.',
+    role: 'Full Stack Developer',
+    company: 'Digital MedieXpert (DMX)',
+    period: 'Jan 2018 – May 2021',
+    location: 'Norway — Remote',
+    description:
+      'Delivered 50+ full-stack web projects for a Norwegian digital agency serving European clients.',
     achievements: [
-      'Delivered 50+ client projects with 98% on-time completion rate over 3 years',
-      'Built NorgsHandle portal: 10K+ active listings, advanced search with maps integration',
-      'Developed 15+ e-commerce stores processing €500K+ combined annual revenue',
-      'Created social networking platform: 5K+ users, real-time messaging, notification system',
-      'Maintained 100% client satisfaction rate with 90% returning for additional projects'
-    ]
-  }
+      'Built diverse production apps: e-commerce, real estate portals, social networks, ERP systems',
+      'Developed real-time features using Socket.IO and WebSockets',
+      'Managed server deployments on AWS, Heroku, and Digital Ocean',
+      'Awarded Employee of the Year 2020 for outstanding performance',
+    ],
+    tech: [
+      'Laravel', 'Vue.js', 'PHP', 'WordPress', 'WooCommerce', 'Node.js',
+      'MongoDB', 'MySQL', 'Socket.IO',
+    ],
+  },
 ];
 
-const achievements = [
+const highlightItems = [
   {
-    title: 'Web3 & AI Integration',
-    organization: 'Permission.io',
-    year: '2024',
-    icon: Award
+    icon: Trophy,
+    label: 'Employee of the Year 2020',
   },
   {
-    title: 'IoT Solutions Expert',
-    organization: 'OffgridEurope',
-    year: '2024',
-    icon: TrendingUp
+    icon: TrendingUp,
+    label: '30-40% API Performance Boost',
   },
   {
-    title: '100+ Projects Delivered',
-    organization: 'Global Clients',
-    year: '2018-2024',
-    icon: Award
+    icon: Globe,
+    label: '50+ Projects Across 5 Countries',
   },
-  {
-    title: 'Microservices Architecture',
-    organization: 'Enterprise Systems',
-    year: '2023',
-    icon: TrendingUp
-  }
 ];
 
 export default function Experience() {
-  const [ref, inView] = useInView({
+  const [ref] = useInView({
     triggerOnce: true,
-    threshold: 0.1,
+    threshold: 0.05,
   });
 
   return (
-    <section id="experience" className="py-12 sm:py-16 md:py-20 px-4 relative overflow-hidden">
+    <section id="experience" className="py-20 px-4 relative overflow-hidden section-alt">
       {/* Background decoration */}
-      <div className="absolute top-1/2 right-0 w-96 h-96 bg-green-500 rounded-full blur-3xl opacity-5"></div>
+      <div className="absolute top-1/2 right-0 w-96 h-96 bg-green-500 rounded-full blur-3xl opacity-5" />
 
-      <div className="max-w-7xl mx-auto" ref={ref}>
+      <div className="max-w-6xl mx-auto" ref={ref}>
+        {/* Section Header */}
         <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <div className="inline-flex items-center gap-2 mb-4">
-            <Sparkles className="text-green-500" size={24} />
-            <h2 className="text-4xl md:text-5xl font-bold gradient-text">Experience & Achievements</h2>
-            <Sparkles className="text-green-500" size={24} />
-          </div>
-          <p className="text-xl text-gray-800 dark:text-gray-300 max-w-3xl mx-auto mt-4">
-            My professional journey and notable accomplishments in the tech industry.
-          </p>
+          <h2 className="text-4xl md:text-5xl font-bold font-[family-name:var(--font-space-grotesk)] gradient-text mb-4">
+            Work Experience
+          </h2>
+          <div className="section-divider" />
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-          {/* Timeline */}
-          <div className="lg:col-span-2">
-            <div className="space-y-8">
-              {experiences.map((exp, index) => (
+        {/* Timeline */}
+        <div className="relative">
+          {/* Vertical timeline line — center on lg, left on mobile */}
+          <div className="absolute left-6 lg:left-1/2 top-0 bottom-0 w-0.5 bg-gradient-to-b from-emerald-500 via-emerald-400 to-emerald-300" />
+
+          <div className="space-y-12">
+            {experiences.map((exp, index) => {
+              const isLeft = index % 2 === 0;
+
+              return (
                 <motion.div
                   key={`${exp.company}-${index}`}
-                  initial={{ opacity: 0, x: -50 }}
-                  animate={inView ? { opacity: 1, x: 0 } : {}}
+                  initial={{ opacity: 0, y: 50 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
                   className="relative"
                 >
-                  {/* Timeline line */}
-                  {index !== experiences.length - 1 && (
-                    <motion.div
-                      initial={{ scaleY: 0 }}
-                      animate={inView ? { scaleY: 1 } : {}}
-                      transition={{ duration: 0.8, delay: index * 0.1 + 0.3 }}
-                      className="absolute left-6 top-16 bottom-0 w-0.5 bg-gradient-to-b from-green-500 to-green-300 origin-top"
-                    ></motion.div>
-                  )}
+                  {/* Green dot on the timeline */}
+                  <div className="absolute left-6 lg:left-1/2 -translate-x-1/2 top-8 z-10">
+                    <span className="block w-4 h-4 rounded-full bg-emerald-500 ring-4 ring-emerald-500/20" />
+                  </div>
 
-                  <div className="flex gap-6">
-                    {/* Icon */}
-                    <div className="flex-shrink-0">
-                      <motion.div
-                        initial={{ scale: 0, rotate: -180 }}
-                        animate={inView ? { scale: 1, rotate: 0 } : {}}
-                        transition={{ duration: 0.6, delay: index * 0.1, type: "spring", stiffness: 200 }}
-                        whileHover={{ scale: 1.1, rotate: 360 }}
-                        className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center shadow-lg shadow-green-500/50"
-                      >
-                        <Briefcase className="text-white" size={24} />
-                      </motion.div>
-                    </div>
-
-                    {/* Content */}
-                    <div className="flex-1 glass p-6 rounded-2xl hover:shadow-xl hover:shadow-green-500/10 transition-smooth">
-                      <div className="flex flex-wrap justify-between items-start gap-2 mb-3">
-                        <div>
-                          <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-1">
-                            {exp.title}
-                          </h3>
-                          <p className="text-green-500 font-semibold">{exp.company}</p>
-                        </div>
-                        <span className="px-3 py-1 bg-green-500/10 text-green-600 dark:text-green-400 rounded-full text-sm font-medium">
+                  {/* Card wrapper — alternating sides on lg */}
+                  <div
+                    className={`ml-16 lg:ml-0 lg:w-[calc(50%-2rem)] ${
+                      isLeft ? 'lg:mr-auto lg:pr-4' : 'lg:ml-auto lg:pl-4'
+                    }`}
+                  >
+                    <div className="glass p-6 rounded-2xl">
+                      {/* Header */}
+                      <div className="flex flex-wrap items-start justify-between gap-2 mb-1">
+                        <h3 className="text-xl font-bold text-gray-900 dark:text-white">
+                          {exp.company}
+                        </h3>
+                        <span className="flex items-center gap-1 text-sm text-emerald-600 dark:text-emerald-400 font-medium whitespace-nowrap">
+                          <Calendar size={14} />
                           {exp.period}
                         </span>
                       </div>
-                      <p className="text-gray-800 dark:text-gray-300 mb-4">
+
+                      <p className="text-emerald-600 dark:text-emerald-400 font-semibold mb-1 flex items-center gap-1">
+                        <Briefcase size={14} />
+                        {exp.role}
+                      </p>
+
+                      <p className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-1 mb-3">
+                        <MapPin size={14} />
+                        {exp.location}
+                      </p>
+
+                      <p className="text-gray-700 dark:text-gray-300 mb-4 leading-relaxed">
                         {exp.description}
                       </p>
-                      <div className="space-y-2">
-                        {exp.achievements.map((achievement) => (
+
+                      {/* Achievements */}
+                      <div className="space-y-2 mb-4">
+                        {exp.achievements.map((item) => (
                           <div
-                            key={achievement}
-                            className="flex items-start gap-2 text-sm text-gray-800 dark:text-gray-400"
+                            key={item}
+                            className="flex items-start gap-2 text-sm text-gray-700 dark:text-gray-400"
                           >
-                            <span className="text-green-500 mt-1">▹</span>
-                            <span>{achievement}</span>
+                            <span className="text-emerald-500 mt-0.5 shrink-0">&#9655;</span>
+                            <span>{item}</span>
                           </div>
+                        ))}
+                      </div>
+
+                      {/* Tech Stack Pills */}
+                      <div className="flex flex-wrap gap-2">
+                        {exp.tech.map((t) => (
+                          <span
+                            key={t}
+                            className="px-3 py-1 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-full text-xs font-medium"
+                          >
+                            {t}
+                          </span>
                         ))}
                       </div>
                     </div>
                   </div>
                 </motion.div>
-              ))}
-            </div>
-          </div>
-
-          {/* Achievements Sidebar */}
-          <div className="space-y-6">
-            <motion.div
-              initial={{ opacity: 0, x: 50 }}
-              animate={inView ? { opacity: 1, x: 0 } : {}}
-              transition={{ duration: 0.6, delay: 0.2 }}
-            >
-              <h3 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white">
-                Notable Achievements
-              </h3>
-              <div className="space-y-4">
-                {achievements.map((achievement, index) => (
-                  <motion.div
-                    key={achievement.title}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={inView ? { opacity: 1, y: 0 } : {}}
-                    transition={{ duration: 0.5, delay: 0.3 + index * 0.1 }}
-                    className="glass p-4 rounded-xl hover:shadow-lg hover:shadow-green-500/10 transition-smooth group"
-                  >
-                    <div className="flex items-start gap-3">
-                      <div className="p-2 bg-green-500/10 rounded-lg group-hover:bg-green-500 transition-smooth">
-                        <achievement.icon
-                          size={20}
-                          className="text-green-500 group-hover:text-white transition-smooth"
-                        />
-                      </div>
-                      <div className="flex-1">
-                        <h4 className="font-bold text-gray-900 dark:text-white mb-1">
-                          {achievement.title}
-                        </h4>
-                        <p className="text-sm text-gray-800 dark:text-gray-400">
-                          {achievement.organization}
-                        </p>
-                        <span className="inline-block mt-2 text-xs text-green-500 font-semibold">
-                          {achievement.year}
-                        </span>
-                      </div>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
-
-            {/* Download Resume */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6, delay: 0.5 }}
-              className="glass p-6 rounded-xl text-center"
-            >
-              <h4 className="text-lg font-bold mb-3 text-gray-900 dark:text-white">
-                Want to know more?
-              </h4>
-              <a
-                href="/resume.pdf"
-                download
-                className="inline-block px-6 py-3 bg-green-500 hover:bg-green-600 text-white rounded-full font-semibold transition-smooth hover:scale-105 hover:shadow-lg hover:shadow-green-500/50"
-              >
-                Download Resume
-              </a>
-            </motion.div>
+              );
+            })}
           </div>
         </div>
+
+        {/* Achievements Highlight Bar */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.3 }}
+          className="mt-16 grid grid-cols-1 sm:grid-cols-3 gap-4"
+        >
+          {highlightItems.map((item, i) => (
+            <motion.div
+              key={item.label}
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.4, delay: 0.4 + i * 0.1 }}
+              className="glass p-5 rounded-2xl flex items-center gap-4 text-center sm:text-left"
+            >
+              <div className="p-3 bg-emerald-500/10 rounded-xl shrink-0">
+                <item.icon size={24} className="text-emerald-500" />
+              </div>
+              <span className="text-sm font-semibold text-gray-900 dark:text-white">
+                {item.label}
+              </span>
+            </motion.div>
+          ))}
+        </motion.div>
       </div>
     </section>
   );

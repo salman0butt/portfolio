@@ -1,51 +1,110 @@
 'use client';
 
-import { Heart } from 'lucide-react';
+import { Github, Linkedin, Mail } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { useInView } from 'react-intersection-observer';
+
+const quickLinks = [
+  { label: 'About', href: '#about' },
+  { label: 'Experience', href: '#experience' },
+  { label: 'Projects', href: '#projects' },
+  { label: 'Skills', href: '#skills' },
+  { label: 'Contact', href: '#contact' },
+];
 
 export default function Footer() {
-  const currentYear = new Date().getFullYear();
+  const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.1 });
 
   return (
-    <footer className="py-6 sm:py-8 px-4 border-t border-gray-200 dark:border-gray-800">
-      <div className="max-w-7xl mx-auto">
-        <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-          <div className="text-center md:text-left">
-            <p className="text-gray-800 dark:text-gray-400 flex items-center gap-2 justify-center md:justify-start">
-              Made with <Heart className="text-green-500 fill-green-500" size={16} /> using Next.js
+    <footer className="bg-gray-900 text-gray-400">
+      <motion.div
+        ref={ref}
+        initial={{ opacity: 0, y: 30 }}
+        animate={inView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.5 }}
+        className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16"
+      >
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+          {/* Left column - Name and socials */}
+          <div>
+            <h3 className="font-[family-name:var(--font-space-grotesk)] text-xl font-bold text-white mb-2">
+              Salman Butt
+            </h3>
+            <p className="text-sm text-gray-500 mb-5">
+              Senior Full Stack & GenAI Engineer
             </p>
-            <p className="text-sm text-gray-700 dark:text-gray-500 mt-1">
-              © {currentYear} Salman. All rights reserved.
-            </p>
+            <div className="flex gap-3">
+              <a
+                href="https://github.com/salman0butt"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="icon-hover p-2 rounded-lg hover:text-emerald-400 transition-colors"
+                aria-label="GitHub"
+              >
+                <Github size={20} />
+              </a>
+              <a
+                href="https://www.linkedin.com/in/salman0butt/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="icon-hover p-2 rounded-lg hover:text-emerald-400 transition-colors"
+                aria-label="LinkedIn"
+              >
+                <Linkedin size={20} />
+              </a>
+              <a
+                href="mailto:salman0butt@gmail.com"
+                className="icon-hover p-2 rounded-lg hover:text-emerald-400 transition-colors"
+                aria-label="Email"
+              >
+                <Mail size={20} />
+              </a>
+            </div>
           </div>
 
-          <div className="flex gap-6 text-sm">
+          {/* Middle column - Quick links */}
+          <div>
+            <h4 className="font-[family-name:var(--font-space-grotesk)] text-sm font-semibold text-white uppercase tracking-wider mb-4">
+              Quick Links
+            </h4>
+            <ul className="space-y-2.5">
+              {quickLinks.map((link) => (
+                <li key={link.href}>
+                  <a
+                    href={link.href}
+                    className="text-sm hover:text-emerald-400 transition-colors"
+                  >
+                    {link.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Right column - Get in touch */}
+          <div>
+            <h4 className="font-[family-name:var(--font-space-grotesk)] text-sm font-semibold text-white uppercase tracking-wider mb-4">
+              Get in Touch
+            </h4>
             <a
-              href="#about"
-              className="text-gray-800 dark:text-gray-400 hover:text-green-500 transition-smooth"
+              href="mailto:salman0butt@gmail.com"
+              className="text-sm text-emerald-400 hover:text-emerald-300 transition-colors break-all"
             >
-              About
+              salman0butt@gmail.com
             </a>
-            <a
-              href="#projects"
-              className="text-gray-800 dark:text-gray-400 hover:text-green-500 transition-smooth"
-            >
-              Projects
-            </a>
-            <a
-              href="#experience"
-              className="text-gray-800 dark:text-gray-400 hover:text-green-500 transition-smooth"
-            >
-              Experience
-            </a>
-            <a
-              href="#contact"
-              className="text-gray-800 dark:text-gray-400 hover:text-green-500 transition-smooth"
-            >
-              Contact
-            </a>
+            <p className="text-sm text-gray-500 mt-3">
+              Open to remote opportunities worldwide
+            </p>
           </div>
         </div>
-      </div>
+
+        {/* Bottom bar */}
+        <div className="mt-12 pt-8 border-t border-gray-800 text-center">
+          <p className="text-sm text-gray-500">
+            &copy; 2024 Salman Butt. Built with Next.js & Tailwind CSS.
+          </p>
+        </div>
+      </motion.div>
     </footer>
   );
 }

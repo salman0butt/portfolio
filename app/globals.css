@@ -83,18 +83,18 @@ body {
 
 /* Modern glass card style */
 .glass {
-  background: rgba(255, 255, 255, 0.95);
+  background: #ffffff;
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid rgba(16, 185, 129, 0.08);
+  border: 1px solid #e2e8f0;
   border-radius: 24px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.04), 0 2px 8px rgba(0, 0, 0, 0.02);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08), 0 1px 4px rgba(0, 0, 0, 0.05);
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .glass:hover {
-  border-color: rgba(16, 185, 129, 0.2);
-  box-shadow: 0 20px 60px rgba(16, 185, 129, 0.1), 0 8px 24px rgba(0, 0, 0, 0.06);
+  border-color: #10b981;
+  box-shadow: 0 12px 40px rgba(16, 185, 129, 0.12), 0 4px 16px rgba(0, 0, 0, 0.08);
   transform: translateY(-4px);
 }
 
@@ -116,7 +116,7 @@ body {
   border-radius: 20px;
   padding: 2rem;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
 .card:hover {
@@ -134,6 +134,26 @@ body {
 .dark .card:hover {
   border-color: #10b981;
   box-shadow: 0 20px 60px rgba(16, 185, 129, 0.25);
+}
+
+/* Alternating section backgrounds for light mode contrast */
+.section-alt {
+  background: #f8fafc;
+}
+
+.section-alt .glass {
+  background: #ffffff;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06), 0 1px 6px rgba(0, 0, 0, 0.04);
+}
+
+.dark .section-alt {
+  background: rgba(15, 23, 42, 0.5);
+}
+
+.dark .section-alt .glass {
+  background: rgba(30, 41, 59, 0.9);
+  border: 1px solid rgba(16, 185, 129, 0.12);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 /* Gradient text */
@@ -270,7 +290,7 @@ body {
   align-items: center;
   gap: 0.375rem;
   padding: 0.375rem 0.75rem;
-  background: rgba(209, 250, 229, 0.95);
+  background: #ecfdf5;
   backdrop-filter: blur(8px);
   color: #047857;
   border-radius: 999px;
@@ -387,17 +407,17 @@ a:focus-visible {
 
 /* Navbar backdrop - Enhanced visibility */
 .navbar-blur {
-  background: rgba(255, 255, 255, 0.98);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-bottom: 2px solid #e2e8f0;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid #e2e8f0;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
 }
 
 .dark .navbar-blur {
-  background: rgba(15, 23, 42, 0.98);
-  border-bottom: 2px solid #334155;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  background: rgba(15, 23, 42, 0.95);
+  border-bottom: 1px solid #334155;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
 }
 
 /* Icon hover effect */

@@ -1,194 +1,206 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { useInView } from 'react-intersection-observer';
-import { Mail, Phone, MapPin, Github, Linkedin, Twitter, Sparkles, Send, Calendar } from 'lucide-react';
+import {
+  Mail,
+  Phone,
+  MapPin,
+  Clock,
+  Github,
+  Linkedin,
+  Download,
+  ExternalLink,
+} from 'lucide-react';
+
+const contactInfo = [
+  {
+    icon: Mail,
+    label: 'salman0butt@gmail.com',
+    href: 'mailto:salman0butt@gmail.com',
+  },
+  {
+    icon: Phone,
+    label: '+92 315 108 3526',
+    href: 'tel:+923151083526',
+  },
+  {
+    icon: MapPin,
+    label: 'Pakistan — Open to Remote Worldwide',
+    href: null,
+  },
+  {
+    icon: Clock,
+    label: 'Available for full-time remote positions',
+    href: null,
+  },
+];
+
+const socialLinks = [
+  {
+    icon: Github,
+    label: 'github.com/salman0butt',
+    href: 'https://github.com/salman0butt',
+  },
+  {
+    icon: Linkedin,
+    label: 'linkedin.com/in/salman0butt',
+    href: 'https://www.linkedin.com/in/salman0butt/',
+  },
+  {
+    icon: Mail,
+    label: 'Send me an email',
+    href: 'mailto:salman0butt@gmail.com',
+  },
+];
+
+const languages = [
+  'English (Professional)',
+  'Urdu (Native)',
+  'Punjabi (Native)',
+];
 
 export default function Contact() {
-  const [ref, inView] = useInView({
-    triggerOnce: true,
-    threshold: 0.1,
-  });
-
-  const contactMethods = [
-    {
-      icon: Mail,
-      label: 'Email',
-      value: 'salman.dev@example.com',
-      link: 'mailto:salman.dev@example.com',
-      description: 'Best way to reach me'
-    },
-    {
-      icon: Phone,
-      label: 'Phone',
-      value: '+1 (234) 567-8900',
-      link: 'tel:+12345678900',
-      description: 'Available Mon-Fri, 9AM-6PM'
-    },
-    {
-      icon: MapPin,
-      label: 'Location',
-      value: 'Remote / Global',
-      link: null,
-      description: 'Open to remote opportunities'
-    },
-    {
-      icon: Calendar,
-      label: 'Availability',
-      value: 'Open for opportunities',
-      link: null,
-      description: 'Ready to start immediately'
-    }
-  ];
-
-  const socialLinks = [
-    {
-      icon: Github,
-      label: 'GitHub',
-      url: 'https://github.com/yourusername',
-      color: 'hover:bg-gray-800 dark:hover:bg-gray-700'
-    },
-    {
-      icon: Linkedin,
-      label: 'LinkedIn',
-      url: 'https://linkedin.com/in/yourusername',
-      color: 'hover:bg-blue-600'
-    },
-    {
-      icon: Twitter,
-      label: 'Twitter',
-      url: 'https://twitter.com/yourusername',
-      color: 'hover:bg-sky-500'
-    }
-  ];
-
   return (
-    <section id="contact" className="py-12 sm:py-16 md:py-20 px-4 relative overflow-hidden">
-      {/* Background decoration */}
-      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-green-500 rounded-full blur-3xl opacity-5"></div>
-
-      <div className="max-w-6xl mx-auto" ref={ref}>
+    <section id="contact" className="py-20 px-4 section-alt">
+      <div className="max-w-6xl mx-auto">
         {/* Section Header */}
         <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <div className="inline-flex items-center gap-2 mb-4">
-            <Sparkles className="text-green-500" size={24} />
-            <h2 className="text-4xl md:text-5xl font-bold gradient-text">Let&apos;s Work Together</h2>
-            <Sparkles className="text-green-500" size={24} />
-          </div>
-          <p className="text-xl text-gray-800 dark:text-gray-300 max-w-3xl mx-auto mt-4">
-            I&apos;m available for <span className="font-semibold text-gray-900 dark:text-white">freelance projects</span>, <span className="font-semibold text-gray-900 dark:text-white">full-time opportunities</span>, and <span className="font-semibold text-gray-900 dark:text-white">consulting work</span>. Let&apos;s create something amazing!
+          <h2 className="text-4xl md:text-5xl font-bold font-[family-name:var(--font-space-grotesk)] gradient-text mb-4">
+            Let&apos;s Work Together
+          </h2>
+          <div className="section-divider mx-auto mb-4" />
+          <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+            I&apos;m open to remote opportunities worldwide. Let&apos;s build
+            something great.
           </p>
         </motion.div>
 
-        {/* Contact Methods Grid */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-12 max-w-4xl mx-auto"
-        >
-          {contactMethods.map((method, index) => (
-            <motion.div
-              key={method.label}
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={inView ? { opacity: 1, scale: 1 } : {}}
-              transition={{ duration: 0.5, delay: 0.1 * index }}
-              whileHover={{ scale: 1.05, y: -5 }}
-              className="group"
-            >
-              {method.link ? (
-                <a
-                  href={method.link}
-                  className="glass p-5 md:p-6 rounded-2xl flex items-start gap-3 md:gap-4 hover:shadow-xl hover:shadow-green-500/10 transition-smooth block"
-                >
-                  <motion.div
-                    whileHover={{ rotate: 360, scale: 1.1 }}
-                    transition={{ duration: 0.5 }}
-                    className="p-2.5 md:p-3 bg-green-500/10 rounded-xl group-hover:bg-green-500 transition-smooth flex-shrink-0"
-                  >
-                    <method.icon className="text-green-600 group-hover:text-white transition-smooth" size={20} />
-                  </motion.div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-xs md:text-sm text-gray-800 dark:text-gray-400 mb-1">{method.label}</p>
-                    <p className="text-base md:text-lg font-bold text-gray-900 dark:text-white mb-1 break-all">{method.value}</p>
-                    <p className="text-xs md:text-sm text-gray-700 dark:text-gray-500">{method.description}</p>
+        {/* Two-Column Layout */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+          {/* Left Column: Contact Info Cards */}
+          <div className="space-y-4">
+            {contactInfo.map((item, index) => {
+              const content = (
+                <div className="flex items-center gap-4">
+                  <div className="w-10 h-10 rounded-full bg-emerald-500/10 flex items-center justify-center flex-shrink-0">
+                    <item.icon className="text-emerald-500" size={20} />
                   </div>
-                  <Send className="text-green-500 opacity-0 group-hover:opacity-100 transition-smooth flex-shrink-0 hidden sm:block" size={18} />
-                </a>
-              ) : (
-                <div className="glass p-5 md:p-6 rounded-2xl flex items-start gap-3 md:gap-4 hover:shadow-lg transition-smooth">
-                  <div className="p-2.5 md:p-3 bg-green-500/10 rounded-xl flex-shrink-0">
-                    <method.icon className="text-green-600" size={20} />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-xs md:text-sm text-gray-800 dark:text-gray-400 mb-1">{method.label}</p>
-                    <p className="text-base md:text-lg font-bold text-gray-900 dark:text-white mb-1">{method.value}</p>
-                    <p className="text-xs md:text-sm text-gray-700 dark:text-gray-500">{method.description}</p>
-                  </div>
+                  <span className="text-gray-700 dark:text-gray-300 text-sm md:text-base">
+                    {item.label}
+                  </span>
                 </div>
-              )}
-            </motion.div>
-          ))}
-        </motion.div>
+              );
 
-        {/* Social Links & CTA */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          className="glass p-6 md:p-8 rounded-2xl max-w-4xl mx-auto"
-        >
-          <div className="text-center mb-6">
-            <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+              return (
+                <motion.div
+                  key={item.label}
+                  initial={{ opacity: 0, x: -20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.4, delay: index * 0.1 }}
+                >
+                  {item.href ? (
+                    <a
+                      href={item.href}
+                      className="glass p-4 rounded-xl block hover:border-emerald-500/50 transition-colors"
+                    >
+                      {content}
+                    </a>
+                  ) : (
+                    <div className="glass p-4 rounded-xl">{content}</div>
+                  )}
+                </motion.div>
+              );
+            })}
+          </div>
+
+          {/* Right Column: Connect With Me */}
+          <div>
+            <motion.h3
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.4 }}
+              className="text-xl font-bold font-[family-name:var(--font-space-grotesk)] text-gray-900 dark:text-white mb-4"
+            >
               Connect With Me
-            </h3>
-            <p className="text-gray-800 dark:text-gray-400">
-              Follow me on social media or reach out directly
-            </p>
-          </div>
+            </motion.h3>
 
-          {/* Social Icons */}
-          <div className="flex justify-center gap-4 mb-8">
-            {socialLinks.map((social) => (
-              <motion.a
-                key={social.label}
-                href={social.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                whileHover={{ scale: 1.1, y: -5 }}
-                whileTap={{ scale: 0.95 }}
-                className={`p-4 glass rounded-xl hover:text-white transition-smooth ${social.color}`}
-                aria-label={social.label}
+            <div className="space-y-3 mb-6">
+              {socialLinks.map((link, index) => (
+                <motion.a
+                  key={link.label}
+                  href={link.href}
+                  target={link.href.startsWith('http') ? '_blank' : undefined}
+                  rel={
+                    link.href.startsWith('http')
+                      ? 'noopener noreferrer'
+                      : undefined
+                  }
+                  initial={{ opacity: 0, x: 20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.4, delay: index * 0.1 }}
+                  className="glass p-4 rounded-xl flex items-center gap-4 w-full hover:border-emerald-500/50 transition-colors group"
+                >
+                  <link.icon
+                    className="text-emerald-500 flex-shrink-0"
+                    size={20}
+                  />
+                  <span className="text-gray-700 dark:text-gray-300 text-sm md:text-base">
+                    {link.label}
+                  </span>
+                  {link.href.startsWith('http') && (
+                    <ExternalLink
+                      size={16}
+                      className="ml-auto text-gray-400 group-hover:text-emerald-500 transition-colors flex-shrink-0"
+                    />
+                  )}
+                </motion.a>
+              ))}
+            </div>
+
+            {/* Download Resume Button */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.4, delay: 0.4 }}
+            >
+              <a
+                href="#"
+                className="btn-primary inline-flex items-center justify-center gap-2 w-full"
               >
-                <social.icon size={28} />
-              </motion.a>
-            ))}
+                <Download size={20} />
+                <span>Download Resume</span>
+              </a>
+            </motion.div>
           </div>
+        </div>
 
-          {/* Quick Contact CTA */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a
-              href="mailto:salman.dev@example.com"
-              className="btn-primary inline-flex items-center justify-center gap-2"
-            >
-              <Mail size={20} />
-              <span>Send Email</span>
-            </a>
-            <a
-              href="/resume.pdf"
-              download
-              className="btn-secondary inline-flex items-center justify-center gap-2"
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-              </svg>
-              <span>Download Resume</span>
-            </a>
+        {/* Languages Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="text-center"
+        >
+          <h3 className="text-lg font-bold font-[family-name:var(--font-space-grotesk)] text-gray-900 dark:text-white mb-4">
+            Languages
+          </h3>
+          <div className="flex flex-wrap justify-center gap-3">
+            {languages.map((lang) => (
+              <span key={lang} className="badge">
+                {lang}
+              </span>
+            ))}
           </div>
         </motion.div>
       </div>

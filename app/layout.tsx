@@ -13,31 +13,30 @@ const spaceGrotesk = Space_Grotesk({
 });
 
 export const metadata: Metadata = {
-  title: "Salman - Full-Stack Developer | Next.js, Nest.js, AWS Expert",
-  description: "Experienced Full-Stack Developer specializing in Next.js, React, Nest.js, Node.js, and AWS. Building scalable, elegant web applications with modern technologies.",
-  keywords: "Full-Stack Developer, Next.js, Nest.js, React, Node.js, AWS, TypeScript, Web Development, Software Engineer",
-  authors: [{ name: "Salman" }],
+  title: "Salman Butt — Senior Full Stack & Generative AI Engineer",
+  description: "Senior Full Stack Engineer with 7+ years building scalable platforms across Web3, IoT, SaaS, and Generative AI. Expert in React, Next.js, Node.js, NestJS, LangChain, LangGraph, and Kubernetes. 50+ projects delivered across 5 countries.",
+  keywords: "Senior Full Stack Engineer, Generative AI, LangChain, LangGraph, React, Next.js, Node.js, NestJS, Web3, IoT, Microservices, Kubernetes, TypeScript, Software Engineer",
+  authors: [{ name: "Salman Butt" }],
   openGraph: {
-    title: "Salman - Full-Stack Developer Portfolio",
-    description: "Building scalable, elegant web applications using Next.js, Nest.js, and AWS.",
+    title: "Salman Butt — Senior Full Stack & Generative AI Engineer",
+    description: "7+ years building scalable platforms across Web3, IoT, SaaS, and Generative AI. 50+ projects. 5 countries.",
     type: "website",
-    url: "https://yourusername.github.io",
+    url: "https://salman0butt.github.io/portfolio",
     images: [
       {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Salman - Full-Stack Developer"
+        alt: "Salman Butt — Senior Full Stack & Generative AI Engineer"
       }
     ]
   },
   twitter: {
     card: "summary_large_image",
-    title: "Salman - Full-Stack Developer",
-    description: "Building scalable, elegant web applications using Next.js, Nest.js, and AWS.",
+    title: "Salman Butt — Senior Full Stack & Generative AI Engineer",
+    description: "7+ years building scalable platforms across Web3, IoT, SaaS, and Generative AI.",
     images: ["/og-image.png"]
   },
-  viewport: "width=device-width, initial-scale=1",
   robots: "index, follow"
 };
 
@@ -54,6 +53,7 @@ export default function RootLayout({
       </head>
       <body
         className={`${inter.variable} ${spaceGrotesk.variable} antialiased`}
+        suppressHydrationWarning
       >
         {children}
       </body>
