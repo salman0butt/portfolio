@@ -74,9 +74,11 @@ export default function Hero() {
                   2000,
                   'Generative AI Engineer',
                   2000,
-                  'IoT Systems Builder',
+                  'Laravel & PHP Expert',
                   2000,
-                  'Microservices Specialist',
+                  'IoT & Real-Time Systems Builder',
+                  2000,
+                  'React & Next.js Developer',
                   2000,
                 ]}
                 wrapper="span"

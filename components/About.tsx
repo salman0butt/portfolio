@@ -2,17 +2,14 @@
 
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
-import { CheckCircle, Calendar, FolderGit2, Globe, Server, GraduationCap } from 'lucide-react';
+import { CheckCircle, Calendar, FolderGit2, Globe, Server, GraduationCap, Trophy } from 'lucide-react';
 
 const highlights = [
-  'Multiple production platforms at Permission.io serving thousands of global users',
-  '30-40% API response time improvement via query optimization & caching',
-  'Built conversational AI agents with LangChain, LangGraph & Google ADK',
-  'Real-time IoT pipelines: RabbitMQ, MQTT, InfluxDB at OffGrid Europe',
-  'Multi-tenant SaaS ERP using Laravel REST API & Vue.js for Middle East businesses',
-  '50+ full-stack projects: Laravel, WordPress, WooCommerce, Node.js across 5 countries',
-  'Deep PHP/Laravel expertise: REST APIs, multi-tenancy, payment gateways, admin panels',
-  'Employee of the Year 2020 — Digital MedieXpert (DMX), Norway',
+  'Reduced API latency by 30-40% across production platforms at Permission.io',
+  'Built multi-agent conversational AI with LangChain, LangGraph & Google ADK',
+  'Architected real-time IoT pipelines: RabbitMQ, MQTT, InfluxDB at OffGrid Europe',
+  'Multi-tenant SaaS ERP from scratch using Laravel REST API & Vue.js',
+  '50+ full-stack projects: Laravel, WordPress, WooCommerce, React, Next.js, Node.js',
 ];
 
 const stats = [
@@ -103,6 +100,29 @@ export default function About() {
             </ul>
           </motion.div>
         </div>
+
+        {/* Award Badge */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="flex justify-center mb-12"
+        >
+          <div className="glass rounded-2xl px-8 py-4 inline-flex items-center gap-4">
+            <div className="p-3 bg-amber-500/10 rounded-xl">
+              <Trophy className="w-7 h-7 text-amber-500" />
+            </div>
+            <div>
+              <p className="text-base font-bold text-gray-900 dark:text-white">
+                Employee of the Year 2020
+              </p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">
+                Digital MedieXpert (DMX) — Norway
+              </p>
+            </div>
+          </div>
+        </motion.div>
 
         {/* Stats Row */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16">

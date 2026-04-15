@@ -84,6 +84,12 @@ export default function Navbar() {
             >
               {dark ? <Sun size={18} /> : <Moon size={18} />}
             </button>
+            <a
+              href="mailto:salman0butt@gmail.com"
+              className="ml-2 px-4 py-2 rounded-lg bg-emerald-500 text-white text-sm font-semibold hover:bg-emerald-600 transition-colors shadow-md shadow-emerald-500/20"
+            >
+              Hire Me
+            </a>
           </div>
 
           {/* Mobile controls */}
@@ -130,6 +136,16 @@ export default function Navbar() {
                   {link.label}
                 </motion.a>
               ))}
+              <motion.a
+                href="mailto:salman0butt@gmail.com"
+                onClick={handleLinkClick}
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: navLinks.length * 0.05 }}
+                className="mt-2 px-4 py-2.5 rounded-lg bg-emerald-500 text-white text-center text-sm font-semibold hover:bg-emerald-600 transition-colors shadow-md shadow-emerald-500/20"
+              >
+                Hire Me
+              </motion.a>
             </div>
           </motion.div>
         )}
