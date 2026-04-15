@@ -2,7 +2,16 @@
 
 import { motion } from 'framer-motion';
 import { TypeAnimation } from 'react-type-animation';
-import { Github, Linkedin, Mail, Briefcase, Code, Globe, Zap } from 'lucide-react';
+import {
+  Github,
+  Linkedin,
+  Mail,
+  Briefcase,
+  Code,
+  Globe,
+  Zap,
+  ChevronDown,
+} from 'lucide-react';
 
 const container = {
   hidden: { opacity: 0 },
@@ -17,60 +26,37 @@ const item = {
   show: { opacity: 1, y: 0, transition: { duration: 0.5 } },
 };
 
-const floatingBadges = [
-  {
-    label: '7+ Years',
-    icon: Briefcase,
-    position: '-top-6 -left-10',
-    delay: 0,
-  },
-  {
-    label: '50+ Projects',
-    icon: Code,
-    position: '-top-6 -right-10',
-    delay: 0.2,
-  },
-  {
-    label: '5 Countries',
-    icon: Globe,
-    position: '-bottom-6 -left-10',
-    delay: 0.4,
-  },
-  {
-    label: '30-40% Faster APIs',
-    icon: Zap,
-    position: '-bottom-6 -right-10',
-    delay: 0.6,
-  },
+const stats = [
+  { label: '7+ Years', icon: Briefcase },
+  { label: '50+ Projects', icon: Code },
+  { label: '5 Countries', icon: Globe },
+  { label: '30-40% Faster APIs', icon: Zap },
 ];
 
 export default function Hero() {
   return (
-    <section id="hero" className="relative pt-32 pb-20 overflow-hidden">
+    <section id="hero" className="relative pt-28 pb-16 overflow-hidden">
+      {/* Animated mesh gradient background */}
+      <div className="hero-gradient" />
+
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
+        <div className="flex flex-col md:flex-row items-center gap-12 md:gap-16">
           {/* Left side - Text content */}
           <motion.div
-            className="flex-1 lg:max-w-[60%] text-center lg:text-left"
+            className="flex-1 md:max-w-[60%] text-center md:text-left"
             variants={container}
             initial="hidden"
             animate="show"
           >
-            {/* Availability badge */}
-            <motion.div variants={item} className="inline-flex items-center gap-2 mb-6">
-              <span className="badge">
-                <span className="relative flex h-2.5 w-2.5">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500" />
-                </span>
-                Available for Remote Opportunities
-              </span>
-            </motion.div>
+            {/* Section label */}
+            <motion.span variants={item} className="section-label">
+              Hello, I&apos;m
+            </motion.span>
 
             {/* Name */}
             <motion.h1
               variants={item}
-              className="font-[family-name:var(--font-space-grotesk)] text-5xl md:text-7xl font-bold text-gray-900 dark:text-white mb-4"
+              className="font-[family-name:var(--font-space-grotesk)] text-4xl md:text-6xl font-bold text-gray-900 dark:text-white mb-4"
             >
               Salman Butt
             </motion.h1>
@@ -100,15 +86,16 @@ export default function Hero() {
             {/* Tagline */}
             <motion.p
               variants={item}
-              className="text-lg text-gray-600 dark:text-gray-400 mb-8 max-w-xl mx-auto lg:mx-0"
+              className="text-lg text-gray-600 dark:text-gray-400 mb-8 max-w-xl mx-auto md:mx-0"
             >
-              I build products that scale, systems that hold, and AI that actually works.
+              I build products that scale, systems that hold, and AI that
+              actually works.
             </motion.p>
 
             {/* CTA buttons */}
             <motion.div
               variants={item}
-              className="flex flex-wrap justify-center lg:justify-start gap-4 mb-8"
+              className="flex flex-wrap justify-center md:justify-start gap-4 mb-8"
             >
               <a href="#projects" className="btn-primary">
                 View My Work
@@ -118,10 +105,34 @@ export default function Hero() {
               </a>
             </motion.div>
 
+            {/* Stats row */}
+            <motion.div
+              variants={item}
+              className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8"
+            >
+              {stats.map((stat) => {
+                const Icon = stat.icon;
+                return (
+                  <div
+                    key={stat.label}
+                    className="flex items-center gap-2 px-3 py-2 rounded-lg bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-white/10"
+                  >
+                    <Icon
+                      size={16}
+                      className="text-emerald-500 shrink-0"
+                    />
+                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300 whitespace-nowrap">
+                      {stat.label}
+                    </span>
+                  </div>
+                );
+              })}
+            </motion.div>
+
             {/* Social links */}
             <motion.div
               variants={item}
-              className="flex justify-center lg:justify-start gap-4"
+              className="flex justify-center md:justify-start gap-4"
             >
               <a
                 href="https://github.com/salman0butt"
@@ -151,43 +162,103 @@ export default function Hero() {
             </motion.div>
           </motion.div>
 
-          {/* Right side - Avatar card with floating badges */}
+          {/* Right side - Code terminal mockup */}
           <motion.div
-            className="hidden lg:flex flex-1 justify-center items-center"
+            className="hidden md:flex flex-1 justify-center items-center"
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6, delay: 0.3 }}
           >
-            <div className="relative">
-              {/* Main avatar card */}
-              <div className="w-72 h-72 rounded-3xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-2xl shadow-emerald-500/20">
-                <span className="font-[family-name:var(--font-space-grotesk)] text-8xl font-bold text-white/90">
-                  SB
+            <div className="code-terminal w-full max-w-md">
+              {/* Terminal bar */}
+              <div className="code-terminal-bar">
+                <div
+                  className="code-terminal-dot"
+                  style={{ background: '#ef4444' }}
+                />
+                <div
+                  className="code-terminal-dot"
+                  style={{ background: '#eab308' }}
+                />
+                <div
+                  className="code-terminal-dot"
+                  style={{ background: '#22c55e' }}
+                />
+                <span className="ml-3 text-xs text-gray-400 font-mono">
+                  salman.ts
                 </span>
               </div>
 
-              {/* Floating stat badges */}
-              {floatingBadges.map((badge, i) => {
-                const Icon = badge.icon;
-                return (
-                  <motion.div
-                    key={badge.label}
-                    className={`absolute ${badge.position} ${i % 2 === 0 ? 'animate-float' : ''}`}
-                    initial={{ opacity: 0, scale: 0 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.4, delay: 0.6 + badge.delay }}
-                  >
-                    <div className="glass flex items-center gap-2 px-4 py-2.5 rounded-xl shadow-lg text-sm font-medium text-gray-800 dark:text-gray-200 whitespace-nowrap">
-                      <Icon size={16} className="text-emerald-500" />
-                      {badge.label}
-                    </div>
-                  </motion.div>
-                );
-              })}
+              {/* Code content */}
+              <div className="p-5 font-mono text-sm leading-relaxed">
+                <div>
+                  <span className="text-violet-400">const</span>{' '}
+                  <span className="text-sky-400">salman</span>{' '}
+                  <span className="text-gray-400">=</span>{' '}
+                  <span className="text-gray-400">{'{'}</span>
+                </div>
+                <div className="pl-6">
+                  <span className="text-sky-400">role</span>
+                  <span className="text-gray-400">: </span>
+                  <span className="text-emerald-400">
+                    &quot;Senior Full Stack &amp; GenAI Engineer&quot;
+                  </span>
+                  <span className="text-gray-400">,</span>
+                </div>
+                <div className="pl-6">
+                  <span className="text-sky-400">experience</span>
+                  <span className="text-gray-400">: </span>
+                  <span className="text-emerald-400">
+                    &quot;7+ years&quot;
+                  </span>
+                  <span className="text-gray-400">,</span>
+                </div>
+                <div className="pl-6">
+                  <span className="text-sky-400">projects</span>
+                  <span className="text-gray-400">: </span>
+                  <span className="text-emerald-400">
+                    &quot;50+&quot;
+                  </span>
+                  <span className="text-gray-400">,</span>
+                </div>
+                <div className="pl-6">
+                  <span className="text-sky-400">countries</span>
+                  <span className="text-gray-400">: </span>
+                  <span className="text-amber-400">5</span>
+                  <span className="text-gray-400">,</span>
+                </div>
+                <div className="pl-6">
+                  <span className="text-sky-400">faster_apis</span>
+                  <span className="text-gray-400">: </span>
+                  <span className="text-emerald-400">
+                    &quot;30-40%&quot;
+                  </span>
+                </div>
+                <div>
+                  <span className="text-gray-400">{'}'}</span>
+                  <span className="text-gray-400">;</span>
+                </div>
+              </div>
             </div>
           </motion.div>
         </div>
       </div>
+
+      {/* Scroll indicator */}
+      <motion.div
+        className="flex justify-center mt-12"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.2, duration: 0.6 }}
+      >
+        <a
+          href="#skills"
+          className="text-gray-400 dark:text-gray-500 hover:text-emerald-500 dark:hover:text-emerald-400 transition-colors"
+          aria-label="Scroll down"
+        >
+          <ChevronDown size={28} className="animate-scroll-down" />
+        </a>
+      </motion.div>
     </section>
   );
 }

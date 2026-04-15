@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import {
   Monitor,
@@ -26,7 +27,7 @@ const categories: SkillCategory[] = [
   {
     name: 'Frontend & Mobile',
     icon: Monitor,
-    color: 'text-sky-500',
+    color: 'text-emerald-500',
     skills: [
       'React.js', 'Next.js', 'Vue.js', 'Nuxt.js', 'React Native', 'TypeScript',
       'JavaScript ES6+', 'jQuery', 'Tailwind CSS', 'Sass', 'Bootstrap', 'Redux',
@@ -36,7 +37,7 @@ const categories: SkillCategory[] = [
   {
     name: 'Backend',
     icon: Server,
-    color: 'text-violet-500',
+    color: 'text-emerald-500',
     skills: [
       'Node.js', 'Express.js', 'NestJS', 'PHP', 'Laravel', 'CodeIgniter',
       'REST API', 'GraphQL', 'WebSockets', 'JWT', 'OAuth2', 'OOP',
@@ -56,7 +57,7 @@ const categories: SkillCategory[] = [
   {
     name: 'System Design',
     icon: Network,
-    color: 'text-amber-500',
+    color: 'text-blue-500',
     skills: [
       'Distributed Systems', 'Microservices', 'Event-Driven Architecture', 'CQRS',
       'Serverless', 'Load Balancing', 'Redis Caching', 'Sharding',
@@ -66,7 +67,7 @@ const categories: SkillCategory[] = [
   {
     name: 'Messaging & IoT',
     icon: Radio,
-    color: 'text-rose-500',
+    color: 'text-blue-500',
     skills: [
       'Apache Kafka', 'RabbitMQ', 'MQTT', 'Socket.IO', 'gRPC', 'Pub/Sub',
       'Server-Sent Events', 'Multi-Tenancy SaaS',
@@ -75,7 +76,7 @@ const categories: SkillCategory[] = [
   {
     name: 'Databases',
     icon: Database,
-    color: 'text-cyan-500',
+    color: 'text-blue-500',
     skills: [
       'MySQL', 'PostgreSQL', 'MongoDB', 'Redis', 'InfluxDB', 'Firebase',
       'SQL Server', 'Mongoose',
@@ -84,7 +85,7 @@ const categories: SkillCategory[] = [
   {
     name: 'DevOps & Cloud',
     icon: Cloud,
-    color: 'text-indigo-500',
+    color: 'text-amber-500',
     skills: [
       'Docker', 'Kubernetes', 'AWS (EC2, S3, Lambda, SQS, RDS)', 'Digital Ocean',
       'CI/CD', 'GitHub Actions', 'Linux', 'Nginx', 'PM2', 'SSH', 'Webpack',
@@ -93,7 +94,7 @@ const categories: SkillCategory[] = [
   {
     name: 'Integrations',
     icon: Plug,
-    color: 'text-orange-500',
+    color: 'text-amber-500',
     skills: [
       'Stripe', 'PayPal', 'Paytabs', 'Braintree', 'Pusher', 'PostHog', 'GA4',
       'GTM', 'ShuftiPro (KYC)', 'Moralis (Web3)', 'WordPress', 'WooCommerce',
@@ -103,7 +104,7 @@ const categories: SkillCategory[] = [
   {
     name: 'Testing',
     icon: TestTube,
-    color: 'text-teal-500',
+    color: 'text-amber-500',
     skills: [
       'Jest', 'Cypress', 'PHPUnit', 'Laravel Dusk', 'TDD', 'BDD',
       'Unit Testing', 'Integration Testing', 'E2E Testing',
@@ -112,7 +113,7 @@ const categories: SkillCategory[] = [
   {
     name: 'Workflow & Tools',
     icon: GitBranch,
-    color: 'text-fuchsia-500',
+    color: 'text-amber-500',
     skills: [
       'Git', 'GitHub', 'GitLab', 'Bitbucket', 'Postman', 'Insomnia',
       'Agile/Scrum', 'Jira', 'RBAC', 'Code Review',
@@ -121,6 +122,9 @@ const categories: SkillCategory[] = [
 ];
 
 export default function Skills() {
+  const [showAll, setShowAll] = useState(false);
+  const visibleCategories = showAll ? categories : categories.slice(0, 6);
+
   return (
     <section id="skills" className="py-20 px-4 section-alt">
       <div className="max-w-6xl mx-auto">
@@ -132,6 +136,7 @@ export default function Skills() {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
+          <span className="section-label">EXPERTISE</span>
           <h2 className="text-4xl md:text-5xl font-bold font-[family-name:var(--font-space-grotesk)] gradient-text mb-4">
             Technical Skills
           </h2>
@@ -140,7 +145,7 @@ export default function Skills() {
 
         {/* Skills Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {categories.map((category, index) => (
+          {visibleCategories.map((category, index) => (
             <motion.div
               key={category.name}
               initial={{ opacity: 0, y: 30 }}
@@ -173,6 +178,22 @@ export default function Skills() {
             </motion.div>
           ))}
         </div>
+
+        {categories.length > 6 && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            className="text-center mt-8"
+          >
+            <button
+              onClick={() => setShowAll(!showAll)}
+              className="btn-secondary text-sm px-6 py-2"
+            >
+              {showAll ? 'Show Less' : `Show All ${categories.length} Categories`}
+            </button>
+          </motion.div>
+        )}
       </div>
     </section>
   );

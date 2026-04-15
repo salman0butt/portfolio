@@ -101,7 +101,7 @@ export default function Footer() {
         {/* Bottom bar */}
         <div className="mt-12 pt-8 border-t border-gray-800 text-center">
           <p className="text-sm text-gray-500">
-            &copy; 2024 Salman Butt. Built with Next.js & Tailwind CSS.
+            &copy; {new Date().getFullYear()} Salman Butt. Built with Next.js & Tailwind CSS.
           </p>
         </div>
       </motion.div>

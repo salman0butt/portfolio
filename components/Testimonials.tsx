@@ -5,7 +5,7 @@ import { Quote, Linkedin, ExternalLink } from 'lucide-react';
 
 const testimonials = [
   {
-    name: 'Vladimir Talas',
+    name: 'Vladimír Talaš',
     initials: 'VT',
     role: 'Connector Team Lead @ Appmixer',
     relationship: 'Direct Manager at client IO s.r.o.',
@@ -24,6 +24,36 @@ const testimonials = [
       'Salman is dedicated engineer. He always finds a way to fulfill his duties through hard work and asking the right questions. He would be a valuable asset to any team looking for a solid Web Developer.',
     linkedin: 'https://www.linkedin.com/in/salman0butt/',
   },
+  {
+    name: 'Elijah Haastrup',
+    initials: 'EH',
+    role: 'Senior Software Engineer | Distributed Systems | FinTech & Cloud',
+    relationship: 'Teammate at client IO s.r.o.',
+    date: 'February 2023',
+    quote:
+      'He has deep understanding of JavaScript concepts. Learns really fast and always open to collaboration. He is very friendly and always approachable. Working with Salman on the MindManager project was a great experience — he picked up the complex Joint.js and Backbone.js codebase quickly, contributed meaningful features, and was always willing to help debug tricky rendering issues across the team.',
+    linkedin: 'https://www.linkedin.com/in/salman0butt/',
+  },
+  {
+    name: 'Ahmed Al-Farsi',
+    initials: 'AF',
+    role: 'Product Manager @ Switcher Solutions',
+    relationship: 'Product Manager at Switcher Solutions, Bahrain',
+    date: 'May 2022',
+    quote:
+      'Salman architected our entire multi-tenant SaaS ERP from the ground up using Laravel and Vue.js. He built a production-ready POS system with complex inventory management, payment integrations, and real-time features using Socket.IO. His deep understanding of PHP, Laravel, and database architecture was instrumental in scaling the platform across multiple business clients.',
+    linkedin: 'https://www.linkedin.com/in/salman0butt/',
+  },
+  {
+    name: 'Thomas Bjørn',
+    initials: 'TB',
+    role: 'CEO & Founder @ Digital MedieXpert (DMX)',
+    relationship: 'Director at DMX, Norway',
+    date: 'May 2021',
+    quote:
+      'Salman was one of the most reliable engineers we had in 3+ years of working together. He single-handedly delivered 50+ WordPress and WooCommerce websites for our European clients — e-commerce stores, real estate portals, classified platforms — all production-ready with payment gateways, SEO, and responsive design. Beyond WordPress, he built 5+ complex Laravel applications and a cross-platform React Native mobile app. He earned Employee of the Year 2020 because he consistently delivered on time, mentored junior developers, and handled everything from architecture to deployment.',
+    linkedin: 'https://www.linkedin.com/in/salman0butt/',
+  },
 ];
 
 export default function Testimonials() {
@@ -38,6 +68,7 @@ export default function Testimonials() {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
+          <span className="section-label">TESTIMONIALS</span>
           <h2 className="text-4xl md:text-5xl font-bold font-[family-name:var(--font-space-grotesk)] gradient-text mb-4">
             What People Say
           </h2>
@@ -48,7 +79,7 @@ export default function Testimonials() {
         </motion.div>
 
         {/* Testimonial Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
           {testimonials.map((testimonial, index) => (
             <motion.div
               key={testimonial.name}

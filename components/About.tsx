@@ -9,10 +9,10 @@ const highlights = [
   '30-40% API response time improvement via query optimization & caching',
   'Built conversational AI agents with LangChain, LangGraph & Google ADK',
   'Real-time IoT pipelines: RabbitMQ, MQTT, InfluxDB at OffGrid Europe',
-  'Multi-tenant SaaS ERP for Middle East retail businesses',
-  '50+ projects delivered across USA, Germany, Norway, Czech Republic, Bahrain',
-  '50+ WordPress & WooCommerce solutions for European clients',
-  'Employee of the Year 2020 — Digital MedieXpert, Norway',
+  'Multi-tenant SaaS ERP using Laravel REST API & Vue.js for Middle East businesses',
+  '50+ full-stack projects: Laravel, WordPress, WooCommerce, Node.js across 5 countries',
+  'Deep PHP/Laravel expertise: REST APIs, multi-tenancy, payment gateways, admin panels',
+  'Employee of the Year 2020 — Digital MedieXpert (DMX), Norway',
 ];
 
 const stats = [
@@ -39,6 +39,7 @@ export default function About() {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
+          <span className="section-label">ABOUT ME</span>
           <h2 className="text-4xl md:text-5xl font-bold font-[family-name:var(--font-space-grotesk)] gradient-text mb-4">
             About Me
           </h2>
@@ -54,7 +55,7 @@ export default function About() {
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            <p className="text-lg leading-relaxed text-gray-700 dark:text-gray-300 mb-4">
+            <p className="text-base leading-relaxed text-gray-700 dark:text-gray-300 mb-4">
               Senior Full Stack Engineer with 7+ years of experience building scalable,
               high-performance web and mobile applications across IoT, SaaS ERP, and
               Generative AI platforms. Proven track record of improving API response times by

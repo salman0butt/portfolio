@@ -71,6 +71,7 @@ export default function Contact() {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
+          <span className="section-label">GET IN TOUCH</span>
           <h2 className="text-4xl md:text-5xl font-bold font-[family-name:var(--font-space-grotesk)] gradient-text mb-4">
             Let&apos;s Work Together
           </h2>
@@ -173,9 +174,7 @@ export default function Contact() {
               viewport={{ once: true }}
               transition={{ duration: 0.4, delay: 0.4 }}
             >
-              <a
-                href="#"
-                className="btn-primary inline-flex items-center justify-center gap-2 w-full"
+              <a href="/Salman_Butt_Resume.pdf" download className="btn-primary inline-flex items-center justify-center gap-2 w-full"
               >
                 <Download size={20} />
                 <span>Download Resume</span>

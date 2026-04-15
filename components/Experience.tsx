@@ -131,6 +131,7 @@ export default function Experience() {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
+          <span className="section-label">CAREER</span>
           <h2 className="text-4xl md:text-5xl font-bold font-[family-name:var(--font-space-grotesk)] gradient-text mb-4">
             Work Experience
           </h2>

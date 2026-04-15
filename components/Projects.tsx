@@ -89,14 +89,40 @@ const projects = [
   {
     title: 'NorgsHandle — Real Estate & Jobs Portal',
     gradient: 'from-amber-500 to-orange-500',
-    category: 'WordPress',
+    category: 'Laravel',
     tech: [
-      'Laravel', 'WordPress', 'WooCommerce', 'PHP', 'MySQL', 'JavaScript', 'jQuery', 'Bootstrap',
+      'Laravel', 'PHP', 'MySQL', 'JavaScript', 'jQuery', 'Bootstrap', 'REST API', 'Postal API',
     ],
     highlights: [
-      'Real estate & jobs classified portal with advanced map-based search, filters, and postal API integration',
-      'Built 50+ WordPress & WooCommerce projects: e-commerce stores, car spare parts shops, and business portals',
-      'Full-featured admin panels, payment gateways (Stripe, PayPal), SEO-optimised, and responsive cross-browser',
+      'Real estate & jobs classified portal with real-time chat, notifications, and advanced map-based search',
+      'Postal API integration, favorites system, ad/banner management, and advanced admin panel',
+      'Built with Laravel MVC, RESTful APIs, and responsive cross-browser design',
+    ],
+  },
+  {
+    title: 'E-Commerce Platform Suite — 50+ WordPress Projects',
+    gradient: 'from-indigo-500 to-purple-500',
+    category: 'WordPress',
+    tech: [
+      'WordPress', 'WooCommerce', 'PHP', 'MySQL', 'JavaScript', 'jQuery', 'REST API', 'Stripe', 'PayPal',
+    ],
+    highlights: [
+      'Delivered 50+ production WordPress & WooCommerce stores for European clients at DMX Norway',
+      'E-commerce stores, car spare parts shops, social networks, and business portals with payment gateways',
+      'Custom themes, plugins, SEO optimization, multi-category product management, and powerful admin panels',
+    ],
+  },
+  {
+    title: 'Eaksept — E-Accounting Web Application',
+    gradient: 'from-teal-500 to-emerald-500',
+    category: 'Laravel',
+    tech: [
+      'Laravel', 'PHP', 'Vue.js', 'MySQL', 'REST API', 'Bootstrap', 'jQuery',
+    ],
+    highlights: [
+      'Full-featured e-accounting application for IT companies to manage resources and client contracts',
+      'Contract proposal system, dynamic resource management, invoicing, and financial reporting',
+      'Built with Laravel REST API backend and Vue.js frontend with role-based access control',
     ],
   },
 ];
@@ -121,6 +147,7 @@ export default function Projects() {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
+          <span className="section-label">PORTFOLIO</span>
           <h2 className="text-4xl md:text-5xl font-bold font-[family-name:var(--font-space-grotesk)] gradient-text mb-4">
             Key Projects
           </h2>
