@@ -5,12 +5,11 @@ import {
   Mail,
   Phone,
   MapPin,
-  Github,
-  Linkedin,
   Download,
   ExternalLink,
   Send,
 } from 'lucide-react';
+import { Github, Linkedin } from './icons';
 
 const contactInfo = [
   {

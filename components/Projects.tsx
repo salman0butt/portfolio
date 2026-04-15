@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Github } from 'lucide-react';
+import { Github } from './icons';
 
 const projects = [
   {

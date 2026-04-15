@@ -2,7 +2,8 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Quote, Linkedin, ExternalLink, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Quote, ExternalLink, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Linkedin } from './icons';
 
 const testimonials = [
   {

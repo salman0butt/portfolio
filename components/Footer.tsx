@@ -1,6 +1,7 @@
 'use client';
 
-import { Github, Linkedin, Mail, ArrowUp, Send } from 'lucide-react';
+import { Mail, ArrowUp, Send } from 'lucide-react';
+import { Github, Linkedin } from './icons';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 

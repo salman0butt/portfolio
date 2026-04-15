@@ -3,8 +3,6 @@
 import { motion } from 'framer-motion';
 import { TypeAnimation } from 'react-type-animation';
 import {
-  Github,
-  Linkedin,
   Mail,
   Briefcase,
   Code,
@@ -12,6 +10,7 @@ import {
   Zap,
   ChevronDown,
 } from 'lucide-react';
+import { Github, Linkedin } from './icons';
 
 const container = {
   hidden: { opacity: 0 },
@@ -74,11 +73,11 @@ export default function Hero() {
                   2000,
                   'Generative AI Engineer',
                   2000,
-                  'Laravel & PHP Expert',
+                  'Backend Architect',
+                  2000,
+                  'Frontend Developer',
                   2000,
                   'IoT & Real-Time Systems Builder',
-                  2000,
-                  'React & Next.js Developer',
                   2000,
                 ]}
                 wrapper="span"
