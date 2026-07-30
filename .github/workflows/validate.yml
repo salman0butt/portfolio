@@ -4,7 +4,7 @@ on:
   pull_request:
     branches: [main]
   push:
-    branches: [feat/portfolio-senior-redesign]
+    branches: [main]
 
 permissions:
   contents: read
