@@ -1,238 +1,176 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { MapPin, Calendar, Trophy, TrendingUp, Globe } from 'lucide-react';
+import { MapPin, Calendar, Trophy } from 'lucide-react';
 
 const experiences = [
   {
     role: 'Software Engineer',
     company: 'Permission.io',
-    type: 'Full-time',
     period: 'Aug 2023 – Present',
-    location: 'United States — Remote',
-    description:
-      'Reduced API latency by 30-40% and shipped multiple production platforms serving thousands of daily active users across Web3 and AI-powered products.',
-    achievements: [
-      'Resolved critical N+1 query bottlenecks, cutting API response times from ~500ms to ~300ms across all platform services',
-      'Built a multi-agent conversational AI platform using LangChain, LangGraph, and Google ADK with real-time streaming',
-      'Deployed containerised microservices on Kubernetes with zero-downtime rollouts and RabbitMQ async processing',
-      'Developed Chrome browser extension with AI widgets, Web3 wallet ops, and secure content script communication',
+    location: 'United States · Remote',
+    impact:
+      'Building and improving production platforms across full-stack product work, Web3 flows, backend services, and AI-powered experiences.',
+    outcomes: [
+      'Investigated N+1 query bottlenecks and other hot paths, reducing representative API responses from roughly 500ms to roughly 300ms and improving key endpoints by about 30–40%.',
+      'Shipped features across React/Next.js, NestJS, PostgreSQL, Redis, RabbitMQ, Kubernetes, browser-extension surfaces, third-party integrations, and conversational AI workflows.',
     ],
-    tech: ['React', 'Next.js', 'NestJS', 'TypeScript', 'LangChain', 'Kubernetes', 'RabbitMQ', 'PostgreSQL'],
+    tech: ['React', 'Next.js', 'NestJS', 'TypeScript', 'PostgreSQL', 'Redis', 'RabbitMQ', 'Kubernetes'],
   },
   {
     role: 'Senior Full Stack Developer',
     company: 'OffGrid Europe',
-    type: 'Part-time · Concurrent',
     period: 'Jul 2023 – Jun 2024',
-    location: 'Germany — Remote',
-    description:
-      'Architected real-time IoT monitoring software processing telemetry from embedded devices across distributed solar energy installations in remote environments.',
-    achievements: [
-      'Built high-throughput data pipelines: InfluxDB for time-series analytics, RabbitMQ/MQTT for device communication',
-      'Developed Next.js dashboards with live charts, device status monitoring, and customisable alert systems',
-      'Engineered device control systems for automation and remote management of distributed IoT hardware',
+    location: 'Germany · Remote · Part-time',
+    impact:
+      'Worked on software connecting distributed solar-energy hardware with monitoring, analytics, alerting, and remote-control workflows.',
+    outcomes: [
+      'Built telemetry and device-communication flows using RabbitMQ, MQTT, InfluxDB, Node.js/Laravel services, and relational persistence.',
+      'Developed Next.js dashboards for live device status, time-series visualisation, operational alerts, and remote management actions.',
     ],
-    tech: ['Next.js', 'React', 'Node.js', 'Laravel', 'RabbitMQ', 'MQTT', 'InfluxDB', 'PostgreSQL'],
+    tech: ['Next.js', 'Node.js', 'Laravel', 'RabbitMQ', 'MQTT', 'InfluxDB', 'PostgreSQL'],
   },
   {
     role: 'Full Stack JavaScript Engineer',
-    company: 'client IO s.r.o. (Corel Corporation)',
-    type: 'Full-time',
+    company: 'client IO s.r.o. · Corel Corporation projects',
     period: 'Jun 2022 – May 2023',
-    location: 'Prague, Czech Republic — Remote',
-    description:
-      'Contributed to MindManager — a large-scale enterprise mind mapping app used by global corporations — handling complex canvas rendering with 1000+ node diagrams.',
-    achievements: [
-      'Built responsive UI components and new feature modules for MindManager using pure JavaScript, Joint.js, and Backbone.js',
-      'Developed features for AppMixer (workflow automation) and Joint.js/Rappid (diagramming framework for ETL/IT tools)',
-      'Conducted daily code reviews, resolved complex rendering bugs, and maintained WCAG cross-browser compatibility',
+    location: 'Prague, Czech Republic · Remote',
+    impact:
+      'Contributed to mature enterprise JavaScript products where correctness, rendering performance, accessibility, and safe change mattered at scale.',
+    outcomes: [
+      'Delivered features and fixes for MindManager using JavaScript, Backbone.js, and Joint.js, including complex canvas behaviour with large diagrams.',
+      'Contributed to Appmixer and JointJS/Rappid-related work, participated in code review, and resolved cross-browser and rendering issues in established codebases.',
     ],
-    tech: ['JavaScript', 'Node.js', 'Backbone.js', 'Joint.js', 'Docker', 'MySQL', 'Git'],
+    tech: ['JavaScript', 'Backbone.js', 'Joint.js', 'Node.js', 'Docker', 'MySQL'],
   },
   {
     role: 'Full Stack Developer',
     company: 'Switcher Solutions',
-    type: 'Full-time',
     period: 'May 2021 – May 2022',
-    location: 'Bahrain — Remote',
-    description:
-      'Architected a multi-tenant SaaS ERP from scratch, onboarding 50+ retail businesses across the Middle East on a single-instance platform.',
-    achievements: [
-      'Built the full ERP with Laravel REST API + Vue.js SPA: POS, inventory, multi-attribute products, and payment processing',
-      'Integrated Stripe, PayPal, AWS S3, Cloudinary, and Socket.IO for real-time order tracking',
-      'Mentored junior developers in Laravel and JavaScript; implemented TDD with Cypress, Jest, and PHPUnit',
+    location: 'Bahrain · Remote',
+    impact:
+      'Architected and built a multi-tenant ERP/POS platform used by 50+ retail and service businesses across the Middle East.',
+    outcomes: [
+      'Built Laravel REST APIs and a Vue.js application covering POS, inventory, multi-attribute products, payments, media, and role-based workflows.',
+      'Integrated Stripe, PayPal, AWS S3, Cloudinary, Socket.IO, Redis, automated testing, and deployment workflows while mentoring junior developers.',
     ],
-    tech: ['Laravel', 'Vue.js', 'PHP', 'MySQL', 'Socket.IO', 'Redis', 'AWS', 'Jest'],
+    tech: ['Laravel', 'Vue.js', 'MySQL', 'Redis', 'Socket.IO', 'AWS', 'Jest', 'Cypress'],
   },
   {
     role: 'Full Stack Developer',
     company: 'Digital MedieXpert (DMX)',
-    type: 'Full-time',
     period: 'Jan 2018 – May 2021',
-    location: 'Norway — Remote',
+    location: 'Norway · Remote',
     badge: 'Employee of the Year 2020',
-    description:
-      'Single-handedly delivered 50+ production web projects for European clients — e-commerce stores, real estate portals, social networks, ERP systems, and a React Native mobile app.',
-    achievements: [
-      'Built 50+ WordPress/WooCommerce stores with custom themes, plugins, payment gateways (Stripe, PayPal), and SEO',
-      'Developed 5+ complex Laravel applications: NorgsHandle (real estate portal), Koran (audio app), Eaksept (e-accounting)',
-      'Built real-time features with Socket.IO/WebSockets and managed deployments on AWS, Heroku, and Digital Ocean',
+    impact:
+      'Delivered a broad portfolio of production web projects for European clients, building the end-to-end ownership habits that still shape how I work today.',
+    outcomes: [
+      'Delivered 50+ WordPress/WooCommerce sites and 5+ Laravel applications spanning e-commerce, real estate, accounting, business portals, and custom integrations.',
+      'Handled application development, payments, real-time features, responsive UI, SEO, admin tooling, deployments, maintenance, and client-driven iteration.',
     ],
     tech: ['Laravel', 'WordPress', 'WooCommerce', 'Vue.js', 'PHP', 'Node.js', 'React Native', 'MySQL'],
   },
 ];
 
-const highlightItems = [
-  { icon: Trophy, label: 'Employee of the Year 2020' },
-  { icon: TrendingUp, label: '30-40% API Performance Boost' },
-  { icon: Globe, label: '50+ Projects · 5 Countries' },
-];
-
 export default function Experience() {
   return (
-    <section id="experience" className="py-20 px-4 relative overflow-hidden section-alt">
-      <div className="absolute top-1/2 right-0 w-96 h-96 bg-green-500 rounded-full blur-3xl opacity-5" />
+    <section id="experience" className="py-20 px-4 relative overflow-hidden">
+      <div className="absolute top-1/3 right-0 w-96 h-96 bg-emerald-500 rounded-full blur-3xl opacity-5" />
 
-      <div className="max-w-6xl mx-auto">
-        {/* Section Header */}
+      <div className="max-w-5xl mx-auto">
         <motion.div
-          initial={{ opacity: 0, y: 40 }}
+          initial={{ opacity: 0, y: 32 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-14"
+          transition={{ duration: 0.55 }}
+          className="text-center mb-12"
         >
-          <span className="section-label">CAREER</span>
+          <span className="section-label">EXPERIENCE</span>
           <h2 className="text-4xl md:text-5xl font-bold font-[family-name:var(--font-space-grotesk)] gradient-text mb-4">
-            Work Experience
+            Selected production experience
           </h2>
           <div className="section-divider" />
+          <p className="text-base md:text-lg text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
+            Roles where I owned meaningful engineering work across product, architecture,
+            implementation, debugging, performance, and delivery.
+          </p>
         </motion.div>
 
-        {/* Timeline */}
         <div className="relative">
-          <div className="absolute left-6 lg:left-1/2 top-0 bottom-0 w-0.5 bg-gradient-to-b from-emerald-500 via-emerald-400 to-emerald-300" />
+          <div className="absolute left-4 md:left-5 top-4 bottom-4 w-px bg-gradient-to-b from-emerald-500 via-emerald-400/60 to-transparent" />
 
-          <div className="space-y-10">
-            {experiences.map((exp, index) => {
-              const isLeft = index % 2 === 0;
+          <div className="space-y-5">
+            {experiences.map((exp, index) => (
+              <motion.article
+                key={`${exp.company}-${exp.period}`}
+                initial={{ opacity: 0, x: 18 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, amount: 0.15 }}
+                transition={{ duration: 0.42, delay: index * 0.05 }}
+                className="relative pl-11 md:pl-14"
+              >
+                <span className="absolute left-[11px] md:left-[15px] top-8 block w-3 h-3 rounded-full bg-emerald-500 ring-4 ring-emerald-500/15 z-10" />
 
-              return (
-                <motion.div
-                  key={exp.company}
-                  initial={{ opacity: 0, y: 40 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: index * 0.08 }}
-                  className="relative"
-                >
-                  {/* Timeline dot */}
-                  <div className="absolute left-6 lg:left-1/2 -translate-x-1/2 top-8 z-10">
-                    <span className="block w-4 h-4 rounded-full bg-emerald-500 ring-4 ring-emerald-500/20" />
-                  </div>
-
-                  {/* Card */}
-                  <div
-                    className={`ml-16 lg:ml-0 lg:w-[calc(50%-2rem)] ${
-                      isLeft ? 'lg:mr-auto lg:pr-4' : 'lg:ml-auto lg:pl-4'
-                    }`}
-                  >
-                    <div className="glass p-6 rounded-2xl">
-                      {/* Role — PRIMARY */}
-                      <h3 className="text-lg font-bold text-gray-900 dark:text-white font-[family-name:var(--font-space-grotesk)] mb-1">
+                <div className="glass rounded-2xl p-6 md:p-7">
+                  <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-3 mb-4">
+                    <div>
+                      <h3 className="text-xl md:text-2xl font-bold font-[family-name:var(--font-space-grotesk)] text-gray-900 dark:text-white">
                         {exp.role}
                       </h3>
-
-                      {/* Company + type */}
-                      <p className="text-emerald-600 dark:text-emerald-400 font-semibold text-sm mb-1">
+                      <p className="text-emerald-600 dark:text-emerald-400 font-semibold mt-1">
                         {exp.company}
-                        <span className="text-gray-400 dark:text-gray-500 font-normal"> · {exp.type}</span>
                       </p>
-
-                      {/* Date + location row */}
-                      <div className="flex flex-wrap items-center gap-3 text-xs text-gray-500 dark:text-gray-400 mb-3">
-                        <span className="flex items-center gap-1">
-                          <Calendar size={12} />
-                          {exp.period}
-                        </span>
-                        <span className="flex items-center gap-1">
-                          <MapPin size={12} />
-                          {exp.location}
-                        </span>
-                      </div>
-
-                      {/* Award badge */}
-                      {'badge' in exp && exp.badge && (
-                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800 text-xs font-bold mb-3">
-                          <Trophy size={12} />
-                          {exp.badge}
-                        </div>
-                      )}
-
-                      {/* Description — impact first */}
-                      <p className="text-sm text-gray-700 dark:text-gray-300 mb-4 leading-relaxed">
-                        {exp.description}
-                      </p>
-
-                      {/* Achievements */}
-                      <div className="space-y-2 mb-4">
-                        {exp.achievements.map((item) => (
-                          <div
-                            key={item}
-                            className="flex items-start gap-2 text-sm text-gray-600 dark:text-gray-400"
-                          >
-                            <span className="text-emerald-500 mt-1 shrink-0 text-[10px]">&#9679;</span>
-                            <span>{item}</span>
-                          </div>
-                        ))}
-                      </div>
-
-                      {/* Tech pills — max 8 */}
-                      <div className="flex flex-wrap gap-1.5">
-                        {exp.tech.map((t) => (
-                          <span
-                            key={t}
-                            className="px-2.5 py-0.5 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-full text-xs font-medium"
-                          >
-                            {t}
-                          </span>
-                        ))}
-                      </div>
+                    </div>
+                    <div className="text-xs text-gray-500 dark:text-gray-400 md:text-right space-y-1">
+                      <span className="flex md:justify-end items-center gap-1.5">
+                        <Calendar size={13} />
+                        {exp.period}
+                      </span>
+                      <span className="flex md:justify-end items-center gap-1.5">
+                        <MapPin size={13} />
+                        {exp.location}
+                      </span>
                     </div>
                   </div>
-                </motion.div>
-              );
-            })}
+
+                  {'badge' in exp && exp.badge && (
+                    <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800 text-xs font-bold mb-4">
+                      <Trophy size={12} />
+                      {exp.badge}
+                    </div>
+                  )}
+
+                  <p className="text-base leading-relaxed text-gray-700 dark:text-gray-300 mb-4">
+                    {exp.impact}
+                  </p>
+
+                  <div className="space-y-2.5 mb-5">
+                    {exp.outcomes.map((outcome) => (
+                      <div
+                        key={outcome}
+                        className="flex items-start gap-2.5 text-sm leading-relaxed text-gray-600 dark:text-gray-400"
+                      >
+                        <span className="text-emerald-500 mt-1 shrink-0">●</span>
+                        <span>{outcome}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="flex flex-wrap gap-1.5">
+                    {exp.tech.map((tech) => (
+                      <span
+                        key={tech}
+                        className="px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 text-xs font-medium"
+                      >
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </motion.article>
+            ))}
           </div>
         </div>
-
-        {/* Highlights bar */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.3 }}
-          className="mt-14 grid grid-cols-1 sm:grid-cols-3 gap-3"
-        >
-          {highlightItems.map((item, i) => (
-            <motion.div
-              key={item.label}
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: 0.4 + i * 0.1 }}
-              className="glass p-4 rounded-xl flex items-center gap-3"
-            >
-              <div className="p-2.5 bg-emerald-500/10 rounded-lg shrink-0">
-                <item.icon size={20} className="text-emerald-500" />
-              </div>
-              <span className="text-sm font-semibold text-gray-900 dark:text-white">
-                {item.label}
-              </span>
-            </motion.div>
-          ))}
-        </motion.div>
       </div>
     </section>
   );
