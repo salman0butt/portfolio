@@ -198,7 +198,7 @@ export default function Hero() {
                   <span className="text-gray-400">{'}'};</span>
                 </div>
                 <div className="mt-4 text-gray-500">
-                  <span className="text-emerald-400">//</span> architecture to production
+                  <span className="text-emerald-400">{'//'}</span> architecture to production
                 </div>
               </div>
             </div>
