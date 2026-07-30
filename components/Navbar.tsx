@@ -12,20 +12,22 @@ const navLinks = [
   { label: 'Contact', href: '#contact' },
 ];
 
+function ThemeIcon() {
+  return (
+    <>
+      <Sun size={18} className="hidden dark:block" />
+      <Moon size={18} className="block dark:hidden" />
+    </>
+  );
+}
+
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [dark, setDark] = useState(true);
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
     const stored = localStorage.getItem('theme');
-    if (stored === 'light') {
-      setDark(false);
-      document.documentElement.classList.remove('dark');
-    } else {
-      setDark(true);
-      document.documentElement.classList.add('dark');
-    }
+    document.documentElement.classList.toggle('dark', stored !== 'light');
   }, []);
 
   useEffect(() => {
@@ -35,15 +37,9 @@ export default function Navbar() {
   }, []);
 
   const toggleTheme = () => {
-    const next = !dark;
-    setDark(next);
-    if (next) {
-      document.documentElement.classList.add('dark');
-      localStorage.setItem('theme', 'dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-      localStorage.setItem('theme', 'light');
-    }
+    const nextDark = !document.documentElement.classList.contains('dark');
+    document.documentElement.classList.toggle('dark', nextDark);
+    localStorage.setItem('theme', nextDark ? 'dark' : 'light');
   };
 
   const handleLinkClick = () => setMobileOpen(false);
@@ -78,10 +74,10 @@ export default function Navbar() {
             ))}
             <button
               onClick={toggleTheme}
-              aria-label={dark ? 'Switch to light theme' : 'Switch to dark theme'}
+              aria-label="Toggle theme"
               className="p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
             >
-              {dark ? <Sun size={18} /> : <Moon size={18} />}
+              <ThemeIcon />
             </button>
             <a
               href="mailto:salman0butt@gmail.com"
@@ -94,10 +90,10 @@ export default function Navbar() {
           <div className="flex md:hidden items-center gap-2">
             <button
               onClick={toggleTheme}
-              aria-label={dark ? 'Switch to light theme' : 'Switch to dark theme'}
+              aria-label="Toggle theme"
               className="p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
             >
-              {dark ? <Sun size={18} /> : <Moon size={18} />}
+              <ThemeIcon />
             </button>
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
