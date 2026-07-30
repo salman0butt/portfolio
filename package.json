@@ -6,7 +6,8 @@
     "dev": "NODE_OPTIONS='--max-old-space-size=3072' next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",

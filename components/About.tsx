@@ -1,173 +1,141 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { useInView } from 'react-intersection-observer';
-import { CheckCircle, Calendar, FolderGit2, Globe, Server, GraduationCap, Trophy } from 'lucide-react';
+import { CheckCircle, GraduationCap, Trophy } from 'lucide-react';
 
-const highlights = [
-  'Reduced API latency by 30-40% across production platforms at Permission.io',
-  'Built multi-agent conversational AI with LangChain, LangGraph & Google ADK',
-  'Architected real-time IoT pipelines: RabbitMQ, MQTT, InfluxDB at OffGrid Europe',
-  'Multi-tenant SaaS ERP from scratch using Laravel REST API & Vue.js',
-  '50+ full-stack projects: Laravel, WordPress, WooCommerce, React, Next.js, Node.js',
-];
-
-const stats = [
-  { value: '7+', label: 'Years Experience', icon: Calendar },
-  { value: '50+', label: 'Projects Delivered', icon: FolderGit2 },
-  { value: '5', label: 'Countries', icon: Globe },
-  { value: '30-40%', label: 'Faster APIs', icon: Server },
+const principles = [
+  {
+    title: 'Own the problem, not just the ticket',
+    text: 'I work from product intent through architecture, implementation, rollout, and follow-up instead of treating frontend, backend, and infrastructure as separate hand-offs.',
+  },
+  {
+    title: 'Design for failure and change',
+    text: 'I prefer explicit boundaries, observable workflows, predictable state, and simple recovery paths so systems remain understandable when integrations fail or requirements evolve.',
+  },
+  {
+    title: 'Measure before optimising',
+    text: 'Performance work starts with evidence. At Permission.io, query and API investigation led to roughly 30–40% latency improvements instead of speculative rewrites.',
+  },
+  {
+    title: 'Keep complexity proportional',
+    text: 'I use queues, caches, agents, microservices, and distributed patterns when the workload earns them — and keep the architecture simpler when it does not.',
+  },
 ];
 
 export default function About() {
-  const [ref] = useInView({
-    triggerOnce: true,
-    threshold: 0.1,
-  });
-
   return (
     <section id="about" className="py-20 px-4">
-      <div className="max-w-6xl mx-auto" ref={ref}>
-        {/* Section Header */}
+      <div className="max-w-6xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          transition={{ duration: 0.55 }}
+          className="text-center mb-12"
         >
-          <span className="section-label">ABOUT ME</span>
+          <span className="section-label">ABOUT</span>
           <h2 className="text-4xl md:text-5xl font-bold font-[family-name:var(--font-space-grotesk)] gradient-text mb-4">
-            About Me
+            How I approach engineering
           </h2>
           <div className="section-divider" />
         </motion.div>
 
-        {/* Two-Column Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-[55%_45%] gap-8 mb-16">
-          {/* Left Column — Professional Summary */}
+        <div className="grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-8 items-start mb-10">
           <motion.div
-            initial={{ opacity: 0, x: -30 }}
+            initial={{ opacity: 0, x: -24 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.2 }}
+            transition={{ duration: 0.5 }}
+            className="space-y-5"
           >
-            <p className="text-base leading-relaxed text-gray-700 dark:text-gray-300 mb-4">
-              I&apos;ve spent 7+ years shipping production systems across 5 countries — from
-              multi-tenant SaaS ERPs and real-time IoT platforms to AI-powered conversational
-              agents used by thousands. My sweet spot is the intersection of scalable backend
-              architecture and cutting-edge GenAI integration, using LangChain, LangGraph,
-              LangSmith, and modern cloud infrastructure. I&apos;ve improved API response times
-              by 30-40%, delivered 50+ projects, and earned Employee of the Year for consistent
-              on-time delivery.
+            <p className="text-lg leading-relaxed text-gray-800 dark:text-gray-200">
+              I&apos;m a senior full-stack engineer with 7+ years of experience building
+              production software across SaaS, AI, enterprise web applications, Web3,
+              e-commerce, and IoT systems.
             </p>
             <p className="text-base leading-relaxed text-gray-600 dark:text-gray-400">
-              Strong System Design foundation — distributed systems, microservices, event-driven
-              architecture, Redis caching, CQRS, and Kafka/RabbitMQ messaging at scale. Deep
-              PHP/Laravel expertise: architected multi-tenant SaaS platforms, built 5+ complex
-              Laravel applications with REST APIs, and delivered 50+ WordPress &amp; WooCommerce
-              solutions for European clients — e-commerce stores, real estate portals, and custom
-              business applications with payment gateways, admin panels, and SEO-optimised themes.
-              Also experienced with containerised Kubernetes deployments and CI/CD pipelines.
+              My strongest work sits where product engineering meets systems thinking:
+              shaping a usable frontend, designing APIs and data flows, integrating external
+              services, handling asynchronous work, and making the result observable and
+              maintainable in production.
+            </p>
+            <p className="text-base leading-relaxed text-gray-600 dark:text-gray-400">
+              More recently, that same approach has extended into AI engineering — agent
+              orchestration, tool calling, RAG, structured outputs, memory, guardrails, and
+              evaluation-friendly workflows rather than one-off prompt demos.
             </p>
           </motion.div>
 
-          {/* Right Column — Key Highlights */}
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-            className="glass rounded-2xl p-6"
-          >
-            <h3 className="text-xl font-bold font-[family-name:var(--font-space-grotesk)] text-slate-900 dark:text-white mb-4">
-              Key Highlights
-            </h3>
-            <ul className="space-y-3">
-              {highlights.map((item, index) => (
-                <motion.li
-                  key={index}
-                  initial={{ opacity: 0, x: 10 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.4, delay: 0.4 + index * 0.07 }}
-                  className="flex items-start gap-3 text-sm text-gray-700 dark:text-gray-300"
-                >
-                  <CheckCircle className="w-5 h-5 text-emerald-500 shrink-0 mt-0.5" />
-                  <span>{item}</span>
-                </motion.li>
-              ))}
-            </ul>
-          </motion.div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {principles.map((principle, index) => (
+              <motion.article
+                key={principle.title}
+                initial={{ opacity: 0, y: 22 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: index * 0.06 }}
+                className="glass rounded-2xl p-5"
+              >
+                <CheckCircle className="w-5 h-5 text-emerald-500 mb-3" />
+                <h3 className="text-base font-bold font-[family-name:var(--font-space-grotesk)] text-gray-900 dark:text-white mb-2">
+                  {principle.title}
+                </h3>
+                <p className="text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+                  {principle.text}
+                </p>
+              </motion.article>
+            ))}
+          </div>
         </div>
 
-        {/* Award Badge */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="flex justify-center mb-12"
-        >
-          <div className="glass rounded-2xl px-8 py-4 inline-flex items-center gap-4">
-            <div className="p-3 bg-amber-500/10 rounded-xl">
-              <Trophy className="w-7 h-7 text-amber-500" />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="glass rounded-2xl p-6 flex items-start gap-4"
+          >
+            <div className="p-3 bg-amber-500/10 rounded-xl shrink-0">
+              <Trophy className="w-6 h-6 text-amber-500" />
             </div>
             <div>
-              <p className="text-base font-bold text-gray-900 dark:text-white">
-                Employee of the Year 2020
+              <p className="text-xs uppercase tracking-wider font-bold text-amber-600 dark:text-amber-400 mb-1">
+                Recognition
               </p>
-              <p className="text-sm text-gray-500 dark:text-gray-400">
-                Digital MedieXpert (DMX) — Norway
+              <h3 className="text-lg font-bold text-gray-900 dark:text-white">
+                Employee of the Year 2020
+              </h3>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                Digital MedieXpert (DMX) — recognised during a three-year period delivering production projects for European clients.
               </p>
             </div>
-          </div>
-        </motion.div>
+          </motion.div>
 
-        {/* Stats Row */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16">
-          {stats.map((stat, index) => (
-            <motion.div
-              key={stat.label}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.2 + index * 0.1 }}
-              className="glass rounded-2xl p-6 text-center"
-            >
-              <stat.icon className="w-7 h-7 text-emerald-500 mx-auto mb-3" />
-              <div className="text-3xl md:text-4xl font-bold gradient-text mb-1">
-                {stat.value}
-              </div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">{stat.label}</div>
-            </motion.div>
-          ))}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="glass rounded-2xl p-6 flex items-start gap-4"
+          >
+            <div className="p-3 bg-emerald-500/10 rounded-xl shrink-0">
+              <GraduationCap className="w-6 h-6 text-emerald-500" />
+            </div>
+            <div>
+              <p className="text-xs uppercase tracking-wider font-bold text-emerald-600 dark:text-emerald-400 mb-1">
+                Education
+              </p>
+              <h3 className="text-lg font-bold text-gray-900 dark:text-white">
+                BS Computer Science
+              </h3>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                University of the Punjab, Lahore · 2015–2019
+              </p>
+              <p className="text-xs text-gray-500 dark:text-gray-500 mt-2">
+                Data Structures &amp; Algorithms · Databases · OOP · Networks · AI · Software Engineering
+              </p>
+            </div>
+          </motion.div>
         </div>
-
-        {/* Education */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="glass rounded-2xl p-8"
-        >
-          <div className="flex items-center gap-3 mb-4">
-            <GraduationCap className="w-6 h-6 text-emerald-500" />
-            <h3 className="text-2xl font-bold font-[family-name:var(--font-space-grotesk)] text-slate-900 dark:text-white">
-              Education
-            </h3>
-          </div>
-          <p className="text-lg font-semibold text-slate-900 dark:text-white">
-            Bachelor of Science — Computer Science
-          </p>
-          <p className="text-gray-600 dark:text-gray-400 mt-1">
-            University of the Punjab | Lahore, Pakistan | 2015 - 2019
-          </p>
-          <p className="text-sm text-gray-500 dark:text-gray-500 mt-2">
-            Data Structures &amp; Algorithms, Database Systems, OOP, Computer Networks, AI, Software Engineering
-          </p>
-        </motion.div>
       </div>
     </section>
   );
