@@ -4,11 +4,11 @@ export default defineConfig({
   testDir: './tests',
   fullyParallel: false,
   forbidOnly: !!process.env.CI,
-  retries: 0,
+  retries: process.env.CI ? 1 : 0,
   workers: 1,
   reporter: 'list',
   use: {
-    baseURL: 'http://localhost:3001',
+    baseURL: 'http://127.0.0.1:3000',
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
   },
@@ -19,9 +19,9 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: 'npm run dev',
-    url: 'http://localhost:3000',
-    reuseExistingServer: true,
+    command: 'npm run dev -- -H 127.0.0.1 -p 3000',
+    url: 'http://127.0.0.1:3000',
+    reuseExistingServer: !process.env.CI,
     timeout: 120000,
   },
 });
