@@ -1,80 +1,48 @@
-import { test } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 
-test.describe('Light Mode Text Visibility', () => {
-  test('check all text elements for sufficient contrast', async ({ page }) => {
-    await page.goto('http://localhost:3001');
+test.describe('Portfolio smoke checks', () => {
+  test('renders the recruiter-first flow and toggles theme', async ({ page }) => {
+    await page.goto('/');
 
-    await page.click('button[aria-label="Toggle theme"]');
-    await page.waitForTimeout(500);
+    await expect(
+      page.getByRole('heading', {
+        level: 1,
+        name: 'Building AI-powered products and the systems behind them.',
+      }),
+    ).toBeVisible();
 
-    const htmlClass = await page.locator('html').getAttribute('class');
-    console.log('HTML class:', htmlClass);
+    await expect(page.locator('#projects')).toBeVisible();
+    await expect(page.locator('#experience')).toBeVisible();
+    await expect(page.locator('#skills')).toBeVisible();
+    await expect(page.locator('#about')).toBeVisible();
+    await expect(page.locator('#contact')).toBeVisible();
 
-    await page.screenshot({ path: 'light-mode-hero.png', fullPage: false });
+    const html = page.locator('html');
+    await expect(html).toHaveClass(/dark/);
 
-    console.log('\n=== NAVBAR ===');
-    const navButtons = await page.locator('nav button').all();
-    for (let i = 0; i < navButtons.length; i++) {
-      const color = await navButtons[i].evaluate((el) => window.getComputedStyle(el).color);
-      console.log(`Nav button ${i}: ${color}`);
-    }
+    await page.getByRole('button', { name: 'Toggle theme' }).click();
+    await expect(html).not.toHaveClass(/dark/);
 
-    console.log('\n=== HERO SECTION ===');
-    const heroTitle = page.locator('h1').first();
-    const titleColor = await heroTitle.evaluate((el) => window.getComputedStyle(el).color);
-    console.log('Hero title color:', titleColor);
+    await page.getByRole('button', { name: 'Toggle theme' }).click();
+    await expect(html).toHaveClass(/dark/);
+  });
 
-    const heroDescription = page.locator('#hero p').first();
-    const descColor = await heroDescription.evaluate((el) => window.getComputedStyle(el).color);
-    console.log('Hero description color:', descColor);
+  test('primary calls to action point to work, resume, and contact', async ({ page }) => {
+    await page.goto('/');
 
-    await page.locator('a[href="#projects"]').first().click();
-    await page.waitForTimeout(600);
-    await page.screenshot({ path: 'light-mode-projects.png' });
+    await expect(page.getByRole('link', { name: 'View Selected Work' })).toHaveAttribute(
+      'href',
+      '#projects',
+    );
 
-    console.log('\n=== PROJECTS SECTION ===');
-    const projectTitle = page.locator('#projects h2');
-    const projectTitleColor = await projectTitle.evaluate((el) => window.getComputedStyle(el).color);
-    console.log('Projects title color:', projectTitleColor);
+    await expect(page.getByRole('link', { name: 'Resume', exact: true })).toHaveAttribute(
+      'href',
+      '/Salman_Butt_Resume.pdf',
+    );
 
-    await page.locator('a[href="#experience"]').first().click();
-    await page.waitForTimeout(600);
-    await page.screenshot({ path: 'light-mode-experience.png' });
-
-    console.log('\n=== EXPERIENCE SECTION ===');
-    const expTitle = page.locator('#experience h2');
-    const expTitleColor = await expTitle.evaluate((el) => window.getComputedStyle(el).color);
-    console.log('Experience title color:', expTitleColor);
-
-    await page.locator('a[href="#skills"]').first().click();
-    await page.waitForTimeout(600);
-
-    console.log('\n=== EXPERTISE SECTION ===');
-    const skillsTitle = page.locator('#skills h2');
-    const skillsTitleColor = await skillsTitle.evaluate((el) => window.getComputedStyle(el).color);
-    console.log('Expertise title color:', skillsTitleColor);
-
-    await page.locator('a[href="#about"]').first().click();
-    await page.waitForTimeout(600);
-    await page.screenshot({ path: 'light-mode-about.png' });
-
-    console.log('\n=== ABOUT SECTION ===');
-    const aboutTitle = page.locator('#about h2');
-    const aboutTitleColor = await aboutTitle.evaluate((el) => window.getComputedStyle(el).color);
-    console.log('About title color:', aboutTitleColor);
-
-    const skillCards = await page.locator('.glass').all();
-    console.log(`Found ${skillCards.length} glass cards`);
-
-    await page.locator('a[href="#contact"]').first().click();
-    await page.waitForTimeout(600);
-    await page.screenshot({ path: 'light-mode-contact.png' });
-
-    console.log('\n=== CONTACT SECTION ===');
-    const contactTitle = page.locator('#contact h2');
-    const contactTitleColor = await contactTitle.evaluate((el) => window.getComputedStyle(el).color);
-    console.log('Contact title color:', contactTitleColor);
-
-    await page.screenshot({ path: 'light-mode-full.png', fullPage: true });
+    await expect(page.getByRole('link', { name: "Let's Talk", exact: true }).first()).toHaveAttribute(
+      'href',
+      'mailto:salman0butt@gmail.com',
+    );
   });
 });
