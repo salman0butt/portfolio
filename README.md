@@ -1,182 +1,92 @@
-# 🚀 Full-Stack Developer Portfolio
+# Salman Butt — Engineering Portfolio
 
-A stunning, modern portfolio website built with Next.js, TypeScript, Tailwind CSS, and Framer Motion. Designed to impress recruiters and hiring managers at top tech companies.
+Personal engineering portfolio for Salman Butt, focused on senior full-stack and AI engineering work, production ownership, architecture, and measurable outcomes.
 
-![Portfolio Preview](https://img.shields.io/badge/Next.js-15-black?style=for-the-badge&logo=next.js)
-![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?style=for-the-badge&logo=typescript)
-![Tailwind CSS](https://img.shields.io/badge/Tailwind-3-38B2AC?style=for-the-badge&logo=tailwind-css)
+**Live site:** https://salman-butt.vercel.app
 
-## ✨ Features
+## Positioning
 
-- **Modern & Elegant Design**: Purple-accented color scheme with glassmorphism effects
-- **Fully Responsive**: Optimized for all devices (mobile, tablet, desktop)
-- **Dark/Light Mode**: Toggle between themes with smooth transitions
-- **Smooth Animations**: Powered by Framer Motion for delightful interactions
-- **SEO Optimized**: Meta tags, Open Graph, and Twitter cards configured
-- **Performance Focused**: Fast loading times and optimized assets
-- **GitHub Pages Ready**: Configured for seamless deployment
+The portfolio is structured for recruiters and engineering leaders around a proof-first flow:
 
-## 📂 Sections
+1. Senior full-stack + AI positioning
+2. Selected engineering case studies
+3. Impact-led production experience
+4. Evidence-based technical expertise
+5. Recommendations from teammates and managers
+6. Engineering approach and background
+7. Direct contact and resume actions
 
-- **Hero Section**: Eye-catching introduction with animated background
-- **About Section**: Skills showcase with tech stack display
-- **Projects Section**: Featured work with live demos and GitHub links
-- **Experience Section**: Professional timeline with achievements
-- **Contact Section**: Working contact form with social links
-- **Responsive Navbar**: Smooth navigation with mobile menu
+## Tech stack
 
-## 🛠️ Tech Stack
+- **Framework:** Next.js 16
+- **UI:** React 19
+- **Language:** TypeScript 6
+- **Styling:** Tailwind CSS 4
+- **Motion:** Framer Motion
+- **Icons:** Lucide React
+- **Testing:** Playwright
+- **Linting:** ESLint 9 with Next.js flat config
+- **Deployment:** Vercel
 
-- **Frontend**: Next.js 15, React 19, TypeScript
-- **Styling**: Tailwind CSS, Custom CSS
-- **Animations**: Framer Motion
-- **Icons**: Lucide React
-- **Deployment**: GitHub Pages
-- **Build Tool**: Next.js Static Export
+## Main sections
 
-## 🚀 Getting Started
+- `components/Hero.tsx` — positioning, proof points, resume/work CTAs
+- `components/Projects.tsx` — selected mini case studies with challenge, ownership, and outcomes
+- `components/Experience.tsx` — impact-first career timeline
+- `components/Skills.tsx` — capability groups backed by shipped work instead of percentage ratings
+- `components/Testimonials.tsx` — selected professional recommendations
+- `components/About.tsx` — engineering principles, recognition, and education
+- `components/Contact.tsx` — recruiter-focused contact actions
+- `components/Navbar.tsx` / `components/Footer.tsx` — navigation and supporting links
 
-### Prerequisites
+SEO and discovery metadata live in `app/layout.tsx`, `app/sitemap.ts`, and `app/robots.ts`.
 
-- Node.js 20+ installed
-- npm or yarn package manager
+## Local development
 
-### Installation
+### Requirements
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/yourusername/portfolio.git
-   cd portfolio
-   ```
+- Node.js 22+
+- npm
 
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-
-3. Run the development server:
-   ```bash
-   npm run dev
-   ```
-
-4. Open [http://localhost:3000](http://localhost:3000) in your browser
-
-## 🎨 Customization
-
-### Update Personal Information
-
-1. **Hero Section** (`components/Hero.tsx`):
-   - Update name, title, and tagline
-   - Add your profile image
-   - Update social media links
-
-2. **About Section** (`components/About.tsx`):
-   - Customize your philosophy and skills
-   - Update tech stack and statistics
-
-3. **Projects Section** (`components/Projects.tsx`):
-   - Add your projects with images, descriptions, and links
-   - Update tech stack badges
-
-4. **Experience Section** (`components/Experience.tsx`):
-   - Add your work experience
-   - Update achievements and certifications
-
-5. **Contact Section** (`components/Contact.tsx`):
-   - Update email, phone, and location
-   - Configure EmailJS or API route for form submission
-
-### Update Colors
-
-Edit `app/globals.css` to change the color scheme:
-
-```css
-:root {
-  --purple-primary: #8b5cf6;  /* Main purple */
-  --purple-secondary: #a78bfa; /* Secondary purple */
-  --purple-light: #ede9fe;     /* Light purple */
-}
-```
-
-### Update Metadata
-
-Edit `app/layout.tsx` to update SEO information:
-- Page title
-- Description
-- Keywords
-- Open Graph images
-- Social media URLs
-
-## 📦 Build for Production
-
-Build the static site:
+### Run locally
 
 ```bash
-npm run build
+npm ci
+npm run dev
 ```
 
-The output will be in the `out` directory, ready for deployment.
+Open http://localhost:3000.
 
-## 🌐 Deployment to GitHub Pages
+## Quality checks
 
-### Method 1: Automatic Deployment (Recommended)
+```bash
+npm run lint
+npm run build
+npm run test:e2e
+```
 
-1. Push your code to GitHub
-2. Go to repository Settings → Pages
-3. Source: "GitHub Actions"
-4. The workflow will automatically deploy on every push to `main`
+Pull requests to `main` run validation for linting, a production build, and Chromium smoke tests. Vercel also creates a deployment preview for connected branches and pull requests.
 
-### Method 2: Manual Deployment
+The Playwright smoke suite verifies the primary recruiter flow, major page sections, theme toggling, the selected-work CTA, resume download link, and contact CTA.
 
-1. Build the project:
-   ```bash
-   npm run build
-   ```
+## Deployment
 
-2. Deploy to GitHub Pages:
-   ```bash
-   npm install -g gh-pages
-   gh-pages -d out
-   ```
+Production is deployed through Vercel from `main`.
 
-### Important Notes
+The app intentionally uses the standard Next.js server build for Vercel rather than requiring a static `out/` export.
 
-- Update `basePath` in `next.config.ts` if your repository name is different from "portfolio"
-- The `.github/workflows/deploy.yml` file is already configured
-- Make sure GitHub Pages is enabled in your repository settings
+## Rollback
 
-## 📝 Customization Checklist
+The senior-portfolio redesign was developed outside `main` and squash-merged after validation. The repository also preserves the pre-redesign snapshot branch:
 
-- [ ] Update personal name and branding in all components
-- [ ] Add your profile photo to `public` folder
-- [ ] Update social media links (GitHub, LinkedIn, Twitter)
-- [ ] Add your actual projects with screenshots
-- [ ] Update work experience and achievements
-- [ ] Configure contact form (EmailJS or API route)
-- [ ] Add your resume PDF to `public` folder
-- [ ] Update SEO metadata in `app/layout.tsx`
-- [ ] Replace repository name in `next.config.ts` basePath
-- [ ] Update OG image for social sharing
+```text
+backup/pre-portfolio-enhancement-2026-07-30
+```
 
-## 🔧 Scripts
+Baseline commit:
 
-- `npm run dev` - Start development server
-- `npm run build` - Build for production
-- `npm run start` - Start production server
-- `npm run lint` - Run ESLint
+```text
+8895f352f642302e4f4413c7c964f943a7ef4a14
+```
 
-## 📄 License
-
-This project is open source and available under the [MIT License](LICENSE).
-
-## 🤝 Contributing
-
-Contributions, issues, and feature requests are welcome!
-
-## 💬 Contact
-
-Feel free to reach out if you have any questions or suggestions!
-
----
-
-**Made with ❤️ using Next.js**
+This keeps the original portfolio state available independently of later changes.
