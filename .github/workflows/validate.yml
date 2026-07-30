@@ -51,4 +51,5 @@ jobs:
               state: passed ? 'success' : 'failure',
               context: 'Portfolio Validation',
               description: passed ? 'Lint and production build passed' : 'Lint or production build failed',
+              target_url: `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`,
             });
