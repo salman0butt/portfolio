@@ -6,6 +6,10 @@ on:
   push:
     branches: [feat/portfolio-senior-redesign]
 
+permissions:
+  contents: read
+  statuses: write
+
 concurrency:
   group: portfolio-validate-${{ github.ref }}
   cancel-in-progress: true
@@ -33,3 +37,18 @@ jobs:
 
       - name: Production build
         run: npm run build
+
+      - name: Publish validation status
+        if: always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const passed = '${{ job.status }}' === 'success';
+            await github.rest.repos.createCommitStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              sha: context.sha,
+              state: passed ? 'success' : 'failure',
+              context: 'Portfolio Validation',
+              description: passed ? 'Lint and production build passed' : 'Lint or production build failed',
+            });
