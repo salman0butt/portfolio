@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowUpRight, Clock3 } from 'lucide-react';
 import { BlogPost, estimateReadTime, getBlogDate } from '@/lib/blogs';
@@ -20,12 +21,13 @@ export default function BlogCard({ post, compact = false }: BlogCardProps) {
   return (
     <article className="group overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl dark:border-gray-800 dark:bg-gray-900/70">
       {post.cover_image_url && (
-        <Link href={href} className={`block overflow-hidden bg-gray-100 dark:bg-gray-800 ${compact ? 'h-44' : 'h-52'}`}>
-          <img
+        <Link href={href} className={`relative block overflow-hidden bg-gray-100 dark:bg-gray-800 ${compact ? 'h-44' : 'h-52'}`}>
+          <Image
             src={post.cover_image_url}
             alt={`Cover image for ${post.title}`}
-            loading="lazy"
-            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03] motion-reduce:transition-none motion-reduce:transform-none"
+            fill
+            sizes={compact ? '(max-width: 768px) 100vw, 33vw' : '(max-width: 1024px) 100vw, 50vw'}
+            className="object-cover transition-transform duration-500 group-hover:scale-[1.03] motion-reduce:transition-none motion-reduce:transform-none"
           />
         </Link>
       )}
