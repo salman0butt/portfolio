@@ -1,151 +1,302 @@
-import type { LucideIcon } from 'lucide-react';
+'use client';
+
+import { useState } from 'react';
+import { motion } from 'framer-motion';
 import {
-  BrainCircuit,
-  CloudCog,
-  Code2,
-  Database,
-  GitBranch,
+  Monitor,
+  Server,
+  Brain,
   Network,
-  PlugZap,
   Radio,
-  ServerCog,
-  TestTube2,
+  Database,
+  Cloud,
+  Plug,
+  TestTube,
+  GitBranch,
 } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 
-type SkillGroup = {
-  label: string;
-  description: string;
+interface Skill {
+  name: string;
+  level: number; // 0-100
+}
+
+interface SkillCategory {
+  name: string;
   icon: LucideIcon;
-  skills: string[];
-  featured?: boolean;
-};
+  color: string;
+  bgColor: string;
+  barColor: string;
+  skills: Skill[];
+}
 
-const groups: SkillGroup[] = [
+const categories: SkillCategory[] = [
   {
-    label: 'Core product stack',
-    description: 'The technologies I reach for most often when owning product work end-to-end.',
-    icon: Code2,
-    featured: true,
-    skills: ['React', 'Next.js', 'TypeScript', 'Node.js', 'NestJS', 'Laravel', 'PostgreSQL', 'Redis'],
+    name: 'Frontend & Mobile',
+    icon: Monitor,
+    color: 'text-emerald-500',
+    bgColor: 'bg-emerald-500/10',
+    barColor: 'bg-emerald-500',
+    skills: [
+      { name: 'React.js', level: 95 },
+      { name: 'Next.js', level: 93 },
+      { name: 'TypeScript / JavaScript', level: 95 },
+      { name: 'Vue.js / Nuxt.js', level: 88 },
+      { name: 'React Native', level: 80 },
+      { name: 'Tailwind / Sass / Bootstrap', level: 92 },
+      { name: 'Redux / Vuex', level: 85 },
+    ],
   },
   {
-    label: 'Generative AI, agents & automation',
-    description: 'Production-oriented AI systems that combine reasoning, retrieval, tools, workflow automation, evaluation and observability.',
-    icon: BrainCircuit,
-    featured: true,
-    skills: ['LangChain', 'LangGraph', 'LangSmith', 'RAG', 'MCP', 'AI Automation', 'Workflow Automation', 'Business Process Automation', 'Agentic Workflows', 'Event-Driven Automation', 'Tool Calling', 'Structured Outputs', 'Multi-Agent Systems', 'Human-in-the-loop', 'Evaluations', 'Observability', 'OpenAI API', 'Google ADK'],
+    name: 'Backend',
+    icon: Server,
+    color: 'text-emerald-500',
+    bgColor: 'bg-emerald-500/10',
+    barColor: 'bg-emerald-500',
+    skills: [
+      { name: 'Node.js / Express.js / NestJS', level: 95 },
+      { name: 'PHP / Laravel', level: 92 },
+      { name: 'REST API / GraphQL', level: 93 },
+      { name: 'WebSockets / Socket.IO', level: 88 },
+      { name: 'JWT / OAuth2', level: 90 },
+      { name: 'WordPress / WooCommerce', level: 90 },
+    ],
   },
   {
-    label: 'Backend & APIs',
-    description: 'Application services, APIs, authentication and integrations across JavaScript, PHP and Python stacks.',
-    icon: ServerCog,
-    skills: ['Node.js', 'Express.js', 'NestJS', 'PHP', 'Laravel', 'Python', 'FastAPI', 'REST APIs', 'GraphQL', 'WebSockets', 'Socket.IO', 'JWT', 'OAuth2'],
+    name: 'Generative AI',
+    icon: Brain,
+    color: 'text-emerald-500',
+    bgColor: 'bg-emerald-500/10',
+    barColor: 'bg-emerald-500',
+    skills: [
+      { name: 'LangChain / LangGraph', level: 88 },
+      { name: 'LangSmith / Observability', level: 85 },
+      { name: 'RAG Pipelines / Vector DBs', level: 85 },
+      { name: 'OpenAI API / Google ADK', level: 88 },
+      { name: 'Prompt Engineering', level: 90 },
+      { name: 'Multi-Agent Orchestration', level: 82 },
+    ],
   },
   {
-    label: 'Frontend & mobile',
-    description: 'Product interfaces across modern React/Vue stacks, enterprise JavaScript and mobile applications.',
-    icon: Code2,
-    skills: ['React', 'Next.js', 'TypeScript', 'JavaScript', 'Vue.js', 'Nuxt.js', 'React Native', 'Redux', 'Vuex', 'Tailwind CSS', 'Sass', 'Bootstrap'],
-  },
-  {
-    label: 'Architecture & system design',
-    description: 'Patterns used when reliability, scale, isolation and maintainability become product requirements.',
+    name: 'System Design & Architecture',
     icon: Network,
-    featured: true,
-    skills: ['System Design', 'API Design', 'Workflow Orchestration', 'Microservices', 'Event-Driven Architecture', 'Distributed Systems', 'Multi-Tenant SaaS', 'Caching', 'CQRS', 'Serverless', 'Load Balancing', 'Fault Tolerance', 'Performance Optimization', 'RBAC / ABAC'],
+    color: 'text-blue-500',
+    bgColor: 'bg-blue-500/10',
+    barColor: 'bg-blue-500',
+    skills: [
+      { name: 'Microservices / Event-Driven', level: 90 },
+      { name: 'CQRS / Serverless', level: 85 },
+      { name: 'Distributed Systems', level: 85 },
+      { name: 'Redis Caching / Sharding', level: 88 },
+      { name: 'Multi-Tenancy SaaS', level: 92 },
+      { name: 'Load Balancing / Fault Tolerance', level: 83 },
+    ],
   },
   {
-    label: 'Messaging, real-time & IoT',
-    description: 'Asynchronous processing, device communication and real-time product experiences.',
+    name: 'Messaging & IoT',
     icon: Radio,
-    skills: ['RabbitMQ', 'Kafka', 'MQTT', 'Pub/Sub', 'WebSockets', 'Socket.IO', 'SSE', 'gRPC', 'IoT Solutions'],
+    color: 'text-blue-500',
+    bgColor: 'bg-blue-500/10',
+    barColor: 'bg-blue-500',
+    skills: [
+      { name: 'RabbitMQ / Kafka', level: 88 },
+      { name: 'MQTT / Pub-Sub', level: 85 },
+      { name: 'Socket.IO / SSE / gRPC', level: 87 },
+    ],
   },
   {
-    label: 'Data',
-    description: 'Relational, document, cache, time-series and vector-oriented application data.',
+    name: 'Databases',
     icon: Database,
-    skills: ['PostgreSQL', 'MySQL', 'MongoDB', 'Mongoose', 'Redis', 'InfluxDB', 'Firebase', 'Vector Databases', 'pgvector'],
+    color: 'text-blue-500',
+    bgColor: 'bg-blue-500/10',
+    barColor: 'bg-blue-500',
+    skills: [
+      { name: 'PostgreSQL / MySQL', level: 93 },
+      { name: 'MongoDB / Mongoose', level: 92 },
+      { name: 'Redis', level: 88 },
+      { name: 'InfluxDB / Firebase', level: 82 },
+    ],
   },
   {
-    label: 'DevOps & cloud',
-    description: 'Deploying and operating production applications with repeatable delivery workflows.',
-    icon: CloudCog,
-    skills: ['Docker', 'Kubernetes', 'AWS EC2', 'AWS S3', 'AWS Lambda', 'AWS RDS', 'CI/CD', 'GitHub Actions', 'Linux', 'Nginx', 'PM2'],
+    name: 'DevOps & Cloud',
+    icon: Cloud,
+    color: 'text-amber-500',
+    bgColor: 'bg-amber-500/10',
+    barColor: 'bg-amber-500',
+    skills: [
+      { name: 'Docker / Kubernetes', level: 85 },
+      { name: 'AWS (EC2, S3, Lambda, RDS)', level: 85 },
+      { name: 'CI/CD / GitHub Actions', level: 88 },
+      { name: 'Linux / Nginx / PM2', level: 90 },
+    ],
   },
   {
-    label: 'Testing & quality',
-    description: 'Automated checks and engineering practices used to keep production changes safe.',
-    icon: TestTube2,
-    skills: ['Jest', 'Cypress', 'Playwright', 'PHPUnit', 'Laravel Dusk', 'TDD', 'BDD', 'E2E Testing', 'Code Review'],
+    name: 'Integrations & Payments',
+    icon: Plug,
+    color: 'text-amber-500',
+    bgColor: 'bg-amber-500/10',
+    barColor: 'bg-amber-500',
+    skills: [
+      { name: 'Stripe / PayPal / Braintree', level: 90 },
+      { name: 'Moralis (Web3) / ShuftiPro (KYC)', level: 82 },
+      { name: 'PostHog / GA4 / GTM', level: 85 },
+      { name: 'Cloudinary / AWS S3', level: 88 },
+    ],
   },
   {
-    label: 'Platforms & integrations',
-    description: 'Payments, identity, analytics, media, Web3 and CMS integrations used in shipped products.',
-    icon: PlugZap,
-    skills: ['Stripe', 'PayPal', 'Braintree', 'Moralis / Web3', 'ShuftiPro / KYC', 'Cloudinary', 'AWS S3', 'PostHog', 'GA4', 'Google Tag Manager', 'WordPress', 'WooCommerce'],
+    name: 'Testing & Quality',
+    icon: TestTube,
+    color: 'text-amber-500',
+    bgColor: 'bg-amber-500/10',
+    barColor: 'bg-amber-500',
+    skills: [
+      { name: 'Jest / Cypress', level: 88 },
+      { name: 'PHPUnit / Laravel Dusk', level: 85 },
+      { name: 'TDD / BDD / E2E', level: 85 },
+    ],
   },
   {
-    label: 'Engineering workflow',
-    description: 'The collaboration, delivery and debugging tools around day-to-day engineering.',
+    name: 'Workflow & Tools',
     icon: GitBranch,
-    skills: ['Git', 'GitHub', 'GitLab', 'Agile', 'Scrum', 'Jira', 'Postman', 'Insomnia'],
+    color: 'text-amber-500',
+    bgColor: 'bg-amber-500/10',
+    barColor: 'bg-amber-500',
+    skills: [
+      { name: 'Git / GitHub / GitLab', level: 95 },
+      { name: 'Agile / Scrum / Jira', level: 90 },
+      { name: 'Postman / Insomnia', level: 92 },
+      { name: 'Code Review / RBAC', level: 88 },
+    ],
   },
 ];
 
 export default function Skills() {
-  return (
-    <section id="skills" className="section-alt py-20 sm:py-24">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="grid gap-8 lg:grid-cols-[.72fr_1.28fr] lg:items-end">
-          <div>
-            <p className="section-label">TECHNICAL EXPERTISE</p>
-            <h2 className="mt-3 font-[family-name:var(--font-space-grotesk)] text-3xl font-bold tracking-tight text-gray-950 sm:text-4xl dark:text-white">
-              Full-stack depth, with production AI and automation on top.
-            </h2>
-          </div>
-          <p className="max-w-3xl text-base leading-7 text-gray-600 dark:text-gray-400">
-            Technologies and engineering practices I have used across production products, client platforms, real-time systems, AI applications and automated workflows. The case studies above show where the core stack was applied and why specific choices were made.
-          </p>
-        </div>
+  const [activeTab, setActiveTab] = useState(0);
+  const active = categories[activeTab];
 
-        <div className="mt-10 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-          {groups.map((group) => {
-            const Icon = group.icon;
-            return (
-              <article
-                key={group.label}
-                className={`rounded-2xl border bg-white p-6 transition-all hover:-translate-y-0.5 hover:shadow-lg dark:bg-white/[0.035] ${
-                  group.featured
-                    ? 'border-emerald-200 shadow-sm dark:border-emerald-500/20'
-                    : 'border-gray-200 dark:border-white/10'
-                }`}
-              >
-                <div className="flex items-start justify-between gap-4">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-500/10">
-                    <Icon size={21} className="text-emerald-600 dark:text-emerald-400" aria-hidden="true" />
+  return (
+    <section id="skills" className="py-20 px-4 section-alt">
+      <div className="max-w-6xl mx-auto">
+        {/* Section Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-12"
+        >
+          <span className="section-label">EXPERTISE</span>
+          <h2 className="text-4xl md:text-5xl font-bold font-[family-name:var(--font-space-grotesk)] gradient-text mb-4">
+            Technical Skills
+          </h2>
+          <div className="section-divider" />
+        </motion.div>
+
+        {/* Interactive Skills Panel */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-6"
+        >
+          {/* Left: Category tabs */}
+          <div className="flex lg:flex-col gap-2 overflow-x-auto lg:overflow-x-visible pb-2 lg:pb-0 scrollbar-hide">
+            {categories.map((cat, i) => {
+              const Icon = cat.icon;
+              return (
+                <button
+                  key={cat.name}
+                  onClick={() => setActiveTab(i)}
+                  className={`flex items-center gap-3 px-4 py-3 rounded-xl text-left text-sm font-medium whitespace-nowrap transition-all duration-300 shrink-0 ${
+                    i === activeTab
+                      ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/25'
+                      : 'glass hover:border-gray-300 dark:hover:border-white/20 text-gray-600 dark:text-gray-400'
+                  }`}
+                >
+                  <Icon size={18} className={i === activeTab ? 'text-white' : cat.color} />
+                  <span className="hidden md:inline">{cat.name}</span>
+                  <span className="md:hidden">{cat.name.split(' ')[0]}</span>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Right: Skill bars */}
+          <div className="glass rounded-2xl p-6 md:p-8">
+            <div className="flex items-center gap-3 mb-6">
+              <div className={`p-2.5 rounded-xl ${active.bgColor}`}>
+                <active.icon size={22} className={active.color} />
+              </div>
+              <div>
+                <h3 className="text-xl font-bold font-[family-name:var(--font-space-grotesk)] text-gray-900 dark:text-white">
+                  {active.name}
+                </h3>
+                <p className="text-xs text-gray-500 dark:text-gray-400">
+                  {active.skills.length} skills &middot; Avg {Math.round(active.skills.reduce((a, b) => a + b.level, 0) / active.skills.length)}% proficiency
+                </p>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              {active.skills.map((skill, i) => (
+                <motion.div
+                  key={`${activeTab}-${skill.name}`}
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.3, delay: i * 0.05 }}
+                >
+                  <div className="flex items-center justify-between mb-1.5">
+                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                      {skill.name}
+                    </span>
+                    <span className="text-xs font-semibold text-gray-500 dark:text-gray-400">
+                      {skill.level}%
+                    </span>
                   </div>
-                  {group.featured && (
-                    <span className="rounded-full bg-emerald-50 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-300">
-                      Core
-                    </span>
-                  )}
-                </div>
-                <h3 className="mt-4 text-lg font-bold text-gray-950 dark:text-white">{group.label}</h3>
-                <p className="mt-2 text-sm leading-6 text-gray-600 dark:text-gray-400">{group.description}</p>
-                <div className="mt-5 flex flex-wrap gap-2">
-                  {group.skills.map((skill) => (
-                    <span
-                      key={skill}
-                      className="rounded-lg border border-gray-200 bg-gray-50 px-3 py-1.5 text-xs font-semibold text-gray-700 dark:border-white/10 dark:bg-white/5 dark:text-gray-300"
-                    >
-                      {skill}
-                    </span>
-                  ))}
-                </div>
-              </article>
-            );
-          })}
-        </div>
+                  <div className="h-2 bg-gray-100 dark:bg-white/5 rounded-full overflow-hidden">
+                    <motion.div
+                      className={`h-full rounded-full ${active.barColor}`}
+                      initial={{ width: 0 }}
+                      animate={{ width: `${skill.level}%` }}
+                      transition={{ duration: 0.8, delay: i * 0.08, ease: 'easeOut' }}
+                    />
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Tech cloud summary */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+          className="mt-10 text-center"
+        >
+          <p className="text-xs text-gray-500 dark:text-gray-500 mb-4 uppercase tracking-wider font-medium">
+            Full technology stack
+          </p>
+          <div className="flex flex-wrap justify-center gap-2 max-w-4xl mx-auto">
+            {[
+              'React', 'Next.js', 'Vue.js', 'Node.js', 'NestJS', 'TypeScript', 'PHP', 'Laravel',
+              'Python', 'WordPress', 'WooCommerce', 'React Native',
+              'LangChain', 'LangGraph', 'LangSmith', 'OpenAI API', 'Google ADK',
+              'PostgreSQL', 'MongoDB', 'Redis', 'InfluxDB', 'Firebase',
+              'Docker', 'Kubernetes', 'AWS', 'RabbitMQ', 'Kafka', 'MQTT',
+              'GraphQL', 'REST API', 'Socket.IO', 'Stripe', 'Git',
+            ].map((tech) => (
+              <span
+                key={tech}
+                className="px-3 py-1 text-xs font-medium rounded-full bg-gray-100 dark:bg-white/5 text-gray-600 dark:text-gray-400 border border-gray-200 dark:border-white/10"
+              >
+                {tech}
+              </span>
+            ))}
+          </div>
+        </motion.div>
       </div>
     </section>
   );

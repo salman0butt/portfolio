@@ -1,173 +1,254 @@
 'use client';
 
-import Link from 'next/link';
-import { ArrowRight, Briefcase, Code, Globe, Zap } from 'lucide-react';
-import { motion, useReducedMotion } from 'framer-motion';
+import { useEffect, useState } from 'react';
+import { motion } from 'framer-motion';
+import {
+  Mail,
+  Briefcase,
+  Code,
+  Globe,
+  Zap,
+  ChevronDown,
+} from 'lucide-react';
 import { Github, Linkedin } from './icons';
 
+const container = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: { staggerChildren: 0.12 },
+  },
+};
+
+const item = {
+  hidden: { opacity: 0, y: 20 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+};
+
 const stats = [
-  { value: '7+', label: 'Years shipping', icon: Briefcase },
-  { value: '50+', label: 'Projects delivered', icon: Code },
-  { value: '5', label: 'Countries & markets', icon: Globe },
-  { value: '~500→300ms', label: 'API latency', icon: Zap },
+  { value: '7+', label: 'Years', icon: Briefcase },
+  { value: '50+', label: 'Projects', icon: Code },
+  { value: '5', label: 'Countries', icon: Globe },
+  { value: '40%', label: 'Faster APIs', icon: Zap },
 ];
 
-function ArchitectureVisual() {
+const roles = [
+  'Senior Full Stack Engineer',
+  'Generative AI Engineer',
+  'Backend Architect',
+  'Frontend Developer',
+  'IoT & Real-Time Systems Builder',
+];
+
+function RotatingRole() {
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      setIndex((current) => (current + 1) % roles.length);
+    }, 2200);
+
+    return () => window.clearInterval(timer);
+  }, []);
+
   return (
-    <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-gray-950 p-4 shadow-2xl sm:p-5">
-      <div className="mb-4 flex items-start justify-between gap-4 border-b border-white/10 pb-4">
-        <div>
-          <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-emerald-400">System view</p>
-          <h2 className="mt-1 text-sm font-semibold text-white">Production AI product architecture</h2>
-        </div>
-        <span className="hidden rounded-full border border-emerald-400/20 bg-emerald-400/10 px-2.5 py-1 text-[10px] font-bold text-emerald-300 sm:inline-flex">
-          state · tools · evals
-        </span>
-      </div>
-
-      <svg
-        viewBox="0 0 700 555"
-        role="img"
-        aria-labelledby="hero-architecture-title hero-architecture-desc"
-        className="h-auto w-full"
-      >
-        <title id="hero-architecture-title">Production AI architecture diagram</title>
-        <desc id="hero-architecture-desc">
-          A product interface calls an application API. The API coordinates LangGraph state and tools, retrieval and data services, guarded external systems, and observability and evaluation.
-        </desc>
-        <defs>
-          <marker id="hero-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-            <path d="M 0 0 L 10 5 L 0 10 z" fill="#34d399" />
-          </marker>
-          <linearGradient id="hero-panel" x1="0" x2="1">
-            <stop offset="0" stopColor="#111827" />
-            <stop offset="1" stopColor="#0b1220" />
-          </linearGradient>
-        </defs>
-
-        <g fill="none" stroke="#34d399" strokeOpacity="0.7" strokeWidth="2" markerEnd="url(#hero-arrow)">
-          <path d="M350 92 V145" />
-          <path d="M350 237 V270 H160 V305" />
-          <path d="M350 237 V305" />
-          <path d="M350 237 V270 H590 V305" />
-          <path d="M160 395 V440 H350" />
-          <path d="M400 395 V440" />
-          <path d="M590 395 V440 H350" />
-        </g>
-
-        <g>
-          <rect x="205" y="20" width="290" height="72" rx="17" fill="url(#hero-panel)" stroke="#334155" />
-          <circle cx="238" cy="56" r="11" fill="#10b981" fillOpacity="0.2" stroke="#34d399" />
-          <path d="M233 56h10M238 51v10" stroke="#6ee7b7" strokeWidth="2" strokeLinecap="round" />
-          <text x="350" y="50" fill="#f8fafc" fontSize="16" fontWeight="700" textAnchor="middle">Product interface</text>
-          <text x="350" y="72" fill="#94a3b8" fontSize="11.5" textAnchor="middle">Next.js · React · TypeScript · streaming UI</text>
-        </g>
-
-        <g>
-          <rect x="190" y="145" width="320" height="92" rx="18" fill="#0f172a" stroke="#10b981" strokeOpacity="0.55" />
-          <text x="350" y="174" fill="#6ee7b7" fontSize="11" fontWeight="700" letterSpacing="1.4" textAnchor="middle">APPLICATION BOUNDARY</text>
-          <text x="350" y="201" fill="#f8fafc" fontSize="17" fontWeight="700" textAnchor="middle">API + orchestration layer</text>
-          <text x="350" y="222" fill="#94a3b8" fontSize="11.5" textAnchor="middle">Node.js · Python</text>
-        </g>
-
-        <g>
-          <rect x="40" y="305" width="240" height="90" rx="16" fill="#0f172a" stroke="#334155" />
-          <text x="160" y="334" fill="#f8fafc" fontSize="14.5" fontWeight="700" textAnchor="middle">Agent state &amp; workflow</text>
-          <text x="160" y="357" fill="#94a3b8" fontSize="10.8" textAnchor="middle">LangGraph · checkpoints · HITL</text>
-          <text x="160" y="375" fill="#94a3b8" fontSize="10.8" textAnchor="middle">typed tool execution</text>
-        </g>
-
-        <g>
-          <rect x="300" y="305" width="200" height="90" rx="16" fill="#0f172a" stroke="#334155" />
-          <text x="400" y="334" fill="#f8fafc" fontSize="14.5" fontWeight="700" textAnchor="middle">Retrieval &amp; data</text>
-          <text x="400" y="357" fill="#94a3b8" fontSize="10.8" textAnchor="middle">Postgres · vectors · cache</text>
-          <text x="400" y="375" fill="#94a3b8" fontSize="10.8" textAnchor="middle">grounded context</text>
-        </g>
-
-        <g>
-          <rect x="520" y="305" width="140" height="90" rx="16" fill="#0f172a" stroke="#334155" />
-          <text x="590" y="334" fill="#f8fafc" fontSize="14.5" fontWeight="700" textAnchor="middle">Tools</text>
-          <text x="590" y="357" fill="#94a3b8" fontSize="10.8" textAnchor="middle">MCP · APIs</text>
-          <text x="590" y="375" fill="#94a3b8" fontSize="10.8" textAnchor="middle">permissions</text>
-        </g>
-
-        <g>
-          <rect x="135" y="440" width="430" height="92" rx="18" fill="#07130f" stroke="#10b981" strokeOpacity="0.45" />
-          <text x="350" y="469" fill="#6ee7b7" fontSize="11" fontWeight="700" letterSpacing="1.4" textAnchor="middle">PRODUCTION FEEDBACK LOOP</text>
-          <text x="350" y="495" fill="#f8fafc" fontSize="14.5" fontWeight="700" textAnchor="middle">Tracing · evaluations · latency</text>
-          <text x="350" y="516" fill="#f8fafc" fontSize="14.5" fontWeight="700" textAnchor="middle">token cost · recovery</text>
-        </g>
-
-        <g fill="#94a3b8" fontSize="10">
-          <text x="362" y="124">request / stream</text>
-          <text x="78" y="292">state</text>
-          <text x="365" y="292">context</text>
-          <text x="601" y="292">actions</text>
-        </g>
-      </svg>
-
-      <div className="mt-2 grid grid-cols-1 gap-2 text-center text-[10px] font-semibold text-gray-400 sm:grid-cols-3">
-        <span className="rounded-lg border border-white/10 bg-white/[0.035] px-2 py-2">Guardrails</span>
-        <span className="rounded-lg border border-white/10 bg-white/[0.035] px-2 py-2">Retries &amp; timeouts</span>
-        <span className="rounded-lg border border-white/10 bg-white/[0.035] px-2 py-2">RBAC / ABAC</span>
-      </div>
-    </div>
+    <motion.span
+      key={roles[index]}
+      initial={{ opacity: 0, y: 6 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.25 }}
+    >
+      {roles[index]}
+    </motion.span>
   );
 }
 
 export default function Hero() {
-  const reduceMotion = useReducedMotion();
-  const initialLeft = reduceMotion ? false : { opacity: 0, y: 24 };
-  const initialRight = reduceMotion ? false : { opacity: 0, x: 30 };
-
   return (
-    <section id="hero" className="relative overflow-hidden pb-20 pt-28 sm:pt-32 lg:pb-24">
+    <section id="hero" className="relative pt-28 pb-16 overflow-hidden">
       <div className="hero-gradient" />
-      <div className="mx-auto grid max-w-7xl items-center gap-14 px-4 sm:px-6 lg:grid-cols-[1.03fr_.97fr] lg:px-8">
-        <motion.div initial={initialLeft} animate={{ opacity: 1, y: 0 }} transition={{ duration: reduceMotion ? 0 : 0.5 }}>
-          <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.16em] text-emerald-800 dark:border-emerald-500/20 dark:bg-emerald-500/10 dark:text-emerald-300">
-            Senior Full Stack &amp; Generative AI Engineer
-          </div>
-          <h1 className="max-w-4xl font-[family-name:var(--font-space-grotesk)] text-4xl font-bold leading-[1.06] tracking-tight text-gray-950 sm:text-5xl lg:text-6xl dark:text-white">
-            I design and ship scalable product systems and production-grade AI agents.
-          </h1>
-          <p className="mt-6 max-w-2xl text-lg leading-8 text-gray-600 dark:text-gray-300">
-            7+ years across SaaS, IoT, enterprise software, Web3 and Generative AI. I work across frontend, backend, data and AI—from architecture and implementation to production observability.
-          </p>
 
-          <div className="mt-8 flex flex-wrap gap-3">
-            <Link href="/#projects" className="btn-primary inline-flex items-center gap-2">
-              View Case Studies <ArrowRight size={17} aria-hidden="true" />
-            </Link>
-            <a href="/Salman_Butt_Resume.pdf" target="_blank" rel="noreferrer" className="btn-secondary">View Resume</a>
-            <Link href="/blog" className="btn-secondary">Engineering Blog</Link>
-          </div>
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col md:flex-row items-center gap-12 md:gap-16">
+          <motion.div
+            className="flex-1 md:max-w-[60%] text-center md:text-left"
+            variants={container}
+            initial="hidden"
+            animate="show"
+          >
+            <motion.span variants={item} className="section-label">
+              SENIOR FULL STACK &amp; GENAI ENGINEER
+            </motion.span>
 
-          <div className="mt-7 flex flex-wrap items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
-            <a href="https://github.com/salman0butt" target="_blank" rel="noopener noreferrer" aria-label="GitHub" className="rounded-md transition-colors hover:text-emerald-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"><Github size={20} /></a>
-            <a href="https://www.linkedin.com/in/salman0butt/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="rounded-md transition-colors hover:text-emerald-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"><Linkedin size={20} /></a>
-            <span className="h-4 w-px bg-gray-300 dark:bg-gray-700" aria-hidden="true" />
-            <span>Pakistan · Remote worldwide</span>
-          </div>
+            <motion.div variants={item} className="flex items-center gap-4 justify-center md:justify-start mb-4">
+              <div className="w-14 h-14 md:w-16 md:h-16 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center text-white font-bold text-lg md:text-xl shadow-lg shadow-emerald-500/20 shrink-0">
+                SB
+              </div>
+              <h1 className="font-[family-name:var(--font-space-grotesk)] text-4xl md:text-6xl font-bold text-gray-900 dark:text-white">
+                Salman Butt
+              </h1>
+            </motion.div>
 
-          <div className="mt-9 grid grid-cols-2 gap-3 sm:grid-cols-4">
-            {stats.map((stat) => {
-              const Icon = stat.icon;
-              return (
-                <div key={stat.label} className="rounded-xl border border-gray-200 bg-white/75 p-3 dark:border-white/10 dark:bg-white/5">
-                  <div className="flex items-center gap-2"><Icon size={15} className="text-emerald-600 dark:text-emerald-400" aria-hidden="true" /><strong className="text-lg text-gray-950 dark:text-white">{stat.value}</strong></div>
-                  <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">{stat.label}</p>
+            <motion.div
+              variants={item}
+              className="text-xl md:text-2xl font-medium text-emerald-500 mb-6 min-h-[2.5rem]"
+            >
+              <RotatingRole />
+            </motion.div>
+
+            <motion.p
+              variants={item}
+              className="text-lg text-gray-600 dark:text-gray-400 mb-8 max-w-xl mx-auto md:mx-0"
+            >
+              I build products that scale, systems that hold, and AI that
+              actually works.
+            </motion.p>
+
+            <motion.div
+              variants={item}
+              className="flex flex-wrap justify-center md:justify-start gap-4 mb-8"
+            >
+              <a href="#projects" className="btn-primary">
+                View My Work
+              </a>
+              <a href="#contact" className="btn-secondary">
+                Get In Touch
+              </a>
+            </motion.div>
+
+            <motion.div
+              variants={item}
+              className="grid grid-cols-4 gap-2 md:gap-3 mb-8"
+            >
+              {stats.map((stat) => {
+                const Icon = stat.icon;
+                return (
+                  <div
+                    key={stat.label}
+                    className="glass rounded-xl px-2 py-3 md:px-4 md:py-4 text-center"
+                  >
+                    <div className="flex items-center justify-center gap-1 mb-1">
+                      <Icon size={14} className="text-emerald-500" />
+                      <span className="text-lg md:text-xl font-bold text-gray-900 dark:text-white">
+                        {stat.value}
+                      </span>
+                    </div>
+                    <span className="text-[10px] md:text-xs text-gray-500 dark:text-gray-400 font-medium">
+                      {stat.label}
+                    </span>
+                  </div>
+                );
+              })}
+            </motion.div>
+
+            <motion.div
+              variants={item}
+              className="flex justify-center md:justify-start gap-4"
+            >
+              <a
+                href="https://github.com/salman0butt"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="icon-hover p-2.5 rounded-lg text-gray-600 dark:text-gray-400 hover:text-emerald-500 dark:hover:text-emerald-400 transition-colors"
+                aria-label="GitHub"
+              >
+                <Github size={22} />
+              </a>
+              <a
+                href="https://www.linkedin.com/in/salman0butt/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="icon-hover p-2.5 rounded-lg text-gray-600 dark:text-gray-400 hover:text-emerald-500 dark:hover:text-emerald-400 transition-colors"
+                aria-label="LinkedIn"
+              >
+                <Linkedin size={22} />
+              </a>
+              <a
+                href="mailto:salman0butt@gmail.com"
+                className="icon-hover p-2.5 rounded-lg text-gray-600 dark:text-gray-400 hover:text-emerald-500 dark:hover:text-emerald-400 transition-colors"
+                aria-label="Email"
+              >
+                <Mail size={22} />
+              </a>
+            </motion.div>
+          </motion.div>
+
+          <motion.div
+            className="hidden md:flex flex-1 justify-center items-center"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+          >
+            <div className="code-terminal w-full max-w-md">
+              <div className="code-terminal-bar">
+                <div className="code-terminal-dot" style={{ background: '#ef4444' }} />
+                <div className="code-terminal-dot" style={{ background: '#eab308' }} />
+                <div className="code-terminal-dot" style={{ background: '#22c55e' }} />
+                <span className="ml-3 text-xs text-gray-400 font-mono">
+                  salman.ts
+                </span>
+              </div>
+
+              <div className="p-5 font-mono text-sm leading-relaxed">
+                <div>
+                  <span className="text-violet-400">const</span>{' '}
+                  <span className="text-sky-400">salman</span>{' '}
+                  <span className="text-gray-400">=</span>{' '}
+                  <span className="text-gray-400">{'{'}</span>
                 </div>
-              );
-            })}
-          </div>
-        </motion.div>
-
-        <motion.div initial={initialRight} animate={{ opacity: 1, x: 0 }} transition={{ duration: reduceMotion ? 0 : 0.55, delay: reduceMotion ? 0 : 0.08 }} className="relative">
-          <div className="absolute -inset-8 rounded-full bg-emerald-500/10 blur-3xl" aria-hidden="true" />
-          <div className="relative"><ArchitectureVisual /></div>
-        </motion.div>
+                <div className="pl-6">
+                  <span className="text-sky-400">role</span>
+                  <span className="text-gray-400">: </span>
+                  <span className="text-emerald-400">&quot;Senior Full Stack &amp; GenAI Engineer&quot;</span>
+                  <span className="text-gray-400">,</span>
+                </div>
+                <div className="pl-6">
+                  <span className="text-sky-400">experience</span>
+                  <span className="text-gray-400">: </span>
+                  <span className="text-emerald-400">&quot;7+ years&quot;</span>
+                  <span className="text-gray-400">,</span>
+                </div>
+                <div className="pl-6">
+                  <span className="text-sky-400">projects</span>
+                  <span className="text-gray-400">: </span>
+                  <span className="text-emerald-400">&quot;50+&quot;</span>
+                  <span className="text-gray-400">,</span>
+                </div>
+                <div className="pl-6">
+                  <span className="text-sky-400">countries</span>
+                  <span className="text-gray-400">: </span>
+                  <span className="text-amber-400">5</span>
+                  <span className="text-gray-400">,</span>
+                </div>
+                <div className="pl-6">
+                  <span className="text-sky-400">faster_apis</span>
+                  <span className="text-gray-400">: </span>
+                  <span className="text-emerald-400">&quot;30-40%&quot;</span>
+                </div>
+                <div>
+                  <span className="text-gray-400">{'}'}</span>
+                  <span className="text-gray-400">;</span>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        </div>
       </div>
+
+      <motion.div
+        className="flex justify-center mt-12"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.2, duration: 0.6 }}
+      >
+        <a
+          href="#about"
+          className="text-gray-400 dark:text-gray-500 hover:text-emerald-500 dark:hover:text-emerald-400 transition-colors"
+          aria-label="Scroll down"
+        >
+          <ChevronDown size={28} className="animate-scroll-down" />
+        </a>
+      </motion.div>
     </section>
   );
 }

@@ -1,77 +1,111 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Menu, Moon, Sun, X } from 'lucide-react';
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { Menu, X, Sun, Moon } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const navLinks = [
-  { label: 'Work', href: '/#projects' },
-  { label: 'AI', href: '/#ai-engineering' },
+  { label: 'About', href: '/#about' },
   { label: 'Experience', href: '/#experience' },
-  { label: 'Expertise', href: '/#skills' },
+  { label: 'Projects', href: '/#projects' },
+  { label: 'Skills', href: '/#skills' },
   { label: 'Blog', href: '/blog' },
   { label: 'Contact', href: '/#contact' },
 ];
 
-function ThemeIcons() {
-  return (
-    <>
-      <Sun size={18} className="hidden dark:block" aria-hidden="true" />
-      <Moon size={18} className="block dark:hidden" aria-hidden="true" />
-    </>
-  );
-}
-
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [dark, setDark] = useState(true);
   const [scrolled, setScrolled] = useState(false);
-  const reduceMotion = useReducedMotion();
+
+  useEffect(() => {
+    const stored = localStorage.getItem('theme');
+    if (stored === 'light') {
+      setDark(false);
+      document.documentElement.classList.remove('dark');
+    } else {
+      setDark(true);
+      document.documentElement.classList.add('dark');
+    }
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
-    handleScroll();
-    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   const toggleTheme = () => {
-    const nextDark = !document.documentElement.classList.contains('dark');
-    document.documentElement.classList.toggle('dark', nextDark);
-    localStorage.setItem('theme', nextDark ? 'dark' : 'light');
+    const next = !dark;
+    setDark(next);
+    if (next) {
+      document.documentElement.classList.add('dark');
+      localStorage.setItem('theme', 'dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+      localStorage.setItem('theme', 'light');
+    }
   };
 
-  const closeMenu = () => setMobileOpen(false);
+  const handleLinkClick = () => setMobileOpen(false);
 
   return (
-    <nav aria-label="Primary navigation" className={`fixed inset-x-0 top-0 z-50 navbar-blur transition-shadow duration-300 motion-reduce:transition-none ${scrolled ? 'shadow-lg' : ''}`}>
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex h-16 items-center justify-between">
-          <Link href="/#hero" className="group flex items-center gap-2 rounded-lg" onClick={closeMenu}>
-            <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-600 text-sm font-bold text-white">SB</span>
-            <span className="font-[family-name:var(--font-space-grotesk)] text-lg font-semibold text-gray-900 dark:text-white">Salman Butt</span>
+    <nav
+      className={`fixed top-0 left-0 right-0 z-50 navbar-blur transition-shadow duration-300 ${
+        scrolled ? 'shadow-lg' : ''
+      }`}
+    >
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16">
+          <Link href="/#hero" className="flex items-center gap-2 group" onClick={handleLinkClick}>
+            <span className="flex items-center justify-center w-9 h-9 rounded-lg bg-emerald-500 text-white font-bold text-sm">
+              SB
+            </span>
+            <span className="font-[family-name:var(--font-space-grotesk)] font-semibold text-lg text-gray-900 dark:text-white">
+              Salman Butt
+            </span>
           </Link>
 
-          <div className="hidden items-center gap-6 lg:flex">
+          <div className="hidden md:flex items-center gap-7">
             {navLinks.map((link) => (
-              <Link key={link.href} href={link.href} className="rounded-md text-sm font-medium text-gray-600 transition-colors hover:text-emerald-700 dark:text-gray-300 dark:hover:text-emerald-300">
+              <Link
+                key={link.href}
+                href={link.href}
+                className="relative text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-emerald-500 dark:hover:text-emerald-400 transition-colors after:absolute after:left-0 after:bottom-[-4px] after:h-[2px] after:w-0 after:bg-emerald-500 after:transition-all after:duration-300 hover:after:w-full"
+              >
                 {link.label}
               </Link>
             ))}
-            <button type="button" onClick={toggleTheme} aria-label="Toggle theme" className="rounded-lg p-2 text-gray-600 transition-colors hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800">
-              <ThemeIcons />
+            <button
+              onClick={toggleTheme}
+              aria-label="Toggle theme"
+              className="p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+            >
+              {dark ? <Sun size={18} /> : <Moon size={18} />}
             </button>
-            <a href="mailto:salman0butt@gmail.com" className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow-md shadow-emerald-500/20 transition-colors hover:bg-emerald-700">
+            <a
+              href="mailto:salman0butt@gmail.com"
+              className="ml-1 px-4 py-2 rounded-lg bg-emerald-500 text-white text-sm font-semibold hover:bg-emerald-600 transition-colors shadow-md shadow-emerald-500/20"
+            >
               Hire Me
             </a>
           </div>
 
-          <div className="flex items-center gap-2 lg:hidden">
-            <button type="button" onClick={toggleTheme} aria-label="Toggle theme" className="rounded-lg p-2 text-gray-600 dark:text-gray-300">
-              <ThemeIcons />
+          <div className="flex md:hidden items-center gap-2">
+            <button
+              onClick={toggleTheme}
+              aria-label="Toggle theme"
+              className="p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+            >
+              {dark ? <Sun size={18} /> : <Moon size={18} />}
             </button>
-            <button type="button" onClick={() => setMobileOpen((open) => !open)} aria-label="Toggle menu" aria-expanded={mobileOpen} aria-controls="mobile-navigation" className="rounded-lg p-2 text-gray-600 dark:text-gray-300">
-              {mobileOpen ? <X size={22} aria-hidden="true" /> : <Menu size={22} aria-hidden="true" />}
+            <button
+              onClick={() => setMobileOpen(!mobileOpen)}
+              aria-label="Toggle menu"
+              className="p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+            >
+              {mobileOpen ? <X size={22} /> : <Menu size={22} />}
             </button>
           </div>
         </div>
@@ -80,20 +114,39 @@ export default function Navbar() {
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
-            id="mobile-navigation"
-            initial={reduceMotion ? false : { opacity: 0, y: -8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={reduceMotion ? undefined : { opacity: 0, y: -8 }}
-            transition={{ duration: reduceMotion ? 0 : 0.18 }}
-            className="border-t border-gray-200 bg-white px-4 py-4 shadow-xl dark:border-gray-800 dark:bg-gray-950 lg:hidden"
+            initial={{ x: '100%' }}
+            animate={{ x: 0 }}
+            exit={{ x: '100%' }}
+            transition={{ type: 'tween', duration: 0.3 }}
+            className="fixed top-16 right-0 bottom-0 w-64 bg-white dark:bg-gray-900 shadow-2xl border-l border-gray-200 dark:border-gray-700 md:hidden z-40"
           >
-            <div className="mx-auto flex max-w-7xl flex-col gap-1">
-              {navLinks.map((link) => (
-                <Link key={link.href} href={link.href} onClick={closeMenu} className="rounded-lg px-3 py-3 text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-emerald-700 dark:text-gray-200 dark:hover:bg-gray-900 dark:hover:text-emerald-300">
-                  {link.label}
-                </Link>
+            <div className="flex flex-col p-6 gap-4">
+              {navLinks.map((link, i) => (
+                <motion.div
+                  key={link.href}
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: i * 0.05 }}
+                >
+                  <Link
+                    href={link.href}
+                    onClick={handleLinkClick}
+                    className="block text-base font-medium text-gray-700 dark:text-gray-200 hover:text-emerald-500 dark:hover:text-emerald-400 transition-colors py-2 border-b border-gray-100 dark:border-gray-800"
+                  >
+                    {link.label}
+                  </Link>
+                </motion.div>
               ))}
-              <a href="mailto:salman0butt@gmail.com" onClick={closeMenu} className="mt-2 rounded-lg bg-emerald-600 px-4 py-3 text-center text-sm font-semibold text-white">Hire Me</a>
+              <motion.a
+                href="mailto:salman0butt@gmail.com"
+                onClick={handleLinkClick}
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: navLinks.length * 0.05 }}
+                className="mt-2 px-4 py-2.5 rounded-lg bg-emerald-500 text-white text-center text-sm font-semibold hover:bg-emerald-600 transition-colors shadow-md shadow-emerald-500/20"
+              >
+                Hire Me
+              </motion.a>
             </div>
           </motion.div>
         )}
