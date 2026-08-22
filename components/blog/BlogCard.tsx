@@ -14,7 +14,7 @@ const dateFormatter = new Intl.DateTimeFormat('en', {
 });
 
 export default function BlogCard({ post, compact = false }: BlogCardProps) {
-  const href = { pathname: '/blog/post', query: { slug: post.slug } };
+  const href = `/blog/${post.slug}`;
   const readTime = estimateReadTime(post.content);
 
   return (
@@ -23,9 +23,9 @@ export default function BlogCard({ post, compact = false }: BlogCardProps) {
         <Link href={href} className={`block overflow-hidden bg-gray-100 dark:bg-gray-800 ${compact ? 'h-44' : 'h-52'}`}>
           <img
             src={post.cover_image_url}
-            alt=""
+            alt={`Cover image for ${post.title}`}
             loading="lazy"
-            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03] motion-reduce:transition-none motion-reduce:transform-none"
           />
         </Link>
       )}
@@ -33,7 +33,7 @@ export default function BlogCard({ post, compact = false }: BlogCardProps) {
       <div className={compact ? 'p-5' : 'p-6'}>
         <div className="mb-3 flex flex-wrap items-center gap-2 text-xs font-medium text-gray-500 dark:text-gray-400">
           {post.category && (
-            <span className="rounded-full bg-emerald-50 px-2.5 py-1 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-300">
+            <span className="rounded-full bg-emerald-50 px-2.5 py-1 text-emerald-800 dark:bg-emerald-500/10 dark:text-emerald-300">
               {post.category}
             </span>
           )}
@@ -46,7 +46,7 @@ export default function BlogCard({ post, compact = false }: BlogCardProps) {
         </div>
 
         <h2 className={`${compact ? 'text-lg' : 'text-xl'} font-[family-name:var(--font-space-grotesk)] font-semibold leading-snug text-gray-950 dark:text-white`}>
-          <Link href={href} className="transition-colors hover:text-emerald-600 dark:hover:text-emerald-400">
+          <Link href={href} className="rounded-sm transition-colors hover:text-emerald-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 dark:hover:text-emerald-300">
             {post.title}
           </Link>
         </h2>
@@ -59,7 +59,7 @@ export default function BlogCard({ post, compact = false }: BlogCardProps) {
 
         <Link
           href={href}
-          className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-emerald-600 transition-colors hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300"
+          className="mt-5 inline-flex items-center gap-1.5 rounded-sm text-sm font-semibold text-emerald-700 transition-colors hover:text-emerald-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 dark:text-emerald-300 dark:hover:text-emerald-200"
         >
           Read article
           <ArrowUpRight size={15} aria-hidden="true" />
