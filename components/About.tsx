@@ -1,173 +1,36 @@
-'use client';
+import { CheckCircle, GraduationCap } from 'lucide-react';
 
-import { motion } from 'framer-motion';
-import { useInView } from 'react-intersection-observer';
-import { CheckCircle, Calendar, FolderGit2, Globe, Server, GraduationCap, Trophy } from 'lucide-react';
-
-const highlights = [
-  'Reduced API latency by 30-40% across production platforms at Permission.io',
-  'Built multi-agent conversational AI with LangChain, LangGraph & Google ADK',
-  'Architected real-time IoT pipelines: RabbitMQ, MQTT, InfluxDB at OffGrid Europe',
-  'Multi-tenant SaaS ERP from scratch using Laravel REST API & Vue.js',
-  '50+ full-stack projects: Laravel, WordPress, WooCommerce, React, Next.js, Node.js',
-];
-
-const stats = [
-  { value: '7+', label: 'Years Experience', icon: Calendar },
-  { value: '50+', label: 'Projects Delivered', icon: FolderGit2 },
-  { value: '5', label: 'Countries', icon: Globe },
-  { value: '30-40%', label: 'Faster APIs', icon: Server },
+const principles = [
+  ['Ownership over tickets', 'I prefer understanding the user and system problem, then carrying the solution through implementation, release and follow-up.'],
+  ['Production over demos', 'Performance, failure modes, permissions, observability and maintainability are part of the feature — not cleanup for later.'],
+  ['Simple systems first', 'I use SOLID, DRY and KISS pragmatically, refactor fragile areas in small steps, and avoid complexity that does not buy us something.'],
+  ['Fast feedback loops', 'Ship small, measure impact, learn from users and production data, then repeat.'],
 ];
 
 export default function About() {
-  const [ref] = useInView({
-    triggerOnce: true,
-    threshold: 0.1,
-  });
-
   return (
-    <section id="about" className="py-20 px-4">
-      <div className="max-w-6xl mx-auto" ref={ref}>
-        {/* Section Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
-        >
-          <span className="section-label">ABOUT ME</span>
-          <h2 className="text-4xl md:text-5xl font-bold font-[family-name:var(--font-space-grotesk)] gradient-text mb-4">
-            About Me
-          </h2>
-          <div className="section-divider" />
-        </motion.div>
-
-        {/* Two-Column Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-[55%_45%] gap-8 mb-16">
-          {/* Left Column — Professional Summary */}
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-          >
-            <p className="text-base leading-relaxed text-gray-700 dark:text-gray-300 mb-4">
-              I&apos;ve spent 7+ years shipping production systems across 5 countries — from
-              multi-tenant SaaS ERPs and real-time IoT platforms to AI-powered conversational
-              agents used by thousands. My sweet spot is the intersection of scalable backend
-              architecture and cutting-edge GenAI integration, using LangChain, LangGraph,
-              LangSmith, and modern cloud infrastructure. I&apos;ve improved API response times
-              by 30-40%, delivered 50+ projects, and earned Employee of the Year for consistent
-              on-time delivery.
-            </p>
-            <p className="text-base leading-relaxed text-gray-600 dark:text-gray-400">
-              Strong System Design foundation — distributed systems, microservices, event-driven
-              architecture, Redis caching, CQRS, and Kafka/RabbitMQ messaging at scale. Deep
-              PHP/Laravel expertise: architected multi-tenant SaaS platforms, built 5+ complex
-              Laravel applications with REST APIs, and delivered 50+ WordPress &amp; WooCommerce
-              solutions for European clients — e-commerce stores, real estate portals, and custom
-              business applications with payment gateways, admin panels, and SEO-optimised themes.
-              Also experienced with containerised Kubernetes deployments and CI/CD pipelines.
-            </p>
-          </motion.div>
-
-          {/* Right Column — Key Highlights */}
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-            className="glass rounded-2xl p-6"
-          >
-            <h3 className="text-xl font-bold font-[family-name:var(--font-space-grotesk)] text-slate-900 dark:text-white mb-4">
-              Key Highlights
-            </h3>
-            <ul className="space-y-3">
-              {highlights.map((item, index) => (
-                <motion.li
-                  key={index}
-                  initial={{ opacity: 0, x: 10 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.4, delay: 0.4 + index * 0.07 }}
-                  className="flex items-start gap-3 text-sm text-gray-700 dark:text-gray-300"
-                >
-                  <CheckCircle className="w-5 h-5 text-emerald-500 shrink-0 mt-0.5" />
-                  <span>{item}</span>
-                </motion.li>
-              ))}
-            </ul>
-          </motion.div>
-        </div>
-
-        {/* Award Badge */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="flex justify-center mb-12"
-        >
-          <div className="glass rounded-2xl px-8 py-4 inline-flex items-center gap-4">
-            <div className="p-3 bg-amber-500/10 rounded-xl">
-              <Trophy className="w-7 h-7 text-amber-500" />
-            </div>
-            <div>
-              <p className="text-base font-bold text-gray-900 dark:text-white">
-                Employee of the Year 2020
-              </p>
-              <p className="text-sm text-gray-500 dark:text-gray-400">
-                Digital MedieXpert (DMX) — Norway
-              </p>
+    <section id="about" className="py-20 sm:py-24">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="grid gap-12 lg:grid-cols-[.9fr_1.1fr]">
+          <div>
+            <p className="section-label">HOW I WORK</p>
+            <h2 className="mt-3 font-[family-name:var(--font-space-grotesk)] text-3xl font-bold tracking-tight text-gray-950 sm:text-4xl dark:text-white">Senior engineering is judgment, not just more code.</h2>
+            <p className="mt-5 text-base leading-7 text-gray-600 dark:text-gray-400">Over 7+ years I’ve worked across SaaS, IoT, enterprise JavaScript, Web3 and Generative AI. The common thread is end-to-end ownership: turning ambiguous requirements into systems teams can operate and extend.</p>
+            <div className="mt-7 rounded-2xl border border-gray-200 bg-gray-50 p-5 dark:border-white/10 dark:bg-white/[0.035]">
+              <div className="flex items-center gap-3"><GraduationCap size={21} className="text-emerald-500" /><div><p className="font-bold text-gray-950 dark:text-white">BSc Computer Science</p><p className="text-sm text-gray-500 dark:text-gray-400">University of the Punjab · Lahore · 2015–2019</p></div></div>
             </div>
           </div>
-        </motion.div>
 
-        {/* Stats Row */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16">
-          {stats.map((stat, index) => (
-            <motion.div
-              key={stat.label}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.2 + index * 0.1 }}
-              className="glass rounded-2xl p-6 text-center"
-            >
-              <stat.icon className="w-7 h-7 text-emerald-500 mx-auto mb-3" />
-              <div className="text-3xl md:text-4xl font-bold gradient-text mb-1">
-                {stat.value}
-              </div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">{stat.label}</div>
-            </motion.div>
-          ))}
-        </div>
-
-        {/* Education */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="glass rounded-2xl p-8"
-        >
-          <div className="flex items-center gap-3 mb-4">
-            <GraduationCap className="w-6 h-6 text-emerald-500" />
-            <h3 className="text-2xl font-bold font-[family-name:var(--font-space-grotesk)] text-slate-900 dark:text-white">
-              Education
-            </h3>
+          <div className="grid gap-4 sm:grid-cols-2">
+            {principles.map(([title, text]) => (
+              <article key={title} className="rounded-2xl border border-gray-200 bg-white p-6 dark:border-white/10 dark:bg-white/[0.035]">
+                <CheckCircle size={20} className="text-emerald-500" />
+                <h3 className="mt-4 text-lg font-bold text-gray-950 dark:text-white">{title}</h3>
+                <p className="mt-2 text-sm leading-6 text-gray-600 dark:text-gray-400">{text}</p>
+              </article>
+            ))}
           </div>
-          <p className="text-lg font-semibold text-slate-900 dark:text-white">
-            Bachelor of Science — Computer Science
-          </p>
-          <p className="text-gray-600 dark:text-gray-400 mt-1">
-            University of the Punjab | Lahore, Pakistan | 2015 - 2019
-          </p>
-          <p className="text-sm text-gray-500 dark:text-gray-500 mt-2">
-            Data Structures &amp; Algorithms, Database Systems, OOP, Computer Networks, AI, Software Engineering
-          </p>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

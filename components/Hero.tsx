@@ -1,269 +1,98 @@
 'use client';
 
+import Link from 'next/link';
+import { ArrowRight, Briefcase, Code, Globe, Zap } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { TypeAnimation } from 'react-type-animation';
-import {
-  Mail,
-  Briefcase,
-  Code,
-  Globe,
-  Zap,
-  ChevronDown,
-} from 'lucide-react';
 import { Github, Linkedin } from './icons';
 
-const container = {
-  hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: { staggerChildren: 0.12 },
-  },
-};
-
-const item = {
-  hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.5 } },
-};
-
 const stats = [
-  { value: '7+', label: 'Years', icon: Briefcase },
-  { value: '50+', label: 'Projects', icon: Code },
+  { value: '7+', label: 'Years shipping', icon: Briefcase },
+  { value: '50+', label: 'Projects delivered', icon: Code },
   { value: '5', label: 'Countries', icon: Globe },
-  { value: '40%', label: 'Faster APIs', icon: Zap },
+  { value: '30–40%', label: 'API improvement', icon: Zap },
+];
+
+const architecture = [
+  ['Next.js product', 'React · TypeScript'],
+  ['Agent / API layer', 'Node.js · Python'],
+  ['LangGraph orchestration', 'Tools · memory · HITL'],
+  ['RAG + data', 'PostgreSQL · pgvector'],
+  ['Observability', 'LangSmith · evals'],
 ];
 
 export default function Hero() {
   return (
-    <section id="hero" className="relative pt-28 pb-16 overflow-hidden">
-      {/* Animated mesh gradient background */}
+    <section id="hero" className="relative overflow-hidden pb-20 pt-28 sm:pt-32 lg:pb-24">
       <div className="hero-gradient" />
+      <div className="mx-auto grid max-w-7xl items-center gap-14 px-4 sm:px-6 lg:grid-cols-[1.08fr_.92fr] lg:px-8">
+        <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.55 }}>
+          <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.16em] text-emerald-700 dark:border-emerald-500/20 dark:bg-emerald-500/10 dark:text-emerald-300">
+            Senior Full Stack &amp; Generative AI Engineer
+          </div>
+          <h1 className="max-w-4xl font-[family-name:var(--font-space-grotesk)] text-4xl font-bold leading-[1.06] tracking-tight text-gray-950 sm:text-5xl lg:text-6xl dark:text-white">
+            I build production AI systems and scalable products that survive real users.
+          </h1>
+          <p className="mt-6 max-w-2xl text-lg leading-8 text-gray-600 dark:text-gray-300">
+            From agentic workflows, RAG and observability to distributed SaaS, Web3 and real-time IoT infrastructure — I work across product, architecture and delivery.
+          </p>
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col md:flex-row items-center gap-12 md:gap-16">
-          {/* Left side - Text content */}
-          <motion.div
-            className="flex-1 md:max-w-[60%] text-center md:text-left"
-            variants={container}
-            initial="hidden"
-            animate="show"
-          >
-            {/* Section label */}
-            <motion.span variants={item} className="section-label">
-              SENIOR FULL STACK &amp; GENAI ENGINEER
-            </motion.span>
+          <div className="mt-8 flex flex-wrap gap-3">
+            <Link href="/#projects" className="btn-primary inline-flex items-center gap-2">
+              View Case Studies <ArrowRight size={17} />
+            </Link>
+            <Link href="/blog" className="btn-secondary">Read Engineering Blog</Link>
+            <a href="/Salman_Butt_Resume.pdf" download className="btn-secondary">Download Resume</a>
+          </div>
 
-            {/* Name with avatar */}
-            <motion.div variants={item} className="flex items-center gap-4 justify-center md:justify-start mb-4">
-              <div className="w-14 h-14 md:w-16 md:h-16 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center text-white font-bold text-lg md:text-xl shadow-lg shadow-emerald-500/20 shrink-0">
-                SB
+          <div className="mt-7 flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
+            <a href="https://github.com/salman0butt" target="_blank" rel="noopener noreferrer" aria-label="GitHub" className="transition-colors hover:text-emerald-500"><Github size={20} /></a>
+            <a href="https://www.linkedin.com/in/salman0butt/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="transition-colors hover:text-emerald-500"><Linkedin size={20} /></a>
+            <span className="h-4 w-px bg-gray-300 dark:bg-gray-700" />
+            <span>Remote worldwide</span>
+          </div>
+
+          <div className="mt-9 grid grid-cols-2 gap-3 sm:grid-cols-4">
+            {stats.map((stat) => {
+              const Icon = stat.icon;
+              return (
+                <div key={stat.label} className="rounded-xl border border-gray-200 bg-white/70 p-3 dark:border-white/10 dark:bg-white/5">
+                  <div className="flex items-center gap-2"><Icon size={15} className="text-emerald-500" /><strong className="text-lg text-gray-950 dark:text-white">{stat.value}</strong></div>
+                  <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">{stat.label}</p>
+                </div>
+              );
+            })}
+          </div>
+        </motion.div>
+
+        <motion.div initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6, delay: 0.12 }} className="relative">
+          <div className="absolute -inset-8 rounded-full bg-emerald-500/10 blur-3xl" />
+          <div className="relative overflow-hidden rounded-3xl border border-gray-200 bg-gray-950 p-5 shadow-2xl dark:border-white/10">
+            <div className="mb-5 flex items-center justify-between border-b border-white/10 pb-4">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-400">System view</p>
+                <h2 className="mt-1 text-sm font-semibold text-white">Production AI architecture</h2>
               </div>
-              <h1 className="font-[family-name:var(--font-space-grotesk)] text-4xl md:text-6xl font-bold text-gray-900 dark:text-white">
-                Salman Butt
-              </h1>
-            </motion.div>
-
-            {/* Typed subtitle */}
-            <motion.div
-              variants={item}
-              className="text-xl md:text-2xl font-medium text-emerald-500 mb-6 min-h-[2.5rem]"
-            >
-              <TypeAnimation
-                sequence={[
-                  'Senior Full Stack Engineer',
-                  2000,
-                  'Generative AI Engineer',
-                  2000,
-                  'Backend Architect',
-                  2000,
-                  'Frontend Developer',
-                  2000,
-                  'IoT & Real-Time Systems Builder',
-                  2000,
-                ]}
-                wrapper="span"
-                speed={50}
-                repeat={Infinity}
-              />
-            </motion.div>
-
-            {/* Tagline */}
-            <motion.p
-              variants={item}
-              className="text-lg text-gray-600 dark:text-gray-400 mb-8 max-w-xl mx-auto md:mx-0"
-            >
-              I build products that scale, systems that hold, and AI that
-              actually works.
-            </motion.p>
-
-            {/* CTA buttons */}
-            <motion.div
-              variants={item}
-              className="flex flex-wrap justify-center md:justify-start gap-4 mb-8"
-            >
-              <a href="#projects" className="btn-primary">
-                View My Work
-              </a>
-              <a href="#contact" className="btn-secondary">
-                Get In Touch
-              </a>
-            </motion.div>
-
-            {/* Stats row */}
-            <motion.div
-              variants={item}
-              className="grid grid-cols-4 gap-2 md:gap-3 mb-8"
-            >
-              {stats.map((stat) => {
-                const Icon = stat.icon;
-                return (
-                  <div
-                    key={stat.label}
-                    className="glass rounded-xl px-2 py-3 md:px-4 md:py-4 text-center"
-                  >
-                    <div className="flex items-center justify-center gap-1 mb-1">
-                      <Icon size={14} className="text-emerald-500" />
-                      <span className="text-lg md:text-xl font-bold text-gray-900 dark:text-white">
-                        {stat.value}
-                      </span>
-                    </div>
-                    <span className="text-[10px] md:text-xs text-gray-500 dark:text-gray-400 font-medium">
-                      {stat.label}
-                    </span>
-                  </div>
-                );
-              })}
-            </motion.div>
-
-            {/* Social links */}
-            <motion.div
-              variants={item}
-              className="flex justify-center md:justify-start gap-4"
-            >
-              <a
-                href="https://github.com/salman0butt"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="icon-hover p-2.5 rounded-lg text-gray-600 dark:text-gray-400 hover:text-emerald-500 dark:hover:text-emerald-400 transition-colors"
-                aria-label="GitHub"
-              >
-                <Github size={22} />
-              </a>
-              <a
-                href="https://www.linkedin.com/in/salman0butt/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="icon-hover p-2.5 rounded-lg text-gray-600 dark:text-gray-400 hover:text-emerald-500 dark:hover:text-emerald-400 transition-colors"
-                aria-label="LinkedIn"
-              >
-                <Linkedin size={22} />
-              </a>
-              <a
-                href="mailto:salman0butt@gmail.com"
-                className="icon-hover p-2.5 rounded-lg text-gray-600 dark:text-gray-400 hover:text-emerald-500 dark:hover:text-emerald-400 transition-colors"
-                aria-label="Email"
-              >
-                <Mail size={22} />
-              </a>
-            </motion.div>
-          </motion.div>
-
-          {/* Right side - Code terminal mockup */}
-          <motion.div
-            className="hidden md:flex flex-1 justify-center items-center"
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-          >
-            <div className="code-terminal w-full max-w-md">
-              {/* Terminal bar */}
-              <div className="code-terminal-bar">
-                <div
-                  className="code-terminal-dot"
-                  style={{ background: '#ef4444' }}
-                />
-                <div
-                  className="code-terminal-dot"
-                  style={{ background: '#eab308' }}
-                />
-                <div
-                  className="code-terminal-dot"
-                  style={{ background: '#22c55e' }}
-                />
-                <span className="ml-3 text-xs text-gray-400 font-mono">
-                  salman.ts
-                </span>
-              </div>
-
-              {/* Code content */}
-              <div className="p-5 font-mono text-sm leading-relaxed">
-                <div>
-                  <span className="text-violet-400">const</span>{' '}
-                  <span className="text-sky-400">salman</span>{' '}
-                  <span className="text-gray-400">=</span>{' '}
-                  <span className="text-gray-400">{'{'}</span>
-                </div>
-                <div className="pl-6">
-                  <span className="text-sky-400">role</span>
-                  <span className="text-gray-400">: </span>
-                  <span className="text-emerald-400">
-                    &quot;Senior Full Stack &amp; GenAI Engineer&quot;
-                  </span>
-                  <span className="text-gray-400">,</span>
-                </div>
-                <div className="pl-6">
-                  <span className="text-sky-400">experience</span>
-                  <span className="text-gray-400">: </span>
-                  <span className="text-emerald-400">
-                    &quot;7+ years&quot;
-                  </span>
-                  <span className="text-gray-400">,</span>
-                </div>
-                <div className="pl-6">
-                  <span className="text-sky-400">projects</span>
-                  <span className="text-gray-400">: </span>
-                  <span className="text-emerald-400">
-                    &quot;50+&quot;
-                  </span>
-                  <span className="text-gray-400">,</span>
-                </div>
-                <div className="pl-6">
-                  <span className="text-sky-400">countries</span>
-                  <span className="text-gray-400">: </span>
-                  <span className="text-amber-400">5</span>
-                  <span className="text-gray-400">,</span>
-                </div>
-                <div className="pl-6">
-                  <span className="text-sky-400">faster_apis</span>
-                  <span className="text-gray-400">: </span>
-                  <span className="text-emerald-400">
-                    &quot;30-40%&quot;
-                  </span>
-                </div>
-                <div>
-                  <span className="text-gray-400">{'}'}</span>
-                  <span className="text-gray-400">;</span>
-                </div>
-              </div>
+              <span className="rounded-full bg-emerald-500/10 px-2.5 py-1 text-[11px] font-semibold text-emerald-300">observable · resilient</span>
             </div>
-          </motion.div>
-        </div>
+            <div className="space-y-2.5">
+              {architecture.map(([title, tech], index) => (
+                <div key={title}>
+                  <div className="flex items-center justify-between rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3">
+                    <span className="text-sm font-semibold text-white">{title}</span>
+                    <span className="text-xs text-gray-400">{tech}</span>
+                  </div>
+                  {index < architecture.length - 1 && <div className="mx-auto h-3 w-px bg-gradient-to-b from-emerald-400 to-emerald-400/20" />}
+                </div>
+              ))}
+            </div>
+            <div className="mt-4 grid grid-cols-3 gap-2 text-center text-[11px] font-medium text-gray-400">
+              <span className="rounded-lg bg-white/[0.04] px-2 py-2">Guardrails</span>
+              <span className="rounded-lg bg-white/[0.04] px-2 py-2">Retries</span>
+              <span className="rounded-lg bg-white/[0.04] px-2 py-2">Tracing</span>
+            </div>
+          </div>
+        </motion.div>
       </div>
-
-      {/* Scroll indicator */}
-      <motion.div
-        className="flex justify-center mt-12"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.2, duration: 0.6 }}
-      >
-        <a
-          href="#about"
-          className="text-gray-400 dark:text-gray-500 hover:text-emerald-500 dark:hover:text-emerald-400 transition-colors"
-          aria-label="Scroll down"
-        >
-          <ChevronDown size={28} className="animate-scroll-down" />
-        </a>
-      </motion.div>
     </section>
   );
 }
