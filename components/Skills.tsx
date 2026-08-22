@@ -29,11 +29,11 @@ const groups: SkillGroup[] = [
     skills: ['React', 'Next.js', 'TypeScript', 'Node.js', 'NestJS', 'Laravel', 'PostgreSQL', 'Redis'],
   },
   {
-    label: 'Generative AI & agents',
-    description: 'Production-oriented AI workflows with explicit state, tools, retrieval, evaluation and observability.',
+    label: 'Generative AI, agents & automation',
+    description: 'Production-oriented AI systems that combine reasoning, retrieval, tools, workflow automation, evaluation and observability.',
     icon: BrainCircuit,
     featured: true,
-    skills: ['LangChain', 'LangGraph', 'LangSmith', 'RAG', 'MCP', 'Tool Calling', 'Structured Outputs', 'Multi-Agent Systems', 'Human-in-the-loop', 'Evaluations', 'Observability', 'OpenAI API', 'Google ADK'],
+    skills: ['LangChain', 'LangGraph', 'LangSmith', 'RAG', 'MCP', 'AI Automation', 'Workflow Automation', 'Business Process Automation', 'Agentic Workflows', 'Event-Driven Automation', 'Tool Calling', 'Structured Outputs', 'Multi-Agent Systems', 'Human-in-the-loop', 'Evaluations', 'Observability', 'OpenAI API', 'Google ADK'],
   },
   {
     label: 'Backend & APIs',
@@ -52,7 +52,7 @@ const groups: SkillGroup[] = [
     description: 'Patterns used when reliability, scale, isolation and maintainability become product requirements.',
     icon: Network,
     featured: true,
-    skills: ['System Design', 'API Design', 'Microservices', 'Event-Driven Architecture', 'Distributed Systems', 'Multi-Tenant SaaS', 'Caching', 'CQRS', 'Serverless', 'Load Balancing', 'Fault Tolerance', 'Performance Optimization', 'RBAC / ABAC'],
+    skills: ['System Design', 'API Design', 'Workflow Orchestration', 'Microservices', 'Event-Driven Architecture', 'Distributed Systems', 'Multi-Tenant SaaS', 'Caching', 'CQRS', 'Serverless', 'Load Balancing', 'Fault Tolerance', 'Performance Optimization', 'RBAC / ABAC'],
   },
   {
     label: 'Messaging, real-time & IoT',
@@ -100,11 +100,11 @@ export default function Skills() {
           <div>
             <p className="section-label">TECHNICAL EXPERTISE</p>
             <h2 className="mt-3 font-[family-name:var(--font-space-grotesk)] text-3xl font-bold tracking-tight text-gray-950 sm:text-4xl dark:text-white">
-              Full-stack depth, with production AI on top.
+              Full-stack depth, with production AI and automation on top.
             </h2>
           </div>
           <p className="max-w-3xl text-base leading-7 text-gray-600 dark:text-gray-400">
-            Technologies and engineering practices I have used across production products, client platforms, real-time systems and AI workflows. The case studies above show where the core stack was applied and why specific choices were made.
+            Technologies and engineering practices I have used across production products, client platforms, real-time systems, AI applications and automated workflows. The case studies above show where the core stack was applied and why specific choices were made.
           </p>
         </div>
 

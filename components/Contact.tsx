@@ -10,7 +10,7 @@ export default function Contact() {
             <div>
               <p className="text-xs font-bold uppercase tracking-[0.2em] text-emerald-400">LET&apos;S WORK TOGETHER</p>
               <h2 className="mt-4 max-w-3xl font-[family-name:var(--font-space-grotesk)] text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl">Looking for a senior engineer who can own complex product systems end-to-end?</h2>
-              <p className="mt-5 max-w-2xl text-base leading-7 text-gray-300">I&apos;m open to Senior Full-Stack and Generative AI roles where product ownership, architecture, reliable delivery and production operations matter.</p>
+              <p className="mt-5 max-w-2xl text-base leading-7 text-gray-300">I&apos;m open to Senior Full-Stack and Generative AI roles where product ownership, architecture, reliable delivery, production operations and AI-powered workflow automation matter.</p>
               <div className="mt-8 flex flex-wrap gap-3">
                 <a href="mailto:salman0butt@gmail.com" className="inline-flex items-center gap-2 rounded-lg bg-emerald-500 px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-emerald-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300"><Send size={17} aria-hidden="true" /> Email me</a>
                 <a href="/Salman_Butt_Resume.pdf" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-lg border border-white/15 bg-white/5 px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300">View résumé <ArrowUpRight size={16} aria-hidden="true" /></a>
@@ -20,7 +20,7 @@ export default function Contact() {
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
               <div className="rounded-xl border border-white/10 bg-white/[0.04] p-4">
                 <div className="flex items-center gap-3 text-sm font-semibold"><MapPin size={17} className="text-emerald-400" aria-hidden="true" /> Pakistan · Remote worldwide</div>
-                <p className="mt-2 text-xs leading-5 text-gray-400">Senior Full-Stack · Generative AI · Agentic systems</p>
+                <p className="mt-2 text-xs leading-5 text-gray-400">Senior Full-Stack · Generative AI · Agentic systems · AI automation</p>
               </div>
               <a href="mailto:salman0butt@gmail.com" className="rounded-xl border border-white/10 bg-white/[0.04] p-4 transition-colors hover:bg-white/[0.07] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300">
                 <div className="flex items-center gap-3 text-sm font-semibold"><Mail size={17} className="text-emerald-400" aria-hidden="true" /> salman0butt@gmail.com</div>

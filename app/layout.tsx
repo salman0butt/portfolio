@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     default: 'Salman Butt — Senior Full-Stack & Generative AI Engineer',
     template: '%s | Salman Butt',
   },
-  description: 'Senior Full-Stack and Generative AI Engineer with 7+ years designing and shipping SaaS, IoT, Web3 and AI systems across international teams. React, Next.js, Node.js, Laravel, LangGraph, RAG and production agentic AI.',
+  description: 'Senior Full-Stack and Generative AI Engineer with 7+ years designing and shipping SaaS, IoT, Web3, AI systems and AI-powered workflow automation across international teams. React, Next.js, Node.js, Laravel, LangGraph, RAG, agentic AI and business process automation.',
   keywords: [
     'Senior Full Stack Engineer',
     'Generative AI Engineer',
@@ -31,6 +31,11 @@ export const metadata: Metadata = {
     'LLM Engineer',
     'AI Agent Developer',
     'LangGraph Engineer',
+    'AI Automation Engineer',
+    'AI Workflow Automation',
+    'Business Process Automation',
+    'Intelligent Automation',
+    'Agentic Automation',
     'Senior React Engineer',
     'Senior Node.js Engineer',
     'Next.js Engineer',
@@ -42,7 +47,7 @@ export const metadata: Metadata = {
   alternates: { canonical: '/' },
   openGraph: {
     title: 'Salman Butt — Senior Full-Stack & Generative AI Engineer',
-    description: '7+ years designing and shipping scalable product systems, real-time platforms and production AI workflows.',
+    description: '7+ years designing and shipping scalable product systems, real-time platforms, production AI workflows and AI-powered automation.',
     type: 'profile',
     url: '/',
     siteName: 'Salman Butt — Engineering Portfolio',
@@ -51,7 +56,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Salman Butt — Senior Full-Stack & Generative AI Engineer',
-    description: 'Scalable product systems and production-grade AI agents.',
+    description: 'Scalable product systems, production-grade AI agents and AI-powered workflow automation.',
     images: ['/opengraph-image'],
   },
 };
@@ -81,6 +86,9 @@ const personStructuredData = {
     'LangGraph',
     'Retrieval-Augmented Generation',
     'Agentic AI',
+    'AI Automation',
+    'Workflow Automation',
+    'Business Process Automation',
   ],
 };
 
