@@ -16,42 +16,34 @@ const navLinks = [
 
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [dark, setDark] = useState(true);
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    const stored = localStorage.getItem('theme');
-    if (stored === 'light') {
-      setDark(false);
-      document.documentElement.classList.remove('dark');
-    } else {
-      setDark(true);
-      document.documentElement.classList.add('dark');
-    }
-  }, []);
-
-  useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   const toggleTheme = () => {
-    const next = !dark;
-    setDark(next);
-    if (next) {
-      document.documentElement.classList.add('dark');
-      localStorage.setItem('theme', 'dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-      localStorage.setItem('theme', 'light');
-    }
+    const root = document.documentElement;
+    const nextDark = !root.classList.contains('dark');
+    root.classList.toggle('dark', nextDark);
+    root.style.colorScheme = nextDark ? 'dark' : 'light';
+    localStorage.setItem('theme', nextDark ? 'dark' : 'light');
   };
 
   const handleLinkClick = () => setMobileOpen(false);
 
+  const themeIcons = (
+    <>
+      <Moon size={18} className="dark:hidden" aria-hidden="true" />
+      <Sun size={18} className="hidden dark:block" aria-hidden="true" />
+    </>
+  );
+
   return (
     <nav
+      aria-label="Primary navigation"
       className={`fixed top-0 left-0 right-0 z-50 navbar-blur transition-shadow duration-300 ${
         scrolled ? 'shadow-lg' : ''
       }`}
@@ -78,11 +70,12 @@ export default function Navbar() {
               </Link>
             ))}
             <button
+              type="button"
               onClick={toggleTheme}
               aria-label="Toggle theme"
               className="p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
             >
-              {dark ? <Sun size={18} /> : <Moon size={18} />}
+              {themeIcons}
             </button>
             <a
               href="mailto:salman0butt@gmail.com"
@@ -94,18 +87,21 @@ export default function Navbar() {
 
           <div className="flex md:hidden items-center gap-2">
             <button
+              type="button"
               onClick={toggleTheme}
               aria-label="Toggle theme"
               className="p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
             >
-              {dark ? <Sun size={18} /> : <Moon size={18} />}
+              {themeIcons}
             </button>
             <button
-              onClick={() => setMobileOpen(!mobileOpen)}
+              type="button"
+              onClick={() => setMobileOpen((open) => !open)}
               aria-label="Toggle menu"
+              aria-expanded={mobileOpen}
               className="p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
             >
-              {mobileOpen ? <X size={22} /> : <Menu size={22} />}
+              {mobileOpen ? <X size={22} aria-hidden="true" /> : <Menu size={22} aria-hidden="true" />}
             </button>
           </div>
         </div>
