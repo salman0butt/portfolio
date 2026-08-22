@@ -5,7 +5,7 @@ test.describe('portfolio hiring journey', () => {
     await page.goto('/');
 
     await expect(page.getByRole('heading', { level: 1, name: 'Salman Butt' })).toBeVisible();
-    await expect(page.getByText('SENIOR FULL STACK & GENAI ENGINEER')).toBeVisible();
+    await expect(page.locator('#hero .section-label')).toHaveText('SENIOR FULL STACK & GENAI ENGINEER');
     await expect(page.locator('h1')).toHaveCount(1);
 
     for (const section of ['about', 'experience', 'projects', 'skills', 'contact']) {
