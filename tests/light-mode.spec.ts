@@ -1,90 +1,65 @@
-import { test, expect } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 
-test.describe('Light Mode Text Visibility', () => {
-  test('check all text elements for sufficient contrast', async ({ page }) => {
-    // Start dev server if needed
-    await page.goto('http://localhost:3001');
+test.describe('portfolio hiring journey', () => {
+  test('homepage communicates senior full-stack + GenAI positioning and complete skills', async ({ page }) => {
+    await page.goto('/');
 
-    // Switch to light mode
-    await page.click('button[aria-label="Toggle theme"]');
-    await page.waitForTimeout(500);
+    await expect(page.getByRole('heading', { level: 1 })).toContainText('scalable product systems');
+    await expect(page.getByText('Senior Full Stack & Generative AI Engineer').first()).toBeVisible();
+    await expect(page.locator('h1')).toHaveCount(1);
 
-    // Check if light mode is active
-    const htmlClass = await page.locator('html').getAttribute('class');
-    console.log('HTML class:', htmlClass);
+    await expect(page.locator('#projects')).toBeVisible();
+    await expect(page.locator('#ai-engineering')).toBeVisible();
+    await expect(page.locator('#experience')).toBeVisible();
+    await expect(page.locator('#skills')).toBeVisible();
+    await expect(page.locator('#contact')).toBeVisible();
 
-    // Take screenshot of light mode
-    await page.screenshot({ path: 'light-mode-hero.png', fullPage: false });
-
-    // Check navbar text
-    console.log('\n=== NAVBAR ===');
-    const navLinks = await page.locator('nav button').all();
-    for (let i = 0; i < navLinks.length; i++) {
-      const color = await navLinks[i].evaluate(el => window.getComputedStyle(el).color);
-      console.log(`Nav link ${i}: ${color}`);
+    const skills = page.locator('#skills');
+    for (const skill of ['React', 'Next.js', 'TypeScript', 'Node.js', 'Laravel', 'Python', 'FastAPI', 'LangGraph', 'LangSmith', 'RAG', 'MCP', 'RabbitMQ', 'MQTT', 'Docker', 'Kubernetes']) {
+      await expect(skills.getByText(skill, { exact: true }).first()).toBeVisible();
     }
+  });
 
-    // Check hero section text
-    console.log('\n=== HERO SECTION ===');
-    const heroTitle = page.locator('h1').first();
-    const titleColor = await heroTitle.evaluate(el => window.getComputedStyle(el).color);
-    console.log('Hero title color:', titleColor);
+  test('case-study route exposes architecture, constraints, trade-offs and proof context', async ({ page }) => {
+    await page.goto('/projects/conversational-ai-platform');
 
-    const heroSubtitle = page.locator('h2').first();
-    const subtitleColor = await heroSubtitle.evaluate(el => window.getComputedStyle(el).color);
-    console.log('Hero subtitle color:', subtitleColor);
+    await expect(page.getByRole('heading', { level: 1 })).toContainText('Conversational AI Agent Platform');
+    await expect(page.getByRole('heading', { name: 'Challenge & constraints' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'System flow' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'What the choices cost' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'What I would carry into the next system' })).toBeVisible();
+    await expect(page.getByRole('link', { name: /Multi-Agent RAG Support System/i })).toBeVisible();
+  });
 
-    const heroDescription = page.locator('p').first();
-    const descColor = await heroDescription.evaluate(el => window.getComputedStyle(el).color);
-    console.log('Hero description color:', descColor);
+  test('theme, keyboard focus and mobile navigation remain usable', async ({ page, isMobile }) => {
+    await page.goto('/');
 
-    // Scroll to About section
-    await page.click('text=About');
-    await page.waitForTimeout(1000);
-    await page.screenshot({ path: 'light-mode-about.png' });
+    const html = page.locator('html');
+    await expect(html).toHaveClass(/dark/);
+    await page.getByRole('button', { name: 'Toggle theme' }).first().click();
+    await expect(html).not.toHaveClass(/dark/);
 
-    console.log('\n=== ABOUT SECTION ===');
-    const aboutTitle = page.locator('#about h2');
-    const aboutTitleColor = await aboutTitle.evaluate(el => window.getComputedStyle(el).color);
-    console.log('About title color:', aboutTitleColor);
+    await page.keyboard.press('Home');
+    await page.keyboard.press('Tab');
+    await expect(page.getByRole('link', { name: 'Skip to main content' })).toBeFocused();
 
-    // Check skill cards
-    const skillCards = await page.locator('.glass').all();
-    console.log(`Found ${skillCards.length} glass cards`);
+    if (isMobile) {
+      await page.getByRole('button', { name: 'Toggle menu' }).click();
+      await expect(page.getByRole('link', { name: 'Expertise' })).toBeVisible();
+      await page.getByRole('link', { name: 'Expertise' }).click();
+      await expect(page.locator('#skills')).toBeInViewport();
+    }
+  });
 
-    // Scroll to Projects
-    await page.click('text=Projects');
-    await page.waitForTimeout(1000);
-    await page.screenshot({ path: 'light-mode-projects.png' });
+  test('SEO metadata routes are available', async ({ request }) => {
+    const robots = await request.get('/robots.txt');
+    expect(robots.ok()).toBeTruthy();
+    expect(await robots.text()).toContain('sitemap.xml');
 
-    console.log('\n=== PROJECTS SECTION ===');
-    const projectTitle = page.locator('#projects h2');
-    const projectTitleColor = await projectTitle.evaluate(el => window.getComputedStyle(el).color);
-    console.log('Projects title color:', projectTitleColor);
-
-    // Scroll to Experience
-    await page.click('text=Experience');
-    await page.waitForTimeout(1000);
-    await page.screenshot({ path: 'light-mode-experience.png' });
-
-    console.log('\n=== EXPERIENCE SECTION ===');
-    const expTitle = page.locator('#experience h2');
-    const expTitleColor = await expTitle.evaluate(el => window.getComputedStyle(el).color);
-    console.log('Experience title color:', expTitleColor);
-
-    // Scroll to Contact
-    await page.click('text=Contact');
-    await page.waitForTimeout(1000);
-    await page.screenshot({ path: 'light-mode-contact.png' });
-
-    console.log('\n=== CONTACT SECTION ===');
-    const contactTitle = page.locator('#contact h2');
-    const contactTitleColor = await contactTitle.evaluate(el => window.getComputedStyle(el).color);
-    console.log('Contact title color:', contactTitleColor);
-
-    // Full page screenshot
-    await page.screenshot({ path: 'light-mode-full.png', fullPage: true });
-
-    console.log('\nScreenshots saved! Check for text visibility issues.');
+    const sitemap = await request.get('/sitemap.xml');
+    expect(sitemap.ok()).toBeTruthy();
+    const xml = await sitemap.text();
+    expect(xml).toContain('/projects/conversational-ai-platform');
+    expect(xml).toContain('/projects/permission-ask');
   });
 });
