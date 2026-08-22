@@ -84,9 +84,24 @@ const personStructuredData = {
   ],
 };
 
+const themeScript = `
+  try {
+    const savedTheme = localStorage.getItem('theme');
+    const useDark = savedTheme !== 'light';
+    document.documentElement.classList.toggle('dark', useDark);
+    document.documentElement.style.colorScheme = useDark ? 'dark' : 'light';
+  } catch (_) {
+    document.documentElement.classList.add('dark');
+    document.documentElement.style.colorScheme = 'dark';
+  }
+`;
+
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+      </head>
       <body className={`${inter.variable} ${spaceGrotesk.variable} antialiased`} suppressHydrationWarning>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(personStructuredData) }} />
         <a
