@@ -1,7 +1,6 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { useInView } from 'react-intersection-observer';
 import { CheckCircle, Calendar, FolderGit2, Globe, Server, GraduationCap, Trophy } from 'lucide-react';
 
 const highlights = [
@@ -20,15 +19,9 @@ const stats = [
 ];
 
 export default function About() {
-  const [ref] = useInView({
-    triggerOnce: true,
-    threshold: 0.1,
-  });
-
   return (
     <section id="about" className="py-20 px-4">
-      <div className="max-w-6xl mx-auto" ref={ref}>
-        {/* Section Header */}
+      <div className="max-w-6xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -43,9 +36,7 @@ export default function About() {
           <div className="section-divider" />
         </motion.div>
 
-        {/* Two-Column Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-[55%_45%] gap-8 mb-16">
-          {/* Left Column — Professional Summary */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -72,7 +63,6 @@ export default function About() {
             </p>
           </motion.div>
 
-          {/* Right Column — Key Highlights */}
           <motion.div
             initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -84,24 +74,23 @@ export default function About() {
               Key Highlights
             </h3>
             <ul className="space-y-3">
-              {highlights.map((item, index) => (
+              {highlights.map((highlight, index) => (
                 <motion.li
-                  key={index}
+                  key={highlight}
                   initial={{ opacity: 0, x: 10 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.4, delay: 0.4 + index * 0.07 }}
                   className="flex items-start gap-3 text-sm text-gray-700 dark:text-gray-300"
                 >
-                  <CheckCircle className="w-5 h-5 text-emerald-500 shrink-0 mt-0.5" />
-                  <span>{item}</span>
+                  <CheckCircle className="w-5 h-5 text-emerald-500 shrink-0 mt-0.5" aria-hidden="true" />
+                  <span>{highlight}</span>
                 </motion.li>
               ))}
             </ul>
           </motion.div>
         </div>
 
-        {/* Award Badge */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -111,7 +100,7 @@ export default function About() {
         >
           <div className="glass rounded-2xl px-8 py-4 inline-flex items-center gap-4">
             <div className="p-3 bg-amber-500/10 rounded-xl">
-              <Trophy className="w-7 h-7 text-amber-500" />
+              <Trophy className="w-7 h-7 text-amber-500" aria-hidden="true" />
             </div>
             <div>
               <p className="text-base font-bold text-gray-900 dark:text-white">
@@ -124,27 +113,28 @@ export default function About() {
           </div>
         </motion.div>
 
-        {/* Stats Row */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16">
-          {stats.map((stat, index) => (
-            <motion.div
-              key={stat.label}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.2 + index * 0.1 }}
-              className="glass rounded-2xl p-6 text-center"
-            >
-              <stat.icon className="w-7 h-7 text-emerald-500 mx-auto mb-3" />
-              <div className="text-3xl md:text-4xl font-bold gradient-text mb-1">
-                {stat.value}
-              </div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">{stat.label}</div>
-            </motion.div>
-          ))}
+          {stats.map((stat, index) => {
+            const Icon = stat.icon;
+            return (
+              <motion.div
+                key={stat.label}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.2 + index * 0.1 }}
+                className="glass rounded-2xl p-6 text-center"
+              >
+                <Icon className="w-7 h-7 text-emerald-500 mx-auto mb-3" aria-hidden="true" />
+                <div className="text-3xl md:text-4xl font-bold gradient-text mb-1">
+                  {stat.value}
+                </div>
+                <div className="text-sm text-gray-600 dark:text-gray-400">{stat.label}</div>
+              </motion.div>
+            );
+          })}
         </div>
 
-        {/* Education */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -153,7 +143,7 @@ export default function About() {
           className="glass rounded-2xl p-8"
         >
           <div className="flex items-center gap-3 mb-4">
-            <GraduationCap className="w-6 h-6 text-emerald-500" />
+            <GraduationCap className="w-6 h-6 text-emerald-500" aria-hidden="true" />
             <h3 className="text-2xl font-bold font-[family-name:var(--font-space-grotesk)] text-slate-900 dark:text-white">
               Education
             </h3>
