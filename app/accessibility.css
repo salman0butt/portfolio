@@ -1,0 +1,42 @@
+/* Accessibility and motion overrides kept separate from legacy visual utilities. */
+.section-label {
+  color: #047857;
+}
+
+.dark .section-label {
+  color: #6ee7b7;
+}
+
+.btn-secondary {
+  color: #047857;
+  border-color: #047857;
+}
+
+.dark .btn-secondary {
+  color: #6ee7b7;
+  border-color: #34d399;
+}
+
+::selection {
+  background: rgba(16, 185, 129, 0.28);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+  }
+
+  .hero-gradient,
+  .animate-float,
+  .animate-pulse-glow,
+  .animate-fade-in,
+  .animate-scroll-down {
+    animation: none !important;
+  }
+}

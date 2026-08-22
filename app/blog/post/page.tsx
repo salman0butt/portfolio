@@ -1,26 +1,13 @@
 import type { Metadata } from 'next';
-import { Suspense } from 'react';
-import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
-import BlogPostView from '@/components/blog/BlogPostView';
+import { redirect } from 'next/navigation';
 
 export const metadata: Metadata = {
-  title: 'Blog article — Salman Butt',
-  description: 'Engineering article by Salman Butt.',
+  title: 'Article moved',
+  robots: { index: false, follow: true },
 };
 
-export default function BlogPostPage() {
-  return (
-    <div className="min-h-screen">
-      <Navbar />
-      <main id="main-content" className="pt-28 pb-20 sm:pt-32 sm:pb-24">
-        <div className="px-4 sm:px-6 lg:px-8">
-          <Suspense fallback={<div className="mx-auto h-96 max-w-3xl animate-pulse rounded-2xl bg-gray-100 dark:bg-gray-900" />}>
-            <BlogPostView />
-          </Suspense>
-        </div>
-      </main>
-      <Footer />
-    </div>
-  );
+export default async function LegacyBlogPostPage({ searchParams }: { searchParams: Promise<{ slug?: string | string[] }> }) {
+  const params = await searchParams;
+  const slug = Array.isArray(params.slug) ? params.slug[0] : params.slug;
+  redirect(slug ? `/blog/${encodeURIComponent(slug)}` : '/blog');
 }
