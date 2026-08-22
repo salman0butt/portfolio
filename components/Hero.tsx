@@ -40,26 +40,47 @@ const roles = [
   'IoT & Real-Time Systems Builder',
 ];
 
-function RotatingRole() {
-  const [index, setIndex] = useState(0);
+function TypewriterRole() {
+  const [roleIndex, setRoleIndex] = useState(0);
+  const [text, setText] = useState('');
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
-    const timer = window.setInterval(() => {
-      setIndex((current) => (current + 1) % roles.length);
-    }, 2200);
+    const role = roles[roleIndex];
+    const isComplete = text === role;
+    const isEmpty = text.length === 0;
+    const delay = isComplete && !deleting ? 2000 : deleting ? 28 : 50;
 
-    return () => window.clearInterval(timer);
-  }, []);
+    const timer = window.setTimeout(() => {
+      if (!deleting) {
+        if (isComplete) {
+          setDeleting(true);
+          return;
+        }
+
+        setText(role.slice(0, text.length + 1));
+        return;
+      }
+
+      if (isEmpty) {
+        setDeleting(false);
+        setRoleIndex((current) => (current + 1) % roles.length);
+        return;
+      }
+
+      setText(role.slice(0, text.length - 1));
+    }, delay);
+
+    return () => window.clearTimeout(timer);
+  }, [deleting, roleIndex, text]);
 
   return (
-    <motion.span
-      key={roles[index]}
-      initial={{ opacity: 0, y: 6 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.25 }}
-    >
-      {roles[index]}
-    </motion.span>
+    <span aria-live="polite">
+      {text}
+      <span aria-hidden="true" className="ml-0.5 animate-pulse">
+        |
+      </span>
+    </span>
   );
 }
 
@@ -93,7 +114,7 @@ export default function Hero() {
               variants={item}
               className="text-xl md:text-2xl font-medium text-emerald-500 mb-6 min-h-[2.5rem]"
             >
-              <RotatingRole />
+              <TypewriterRole />
             </motion.div>
 
             <motion.p
