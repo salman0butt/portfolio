@@ -1,8 +1,9 @@
-import { ArrowUpRight, Brain, Database, Network, Server, TestTube } from 'lucide-react';
+import { ArrowUpRight, Brain, Database, Network, Server, TestTube, Workflow } from 'lucide-react';
 import { Github } from './icons';
 
 const capabilities = [
   { icon: Brain, title: 'Agentic systems', items: ['LangGraph state & routing', 'Tool / function calling', 'Multi-agent orchestration', 'Human-in-the-loop'] },
+  { icon: Workflow, title: 'AI-powered automation', items: ['Business process automation', 'Event-driven AI workflows', 'Tool / API orchestration', 'Approval & exception paths'] },
   { icon: Database, title: 'RAG & knowledge', items: ['Embeddings + vector search', 'Chunking & retrieval pipelines', 'Grounding and citations', 'PostgreSQL / pgvector / Pinecone'] },
   { icon: Server, title: 'Reliability', items: ['Retries + timeouts', 'Checkpointing', 'Fallback paths', 'Idempotent tool execution'] },
   { icon: Network, title: 'Security & control', items: ['Tool-level permissions', 'RBAC / ABAC patterns', 'Prompt-injection boundaries', 'Risk-based approval flows'] },
@@ -102,14 +103,14 @@ export default function AIEngineering() {
     <section id="ai-engineering" className="py-20 sm:py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl">
-          <p className="section-label">PRODUCTION AI ENGINEERING</p>
+          <p className="section-label">PRODUCTION AI &amp; AUTOMATION</p>
           <h2 className="mt-3 font-[family-name:var(--font-space-grotesk)] text-3xl font-bold tracking-tight text-gray-950 sm:text-4xl dark:text-white">AI is a system, not an API call.</h2>
-          <p className="mt-5 max-w-3xl text-base leading-7 text-gray-600 dark:text-gray-400">I treat model calls as one component of a larger product system: explicit state, controlled tools, grounded context, permissions, recovery, observability and evaluation.</p>
+          <p className="mt-5 max-w-3xl text-base leading-7 text-gray-600 dark:text-gray-400">I build AI-powered product systems and automated workflows where models can reason, retrieve context, call tools and APIs, trigger business processes, request human approval, recover from failures, and stay observable in production.</p>
         </div>
 
         <AIWorkflowVisual />
 
-        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {capabilities.map((capability) => {
             const Icon = capability.icon;
             return (
