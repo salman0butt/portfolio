@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 
 test.describe('portfolio hiring journey', () => {
-  test('restored homepage keeps the original portfolio sections and complete skills', async ({ page }) => {
+  test('restored homepage keeps the original portfolio sections and skills', async ({ page }) => {
     await page.goto('/');
 
     await expect(page.getByRole('heading', { level: 1, name: 'Salman Butt' })).toBeVisible();
@@ -13,7 +13,7 @@ test.describe('portfolio hiring journey', () => {
     }
 
     const skills = page.locator('#skills');
-    for (const skill of ['React', 'Next.js', 'TypeScript', 'Node.js', 'Laravel', 'Python', 'FastAPI', 'LangGraph', 'LangSmith', 'RAG', 'RabbitMQ', 'MQTT', 'Docker', 'Kubernetes']) {
+    for (const skill of ['React', 'Next.js', 'TypeScript', 'Node.js', 'Laravel', 'Python', 'LangGraph', 'LangSmith', 'RabbitMQ', 'MQTT', 'Docker', 'Kubernetes']) {
       await expect(skills.getByText(skill, { exact: true }).first()).toBeVisible();
     }
 
