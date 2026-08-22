@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import BlogPostView from '@/components/blog/BlogPostView';
-import { getBlogDate, getPublishedPostBySlug, getPublishedPosts } from '@/lib/blogs';
+import { type BlogPost, getBlogDate, getPublishedPostBySlug, getPublishedPosts } from '@/lib/blogs';
 
 const getPost = cache((slug: string) => getPublishedPostBySlug(slug));
 
@@ -45,7 +45,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 export default async function BlogArticlePage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
 
-  let post;
+  let post: BlogPost | null = null;
   try {
     post = await getPost(slug);
   } catch {
@@ -54,7 +54,7 @@ export default async function BlogArticlePage({ params }: { params: Promise<{ sl
 
   if (!post) notFound();
 
-  let related = [];
+  let related: BlogPost[] = [];
   try {
     const posts = await getPublishedPosts(12);
     const sameCategory = posts.filter((item) => item.slug !== post.slug && item.category === post.category);
