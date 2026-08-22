@@ -5,8 +5,8 @@ import Impact from '@/components/Impact';
 import Projects from '@/components/Projects';
 import AIEngineering from '@/components/AIEngineering';
 import Experience from '@/components/Experience';
-import About from '@/components/About';
 import Skills from '@/components/Skills';
+import About from '@/components/About';
 import Testimonials from '@/components/Testimonials';
 import Authority from '@/components/Authority';
 import BlogPreview from '@/components/blog/BlogPreview';
@@ -24,8 +24,8 @@ export default function Home() {
         <Projects />
         <AIEngineering />
         <Experience />
-        <About />
         <Skills />
+        <About />
         <Testimonials />
         <Authority />
         <BlogPreview />
