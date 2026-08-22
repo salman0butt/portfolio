@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { Mail, ArrowUp, Send } from 'lucide-react';
 import { Github, Linkedin } from './icons';
 import { motion } from 'framer-motion';
@@ -58,135 +59,49 @@ export default function Footer() {
               scalable systems across 5 countries.
             </p>
             <div className="flex gap-2">
-              <a
-                href="https://github.com/salman0butt"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-2 rounded-lg bg-gray-800 hover:bg-emerald-500/20 hover:text-emerald-400 transition-colors"
-                aria-label="GitHub"
-              >
-                <Github size={16} />
-              </a>
-              <a
-                href="https://www.linkedin.com/in/salman0butt/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-2 rounded-lg bg-gray-800 hover:bg-emerald-500/20 hover:text-emerald-400 transition-colors"
-                aria-label="LinkedIn"
-              >
-                <Linkedin size={16} />
-              </a>
-              <a
-                href="mailto:salman0butt@gmail.com"
-                className="p-2 rounded-lg bg-gray-800 hover:bg-emerald-500/20 hover:text-emerald-400 transition-colors"
-                aria-label="Email"
-              >
-                <Mail size={16} aria-hidden="true" />
-              </a>
+              <a href="https://github.com/salman0butt" target="_blank" rel="noopener noreferrer" className="p-2 rounded-lg bg-gray-800 hover:bg-emerald-500/20 hover:text-emerald-400 transition-colors" aria-label="GitHub"><Github size={16} /></a>
+              <a href="https://www.linkedin.com/in/salman0butt/" target="_blank" rel="noopener noreferrer" className="p-2 rounded-lg bg-gray-800 hover:bg-emerald-500/20 hover:text-emerald-400 transition-colors" aria-label="LinkedIn"><Linkedin size={16} /></a>
+              <a href="mailto:salman0butt@gmail.com" className="p-2 rounded-lg bg-gray-800 hover:bg-emerald-500/20 hover:text-emerald-400 transition-colors" aria-label="Email"><Mail size={16} aria-hidden="true" /></a>
             </div>
           </div>
 
           <div>
-            <h4 className="text-xs font-bold text-gray-300 uppercase tracking-wider mb-4">
-              Navigation
-            </h4>
+            <h4 className="text-xs font-bold text-gray-300 uppercase tracking-wider mb-4">Navigation</h4>
             <ul className="space-y-2">
               {quickLinks.map((link) => (
                 <li key={link.href}>
-                  <a
-                    href={link.href}
-                    className="text-sm hover:text-emerald-400 transition-colors"
-                  >
+                  <Link href={link.href} className="text-sm hover:text-emerald-400 transition-colors">
                     {link.label}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
           </div>
 
           <div>
-            <h4 className="text-xs font-bold text-gray-300 uppercase tracking-wider mb-4">
-              Contact
-            </h4>
+            <h4 className="text-xs font-bold text-gray-300 uppercase tracking-wider mb-4">Contact</h4>
             <ul className="space-y-2 text-sm">
-              <li>
-                <a
-                  href="mailto:salman0butt@gmail.com"
-                  className="hover:text-emerald-400 transition-colors"
-                >
-                  salman0butt@gmail.com
-                </a>
-              </li>
-              <li>
-                <a
-                  href="tel:+923151083526"
-                  className="hover:text-emerald-400 transition-colors"
-                >
-                  +92 315 108 3526
-                </a>
-              </li>
-              <li className="text-gray-500">
-                Pakistan — Remote Worldwide
-              </li>
+              <li><a href="mailto:salman0butt@gmail.com" className="hover:text-emerald-400 transition-colors">salman0butt@gmail.com</a></li>
+              <li><a href="tel:+923151083526" className="hover:text-emerald-400 transition-colors">+92 315 108 3526</a></li>
+              <li className="text-gray-500">Pakistan — Remote Worldwide</li>
             </ul>
           </div>
 
           <div>
-            <h4 className="text-xs font-bold text-gray-300 uppercase tracking-wider mb-4">
-              Resources
-            </h4>
+            <h4 className="text-xs font-bold text-gray-300 uppercase tracking-wider mb-4">Resources</h4>
             <ul className="space-y-2 text-sm">
-              <li>
-                <a
-                  href="/Salman_Butt_Resume.pdf"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="hover:text-emerald-400 transition-colors"
-                >
-                  View Resume
-                </a>
-              </li>
-              <li>
-                <a href="/blog" className="hover:text-emerald-400 transition-colors">
-                  Engineering Blog
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://github.com/salman0butt"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-emerald-400 transition-colors"
-                >
-                  GitHub Profile
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://www.linkedin.com/in/salman0butt/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-emerald-400 transition-colors"
-                >
-                  LinkedIn Profile
-                </a>
-              </li>
+              <li><a href="/Salman_Butt_Resume.pdf" target="_blank" rel="noreferrer" className="hover:text-emerald-400 transition-colors">View Resume</a></li>
+              <li><Link href="/blog" className="hover:text-emerald-400 transition-colors">Engineering Blog</Link></li>
+              <li><a href="https://github.com/salman0butt" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-400 transition-colors">GitHub Profile</a></li>
+              <li><a href="https://www.linkedin.com/in/salman0butt/" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-400 transition-colors">LinkedIn Profile</a></li>
             </ul>
           </div>
         </div>
 
         <div className="pt-6 border-t border-gray-800/50 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-xs text-gray-600">
-            &copy; {new Date().getFullYear()} Salman Butt. All rights reserved.
-          </p>
-          <button
-            type="button"
-            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-emerald-400 transition-colors"
-            aria-label="Back to top"
-          >
-            Back to top
-            <ArrowUp size={14} aria-hidden="true" />
+          <p className="text-xs text-gray-600">&copy; {new Date().getFullYear()} Salman Butt. All rights reserved.</p>
+          <button type="button" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-emerald-400 transition-colors" aria-label="Back to top">
+            Back to top <ArrowUp size={14} aria-hidden="true" />
           </button>
         </div>
       </motion.div>
