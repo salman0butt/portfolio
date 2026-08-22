@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, Clock3, Link as LinkIcon } from 'lucide-react';
@@ -61,7 +62,18 @@ export default function BlogPostView({ post, related }: { post: BlogPost; relate
         </div>
       </header>
 
-      {post.cover_image_url && <img src={post.cover_image_url} alt={`Cover image for ${post.title}`} loading="eager" fetchPriority="high" className="mt-10 max-h-[560px] w-full rounded-2xl border border-gray-200 object-cover shadow-sm dark:border-gray-800" />}
+      {post.cover_image_url && (
+        <div className="relative mt-10 aspect-[16/9] max-h-[560px] w-full overflow-hidden rounded-2xl border border-gray-200 bg-gray-100 shadow-sm dark:border-gray-800 dark:bg-gray-900">
+          <Image
+            src={post.cover_image_url}
+            alt={`Cover image for ${post.title}`}
+            fill
+            priority
+            sizes="(max-width: 1280px) 100vw, 1152px"
+            className="object-cover"
+          />
+        </div>
+      )}
 
       <div className="mt-10 grid gap-12 lg:grid-cols-[minmax(0,1fr)_240px]">
         <div className="max-w-3xl border-t border-gray-200 pt-4 dark:border-gray-800"><MarkdownContent content={post.content} /></div>
