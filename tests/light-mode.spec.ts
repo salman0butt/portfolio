@@ -49,8 +49,10 @@ test.describe('portfolio hiring journey', () => {
 
     if (isMobile) {
       await page.getByRole('button', { name: 'Toggle menu' }).click();
-      await expect(page.getByRole('link', { name: 'Expertise' })).toBeVisible();
-      await page.getByRole('link', { name: 'Expertise' }).click();
+      const primaryNav = page.getByLabel('Primary navigation');
+      const expertiseLink = primaryNav.getByRole('link', { name: 'Expertise' });
+      await expect(expertiseLink).toBeVisible();
+      await expertiseLink.click();
       await expect(page.locator('#skills')).toBeInViewport();
     }
   });
