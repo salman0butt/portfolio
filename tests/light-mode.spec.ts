@@ -39,7 +39,11 @@ test.describe('portfolio hiring journey', () => {
     await page.getByRole('button', { name: 'Toggle theme' }).first().click();
     await expect(html).not.toHaveClass(/dark/);
 
-    await page.keyboard.press('Home');
+    // Reload to verify the selected theme persists and to reset browser focus
+    // to the document entry point before testing keyboard navigation.
+    await page.reload();
+    await expect(html).not.toHaveClass(/dark/);
+
     await page.keyboard.press('Tab');
     await expect(page.getByRole('link', { name: 'Skip to main content' })).toBeFocused();
 
