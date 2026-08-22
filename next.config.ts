@@ -1,14 +1,19 @@
-import type { NextConfig } from "next";
-import { resolve } from "path";
+import type { NextConfig } from 'next';
+import { resolve } from 'path';
 
 const isGitHubPages = process.env.GITHUB_PAGES === 'true';
 
 const nextConfig: NextConfig = {
-  ...(isGitHubPages && { output: 'export' }),
+  ...(isGitHubPages && {
+    output: 'export',
+    basePath: process.env.NEXT_PUBLIC_BASE_PATH || '/portfolio',
+    assetPrefix: process.env.NEXT_PUBLIC_BASE_PATH || '/portfolio',
+  }),
   images: {
-    unoptimized: true,
+    unoptimized: isGitHubPages,
   },
-  basePath: process.env.NEXT_PUBLIC_BASE_PATH || '',
+  poweredByHeader: false,
+  compress: true,
   turbopack: {
     root: resolve(__dirname),
   },
