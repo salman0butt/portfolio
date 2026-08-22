@@ -1,182 +1,140 @@
-# 🚀 Full-Stack Developer Portfolio
+# Salman Butt — Engineering Portfolio
 
-A stunning, modern portfolio website built with Next.js, TypeScript, Tailwind CSS, and Framer Motion. Designed to impress recruiters and hiring managers at top tech companies.
+Production portfolio for a **Senior Full-Stack & Generative AI Engineer**. The site is built as technical proof-of-work: measurable impact, engineering case studies, architecture decisions, public AI implementations, technical writing, and a Supabase-backed blog.
 
-![Portfolio Preview](https://img.shields.io/badge/Next.js-15-black?style=for-the-badge&logo=next.js)
-![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?style=for-the-badge&logo=typescript)
-![Tailwind CSS](https://img.shields.io/badge/Tailwind-3-38B2AC?style=for-the-badge&logo=tailwind-css)
+## Production
 
-## ✨ Features
+- Portfolio: https://salman-butt.vercel.app
+- GitHub: https://github.com/salman0butt
+- LinkedIn: https://www.linkedin.com/in/salman0butt/
 
-- **Modern & Elegant Design**: Purple-accented color scheme with glassmorphism effects
-- **Fully Responsive**: Optimized for all devices (mobile, tablet, desktop)
-- **Dark/Light Mode**: Toggle between themes with smooth transitions
-- **Smooth Animations**: Powered by Framer Motion for delightful interactions
-- **SEO Optimized**: Meta tags, Open Graph, and Twitter cards configured
-- **Performance Focused**: Fast loading times and optimized assets
-- **GitHub Pages Ready**: Configured for seamless deployment
+## What the portfolio demonstrates
 
-## 📂 Sections
+### Senior product engineering
 
-- **Hero Section**: Eye-catching introduction with animated background
-- **About Section**: Skills showcase with tech stack display
-- **Projects Section**: Featured work with live demos and GitHub links
-- **Experience Section**: Professional timeline with achievements
-- **Contact Section**: Working contact form with social links
-- **Responsive Navbar**: Smooth navigation with mobile menu
+- End-to-end ownership across frontend, backend, data, integrations, deployment and production debugging
+- Case studies for Generative AI, Web3, IoT and multi-tenant SaaS systems
+- Explicit constraints, trade-offs, architecture, outcomes and lessons instead of technology-only project cards
+- Quantified production evidence including API latency improvement and multi-tenant adoption
 
-## 🛠️ Tech Stack
+### Production Generative AI
 
-- **Frontend**: Next.js 15, React 19, TypeScript
-- **Styling**: Tailwind CSS, Custom CSS
-- **Animations**: Framer Motion
-- **Icons**: Lucide React
-- **Deployment**: GitHub Pages
-- **Build Tool**: Next.js Static Export
+- LangGraph state and orchestration
+- Tool/function calling and MCP
+- RAG, embeddings and vector retrieval
+- Human-in-the-loop and permission boundaries
+- Checkpointing, retries, timeouts and recovery patterns
+- Tracing, evaluation, latency and token-awareness
+- Links to inspect public AI/MCP repositories directly
 
-## 🚀 Getting Started
+### Frontend quality
 
-### Prerequisites
+- Next.js 16 + React 19 + TypeScript
+- Responsive dark/light UI
+- Semantic navigation and page structure
+- Reduced-motion support and keyboard-focus states
+- SEO-friendly project and article routes
+- Desktop + mobile Playwright smoke coverage
 
-- Node.js 20+ installed
-- npm or yarn package manager
+## Main routes
 
-### Installation
+```text
+/
+├── #projects
+├── #ai-engineering
+├── #experience
+├── #skills
+├── #testimonials
+└── #contact
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/yourusername/portfolio.git
-   cd portfolio
-   ```
-
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-
-3. Run the development server:
-   ```bash
-   npm run dev
-   ```
-
-4. Open [http://localhost:3000](http://localhost:3000) in your browser
-
-## 🎨 Customization
-
-### Update Personal Information
-
-1. **Hero Section** (`components/Hero.tsx`):
-   - Update name, title, and tagline
-   - Add your profile image
-   - Update social media links
-
-2. **About Section** (`components/About.tsx`):
-   - Customize your philosophy and skills
-   - Update tech stack and statistics
-
-3. **Projects Section** (`components/Projects.tsx`):
-   - Add your projects with images, descriptions, and links
-   - Update tech stack badges
-
-4. **Experience Section** (`components/Experience.tsx`):
-   - Add your work experience
-   - Update achievements and certifications
-
-5. **Contact Section** (`components/Contact.tsx`):
-   - Update email, phone, and location
-   - Configure EmailJS or API route for form submission
-
-### Update Colors
-
-Edit `app/globals.css` to change the color scheme:
-
-```css
-:root {
-  --purple-primary: #8b5cf6;  /* Main purple */
-  --purple-secondary: #a78bfa; /* Secondary purple */
-  --purple-light: #ede9fe;     /* Light purple */
-}
+/projects/[slug]
+/blog
+/blog/[slug]
+/sitemap.xml
+/robots.txt
+/opengraph-image
 ```
 
-### Update Metadata
+## Tech stack
 
-Edit `app/layout.tsx` to update SEO information:
-- Page title
-- Description
-- Keywords
-- Open Graph images
-- Social media URLs
+| Area | Technologies |
+| --- | --- |
+| Framework | Next.js 16, React 19, TypeScript 6 |
+| Styling | Tailwind CSS 4, custom CSS |
+| Motion | Framer Motion with reduced-motion handling |
+| Icons | Lucide React |
+| Blog data | Supabase REST API with published-row access |
+| SEO | Next.js Metadata API, dynamic sitemap, robots, Open Graph image, Person + BlogPosting JSON-LD |
+| Testing | ESLint, TypeScript, Playwright desktop/mobile smoke tests |
+| Deployment | Vercel production + GitHub pull-request validation |
 
-## 📦 Build for Production
-
-Build the static site:
+## Local development
 
 ```bash
-npm run build
+npm ci
+npm run dev
 ```
 
-The output will be in the `out` directory, ready for deployment.
+Open `http://localhost:3000`.
 
-## 🌐 Deployment to GitHub Pages
+## Supabase blog configuration
 
-### Method 1: Automatic Deployment (Recommended)
+Copy the environment template and add the public Supabase credentials:
 
-1. Push your code to GitHub
-2. Go to repository Settings → Pages
-3. Source: "GitHub Actions"
-4. The workflow will automatically deploy on every push to `main`
+```bash
+cp .env.example .env.local
+```
 
-### Method 2: Manual Deployment
+Required variables:
 
-1. Build the project:
-   ```bash
-   npm run build
-   ```
+```dotenv
+NEXT_PUBLIC_SUPABASE_URL=...
+NEXT_PUBLIC_SUPABASE_ANON_KEY=...
+```
 
-2. Deploy to GitHub Pages:
-   ```bash
-   npm install -g gh-pages
-   gh-pages -d out
-   ```
+Run `supabase/blogs.sql` in the Supabase SQL editor before publishing posts. The service-role key is not used by the portfolio and must never be exposed to the browser.
 
-### Important Notes
+## Quality checks
 
-- Update `basePath` in `next.config.ts` if your repository name is different from "portfolio"
-- The `.github/workflows/deploy.yml` file is already configured
-- Make sure GitHub Pages is enabled in your repository settings
+```bash
+npm run lint
+npm run typecheck
+npm run build
+npm run test:e2e
+```
 
-## 📝 Customization Checklist
+Or run the static checks together:
 
-- [ ] Update personal name and branding in all components
-- [ ] Add your profile photo to `public` folder
-- [ ] Update social media links (GitHub, LinkedIn, Twitter)
-- [ ] Add your actual projects with screenshots
-- [ ] Update work experience and achievements
-- [ ] Configure contact form (EmailJS or API route)
-- [ ] Add your resume PDF to `public` folder
-- [ ] Update SEO metadata in `app/layout.tsx`
-- [ ] Replace repository name in `next.config.ts` basePath
-- [ ] Update OG image for social sharing
+```bash
+npm run check
+```
 
-## 🔧 Scripts
+The GitHub Actions quality workflow runs linting, type checking, production build, and Playwright tests on pull requests and `main`.
 
-- `npm run dev` - Start development server
-- `npm run build` - Build for production
-- `npm run start` - Start production server
-- `npm run lint` - Run ESLint
+## Content architecture
 
-## 📄 License
+### Case studies
 
-This project is open source and available under the [MIT License](LICENSE).
+Case-study data lives in `lib/projects.ts` and is rendered through `components/CaseStudyPage.tsx`. Each flagship project includes:
 
-## 🤝 Contributing
+- problem and operating context
+- personal ownership
+- scale and constraints
+- system flow
+- technical decisions
+- trade-offs
+- outcomes
+- lessons
+- public proof where disclosure is possible
 
-Contributions, issues, and feature requests are welcome!
+### Blog
 
-## 💬 Contact
+Blog records are read from Supabase through `lib/blogs.ts`. Published articles use `/blog/[slug]` so every article has server-generated metadata, canonical URLs, Open Graph data and `BlogPosting` structured data.
 
-Feel free to reach out if you have any questions or suggestions!
+## Deployment
 
----
+Vercel is the canonical production deployment. Repository changes should land through a pull request so the quality workflow and Vercel preview can be reviewed before merge.
 
-**Made with ❤️ using Next.js**
+## Privacy and proprietary work
+
+Employer/client source code is not published. Case studies explain architecture and outcomes at a level that demonstrates engineering judgment without exposing proprietary code, customer data or credentials.
