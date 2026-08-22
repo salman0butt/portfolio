@@ -26,7 +26,7 @@ function ArchitectureVisual() {
       </div>
 
       <svg
-        viewBox="0 0 700 520"
+        viewBox="0 0 700 555"
         role="img"
         aria-labelledby="hero-architecture-title hero-architecture-desc"
         className="h-auto w-full"
@@ -46,68 +46,69 @@ function ArchitectureVisual() {
         </defs>
 
         <g fill="none" stroke="#34d399" strokeOpacity="0.7" strokeWidth="2" markerEnd="url(#hero-arrow)">
-          <path d="M350 84 V132" />
-          <path d="M350 210 V245 H170 V286" />
-          <path d="M350 210 V286" />
-          <path d="M350 210 V245 H530 V286" />
-          <path d="M170 362 V408 H350" />
-          <path d="M350 362 V408" />
-          <path d="M530 362 V408 H350" />
+          <path d="M350 92 V145" />
+          <path d="M350 237 V270 H160 V305" />
+          <path d="M350 237 V305" />
+          <path d="M350 237 V270 H590 V305" />
+          <path d="M160 395 V440 H350" />
+          <path d="M400 395 V440" />
+          <path d="M590 395 V440 H350" />
         </g>
 
         <g>
-          <rect x="215" y="24" width="270" height="60" rx="16" fill="url(#hero-panel)" stroke="#334155" />
-          <circle cx="246" cy="54" r="11" fill="#10b981" fillOpacity="0.2" stroke="#34d399" />
-          <path d="M241 54h10M246 49v10" stroke="#6ee7b7" strokeWidth="2" strokeLinecap="round" />
-          <text x="270" y="49" fill="#f8fafc" fontSize="16" fontWeight="700">Product interface</text>
-          <text x="270" y="69" fill="#94a3b8" fontSize="12">Next.js · React · TypeScript · streaming UI</text>
+          <rect x="205" y="20" width="290" height="72" rx="17" fill="url(#hero-panel)" stroke="#334155" />
+          <circle cx="238" cy="56" r="11" fill="#10b981" fillOpacity="0.2" stroke="#34d399" />
+          <path d="M233 56h10M238 51v10" stroke="#6ee7b7" strokeWidth="2" strokeLinecap="round" />
+          <text x="350" y="50" fill="#f8fafc" fontSize="16" fontWeight="700" textAnchor="middle">Product interface</text>
+          <text x="350" y="72" fill="#94a3b8" fontSize="11.5" textAnchor="middle">Next.js · React · TypeScript · streaming UI</text>
         </g>
 
         <g>
-          <rect x="195" y="132" width="310" height="78" rx="18" fill="#0f172a" stroke="#10b981" strokeOpacity="0.55" />
-          <text x="220" y="162" fill="#6ee7b7" fontSize="11" fontWeight="700" letterSpacing="1.4">APPLICATION BOUNDARY</text>
-          <text x="220" y="188" fill="#f8fafc" fontSize="17" fontWeight="700">API + orchestration layer</text>
-          <text x="470" y="188" fill="#94a3b8" fontSize="11" textAnchor="end">Node.js · Python</text>
+          <rect x="190" y="145" width="320" height="92" rx="18" fill="#0f172a" stroke="#10b981" strokeOpacity="0.55" />
+          <text x="350" y="174" fill="#6ee7b7" fontSize="11" fontWeight="700" letterSpacing="1.4" textAnchor="middle">APPLICATION BOUNDARY</text>
+          <text x="350" y="201" fill="#f8fafc" fontSize="17" fontWeight="700" textAnchor="middle">API + orchestration layer</text>
+          <text x="350" y="222" fill="#94a3b8" fontSize="11.5" textAnchor="middle">Node.js · Python</text>
         </g>
 
         <g>
-          <rect x="55" y="286" width="230" height="76" rx="16" fill="#0f172a" stroke="#334155" />
-          <text x="76" y="314" fill="#f8fafc" fontSize="15" fontWeight="700">Agent state & workflow</text>
-          <text x="76" y="336" fill="#94a3b8" fontSize="11">LangGraph · checkpoints · HITL</text>
-          <text x="76" y="351" fill="#94a3b8" fontSize="11">typed tool execution</text>
+          <rect x="40" y="305" width="240" height="90" rx="16" fill="#0f172a" stroke="#334155" />
+          <text x="160" y="334" fill="#f8fafc" fontSize="14.5" fontWeight="700" textAnchor="middle">Agent state &amp; workflow</text>
+          <text x="160" y="357" fill="#94a3b8" fontSize="10.8" textAnchor="middle">LangGraph · checkpoints · HITL</text>
+          <text x="160" y="375" fill="#94a3b8" fontSize="10.8" textAnchor="middle">typed tool execution</text>
         </g>
 
         <g>
-          <rect x="305" y="286" width="190" height="76" rx="16" fill="#0f172a" stroke="#334155" />
-          <text x="326" y="314" fill="#f8fafc" fontSize="15" fontWeight="700">Retrieval & data</text>
-          <text x="326" y="336" fill="#94a3b8" fontSize="11">Postgres · vectors · cache</text>
-          <text x="326" y="351" fill="#94a3b8" fontSize="11">grounded context</text>
+          <rect x="300" y="305" width="200" height="90" rx="16" fill="#0f172a" stroke="#334155" />
+          <text x="400" y="334" fill="#f8fafc" fontSize="14.5" fontWeight="700" textAnchor="middle">Retrieval &amp; data</text>
+          <text x="400" y="357" fill="#94a3b8" fontSize="10.8" textAnchor="middle">Postgres · vectors · cache</text>
+          <text x="400" y="375" fill="#94a3b8" fontSize="10.8" textAnchor="middle">grounded context</text>
         </g>
 
         <g>
-          <rect x="515" y="286" width="130" height="76" rx="16" fill="#0f172a" stroke="#334155" />
-          <text x="536" y="314" fill="#f8fafc" fontSize="15" fontWeight="700">Tools</text>
-          <text x="536" y="336" fill="#94a3b8" fontSize="11">MCP · APIs</text>
-          <text x="536" y="351" fill="#94a3b8" fontSize="11">permissions</text>
+          <rect x="520" y="305" width="140" height="90" rx="16" fill="#0f172a" stroke="#334155" />
+          <text x="590" y="334" fill="#f8fafc" fontSize="14.5" fontWeight="700" textAnchor="middle">Tools</text>
+          <text x="590" y="357" fill="#94a3b8" fontSize="10.8" textAnchor="middle">MCP · APIs</text>
+          <text x="590" y="375" fill="#94a3b8" fontSize="10.8" textAnchor="middle">permissions</text>
         </g>
 
         <g>
-          <rect x="160" y="408" width="380" height="80" rx="18" fill="#07130f" stroke="#10b981" strokeOpacity="0.45" />
-          <text x="185" y="438" fill="#6ee7b7" fontSize="11" fontWeight="700" letterSpacing="1.4">PRODUCTION FEEDBACK LOOP</text>
-          <text x="185" y="463" fill="#f8fafc" fontSize="15" fontWeight="700">Tracing · evaluations · latency · token cost · recovery</text>
+          <rect x="135" y="440" width="430" height="92" rx="18" fill="#07130f" stroke="#10b981" strokeOpacity="0.45" />
+          <text x="350" y="469" fill="#6ee7b7" fontSize="11" fontWeight="700" letterSpacing="1.4" textAnchor="middle">PRODUCTION FEEDBACK LOOP</text>
+          <text x="350" y="495" fill="#f8fafc" fontSize="14.5" fontWeight="700" textAnchor="middle">Tracing · evaluations · latency</text>
+          <text x="350" y="516" fill="#f8fafc" fontSize="14.5" fontWeight="700" textAnchor="middle">token cost · recovery</text>
         </g>
 
         <g fill="#94a3b8" fontSize="10">
-          <text x="362" y="116">request / stream</text>
-          <text x="92" y="274">state</text>
-          <text x="363" y="274">context</text>
-          <text x="544" y="274">actions</text>
+          <text x="362" y="124">request / stream</text>
+          <text x="78" y="292">state</text>
+          <text x="365" y="292">context</text>
+          <text x="601" y="292">actions</text>
         </g>
       </svg>
 
-      <div className="mt-2 grid grid-cols-3 gap-2 text-center text-[10px] font-semibold text-gray-400">
+      <div className="mt-2 grid grid-cols-1 gap-2 text-center text-[10px] font-semibold text-gray-400 sm:grid-cols-3">
         <span className="rounded-lg border border-white/10 bg-white/[0.035] px-2 py-2">Guardrails</span>
-        <span className="rounded-lg border border-white/10 bg-white/[0.035] px-2 py-2">Retries & timeouts</span>
+        <span className="rounded-lg border border-white/10 bg-white/[0.035] px-2 py-2">Retries &amp; timeouts</span>
         <span className="rounded-lg border border-white/10 bg-white/[0.035] px-2 py-2">RBAC / ABAC</span>
       </div>
     </div>
