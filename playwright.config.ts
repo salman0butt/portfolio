@@ -2,26 +2,31 @@ import { defineConfig, devices } from '@playwright/test';
 
 export default defineConfig({
   testDir: './tests',
-  fullyParallel: false,
+  fullyParallel: true,
   forbidOnly: !!process.env.CI,
-  retries: 0,
-  workers: 1,
-  reporter: 'list',
+  retries: process.env.CI ? 1 : 0,
+  workers: process.env.CI ? 1 : undefined,
+  reporter: process.env.CI ? [['list'], ['html', { open: 'never' }]] : 'list',
   use: {
-    baseURL: 'http://localhost:3001',
+    baseURL: 'http://127.0.0.1:3000',
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
+    video: 'retain-on-failure',
   },
   projects: [
     {
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
     },
+    {
+      name: 'mobile',
+      use: { ...devices['Pixel 7'] },
+    },
   ],
   webServer: {
     command: 'npm run dev',
-    url: 'http://localhost:3000',
-    reuseExistingServer: true,
+    url: 'http://127.0.0.1:3000',
+    reuseExistingServer: !process.env.CI,
     timeout: 120000,
   },
 });
