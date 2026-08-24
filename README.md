@@ -64,7 +64,6 @@ Production portfolio for a **Senior Full-Stack & Generative AI Engineer**. The s
 | Motion | Framer Motion with reduced-motion handling |
 | Icons | Lucide React |
 | Blog data | Supabase REST API with published-row access |
-| Blog media | Versioned assets under `public/blog-images/`, delivered by Vercel |
 | SEO | Next.js Metadata API, dynamic sitemap, robots, Open Graph image, Person + BlogPosting JSON-LD |
 | Testing | ESLint, TypeScript, Playwright desktop/mobile smoke tests |
 | Deployment | Vercel production + GitHub pull-request validation |
@@ -90,10 +89,10 @@ Required variables:
 
 ```dotenv
 NEXT_PUBLIC_SUPABASE_URL=...
-NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=...
+NEXT_PUBLIC_SUPABASE_ANON_KEY=...
 ```
 
-Run `supabase/blogs.sql` in the Supabase SQL editor before publishing posts. A secret/service-role key is not used by the public portfolio runtime and must never be exposed to the browser.
+Run `supabase/blogs.sql` in the Supabase SQL editor before publishing posts. The service-role key is not used by the portfolio and must never be exposed to the browser.
 
 ## Quality checks
 
@@ -131,10 +130,6 @@ Case-study data lives in `lib/projects.ts` and is rendered through `components/C
 ### Blog
 
 Blog records are read from Supabase through `lib/blogs.ts`. Published articles use `/blog/[slug]` so every article has server-generated metadata, canonical URLs, Open Graph data and `BlogPosting` structured data.
-
-The public site is intentionally read-only. ChatGPT-assisted publishing uses the connected Supabase tool for article data and the connected GitHub tool for versioned media under `public/blog-images/<slug>/`; Vercel deploys those media/code changes. This avoids exposing a privileged publishing endpoint on the public portfolio.
-
-See `docs/CHATGPT_PUBLISHING.md` for create/update/delete, custom publication dates, and media workflows.
 
 ## Deployment
 
