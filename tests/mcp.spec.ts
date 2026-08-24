@@ -26,6 +26,15 @@ function meta() {
   };
 }
 
+function parseSseJson(text: string) {
+  const dataLine = text
+    .split(/\r?\n/)
+    .find((line) => line.startsWith('data:'));
+
+  if (!dataLine) throw new Error(`Missing SSE data event: ${text.slice(0, 300)}`);
+  return JSON.parse(dataLine.slice(5).trim());
+}
+
 test.describe('Portfolio MCP', () => {
   test('supports standard MCP initialize on the stable path-token URL', async ({ request }) => {
     const response = await request.post(PATH_MCP_URL, {
@@ -46,7 +55,9 @@ test.describe('Portfolio MCP', () => {
     });
 
     expect(response.ok()).toBeTruthy();
-    const body = await response.json();
+    expect(response.headers()['content-type']).toContain('text/event-stream');
+
+    const body = parseSseJson(await response.text());
     expect(body.jsonrpc).toBe('2.0');
     expect(body.result.protocolVersion).toBe(LEGACY_PROTOCOL);
     expect(body.result.serverInfo.name).toBe('salman-portfolio-mcp');
