@@ -13,7 +13,7 @@ The script creates:
 - published/draft state
 - featured posts
 - category and tags
-- automatic `published_at` / `updated_at` timestamps
+- `published_at` / `updated_at` timestamps
 - Row Level Security so anonymous visitors can read **published posts only**
 
 ## 2. Add environment variables
@@ -40,7 +40,7 @@ If you deploy through GitHub Actions, add repository Actions secrets named:
 
 ## 3. Create blog posts
 
-Use **Supabase -> Table Editor -> blogs**. The important fields are:
+Use Supabase directly (Table Editor/SQL) or the connected Supabase tool in ChatGPT. The important fields are:
 
 | Field | Purpose |
 | --- | --- |
@@ -48,13 +48,30 @@ Use **Supabase -> Table Editor -> blogs**. The important fields are:
 | `slug` | URL-safe slug, e.g. `building-ai-agents-with-langgraph` |
 | `excerpt` | Short card/search description |
 | `content` | Article body in Markdown-style text |
-| `cover_image_url` | Optional public image URL |
+| `cover_image_url` | Optional public/site-relative image URL |
 | `category` | Optional category such as `AI` or `Engineering` |
 | `tags` | PostgreSQL text array |
 | `featured` | Featured articles appear first |
 | `published` | Only `true` posts are visible publicly |
+| `published_at` | Publication date/time; may be set explicitly to a custom ISO 8601 timestamp |
 
-`published_at`, `created_at`, and `updated_at` are handled automatically.
+`created_at` and `updated_at` are automatic. `published_at` can use the database default/current time or be explicitly set when a custom article date is required.
+
+## 4. ChatGPT publishing workflow
+
+The public portfolio does not expose a write API. ChatGPT publishing uses connected services instead:
+
+- **Supabase** for article create/update/publish/unpublish/delete and custom `published_at`
+- **GitHub** for image add/replace/delete under `public/blog-images/<slug>/`
+- **Vercel** automatically deploys image/code changes from GitHub
+
+See `docs/CHATGPT_PUBLISHING.md` for the full workflow and security model.
+
+Recommended image URL format:
+
+```text
+/blog-images/<article-slug>/cover.webp
+```
 
 ## Supported article formatting
 
@@ -106,14 +123,14 @@ profile, preferences = await asyncio.gather(
 
 ### Architecture diagrams
 
-```md
+````md
 ```diagram
 title: Request path
 Browser -> Next.js | request
 Next.js -> Application service | validated intent
 Application service -> PostgreSQL | durable state
 ```
-```
+````
 
 ## SEO and AI discovery
 
