@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useId, useMemo, useState } from 'react';
+import { useId, useMemo, useState, useSyncExternalStore } from 'react';
 
 type CodeExample = { language: string; code: string };
 
@@ -20,32 +20,36 @@ function canonicalLanguage(language: string) {
   return value;
 }
 
+function subscribeToLanguagePreference(callback: () => void) {
+  const notify = () => callback();
+  window.addEventListener(EVENT_NAME, notify);
+  window.addEventListener('storage', notify);
+  return () => {
+    window.removeEventListener(EVENT_NAME, notify);
+    window.removeEventListener('storage', notify);
+  };
+}
+
+function getLanguagePreference() {
+  return window.localStorage.getItem(STORAGE_KEY) ?? '';
+}
+
+function getServerLanguagePreference() {
+  return '';
+}
+
 export default function CodeGroup({ examples }: { examples: CodeExample[] }) {
   const groupId = useId();
   const normalized = useMemo(() => examples.map((example) => ({ ...example, language: canonicalLanguage(example.language) })), [examples]);
-  const [activeLanguage, setActiveLanguage] = useState(normalized[0]?.language ?? '');
+  const preferredLanguage = useSyncExternalStore(subscribeToLanguagePreference, getLanguagePreference, getServerLanguagePreference);
   const [copied, setCopied] = useState(false);
 
-  useEffect(() => {
-    const saved = window.localStorage.getItem(STORAGE_KEY);
-    if (saved && normalized.some((example) => example.language === saved)) setActiveLanguage(saved);
-
-    const syncLanguage = (event: Event) => {
-      const language = (event as CustomEvent<string>).detail;
-      if (normalized.some((example) => example.language === language)) setActiveLanguage(language);
-    };
-
-    window.addEventListener(EVENT_NAME, syncLanguage);
-    return () => window.removeEventListener(EVENT_NAME, syncLanguage);
-  }, [normalized]);
-
-  const active = normalized.find((example) => example.language === activeLanguage) ?? normalized[0];
+  const active = normalized.find((example) => example.language === preferredLanguage) ?? normalized[0];
   if (!active) return null;
 
   const selectLanguage = (language: string) => {
-    setActiveLanguage(language);
     window.localStorage.setItem(STORAGE_KEY, language);
-    window.dispatchEvent(new CustomEvent(EVENT_NAME, { detail: language }));
+    window.dispatchEvent(new Event(EVENT_NAME));
   };
 
   const onTabKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>, currentIndex: number) => {
