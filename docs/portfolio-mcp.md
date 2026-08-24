@@ -23,18 +23,21 @@ Set these for Production and Preview as appropriate:
 ```bash
 SUPABASE_SECRET_KEY=sb_secret_...
 SUPABASE_BLOG_BUCKET=blog-images
-PORTFOLIO_MCP_TOKEN=<long-random-token>
+PORTFOLIO_MCP_TOKEN=<long-random-internal-token>
+PORTFOLIO_MCP_URL_TOKEN=<different-long-random-chatgpt-token>
 ```
 
-`NEXT_PUBLIC_SUPABASE_URL` is already used by the portfolio and is reused by the MCP endpoint. `SUPABASE_SECRET_KEY` and `PORTFOLIO_MCP_TOKEN` must never be prefixed with `NEXT_PUBLIC_`.
+`NEXT_PUBLIC_SUPABASE_URL` is already used by the portfolio and is reused by the MCP endpoint. All MCP secrets must remain server-side and must never be prefixed with `NEXT_PUBLIC_`.
 
-Create a dedicated Supabase secret key for this backend component rather than reusing a key from another server integration.
-
-A strong bearer token can be generated locally with:
+Use two different random tokens:
 
 ```bash
-openssl rand -hex 32
+node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 ```
+
+Run it twice: one value for `PORTFOLIO_MCP_TOKEN`, and a different value for `PORTFOLIO_MCP_URL_TOKEN`.
+
+`PORTFOLIO_MCP_TOKEN` is the internal bearer token used by the core MCP route. `PORTFOLIO_MCP_URL_TOKEN` is a disposable ChatGPT connection token that the Next.js proxy validates and converts to the internal bearer header. The internal token therefore never appears in the URL.
 
 ## Endpoint
 
@@ -46,13 +49,27 @@ https://salman-butt.vercel.app/api/mcp
 
 The endpoint implements stateless Streamable HTTP JSON-RPC compatible with MCP protocol `2025-06-18`.
 
-All MCP POST requests require:
+### ChatGPT
+
+ChatGPT's custom MCP form does not provide an arbitrary HTTP header field, so connect with the URL token and choose **No Auth**:
+
+```text
+https://salman-butt.vercel.app/api/mcp?token=YOUR_PORTFOLIO_MCP_URL_TOKEN
+```
+
+The root `proxy.ts` only matches `/api/mcp`. If the query token matches `PORTFOLIO_MCP_URL_TOKEN`, it injects the private internal bearer token into the request before the MCP route runs.
+
+Because URL query parameters can appear in infrastructure/request logs, treat `PORTFOLIO_MCP_URL_TOKEN` as disposable and rotate it if it is exposed. Do not reuse `PORTFOLIO_MCP_TOKEN` as the URL token.
+
+### Clients that support custom headers
+
+Cursor, CLI clients, and other MCP clients can continue using the private bearer-token flow:
 
 ```http
 Authorization: Bearer <PORTFOLIO_MCP_TOKEN>
 ```
 
-## Cursor example
+Cursor example:
 
 ```json
 {
@@ -67,7 +84,7 @@ Authorization: Bearer <PORTFOLIO_MCP_TOKEN>
 }
 ```
 
-Do not commit the real token to a repository.
+Do not commit either real token to a repository.
 
 ## Blog image bucket
 
@@ -102,12 +119,9 @@ The server instructions also tell MCP clients to prefer this draft-first workflo
 ## Security notes
 
 - The public portfolio keeps its existing anonymous/read-only Supabase access.
-- MCP requests are rejected unless the bearer token matches `PORTFOLIO_MCP_TOKEN`.
+- Direct MCP requests are rejected unless the bearer token matches `PORTFOLIO_MCP_TOKEN`.
+- ChatGPT URL-token requests are accepted only when `token` matches `PORTFOLIO_MCP_URL_TOKEN`, then converted internally to bearer authentication.
 - The Supabase secret key exists only in Vercel server environment variables.
 - Secret keys bypass RLS, so the MCP deliberately exposes only portfolio blog operations instead of arbitrary SQL/database tools.
 - Image paths are sanitized and file size/type are restricted.
 - Destructive tools are marked as destructive in MCP tool metadata so compatible clients can request confirmation.
-
-## ChatGPT availability
-
-As of August 2026, full custom MCP write/modify apps in ChatGPT are available on Business and Enterprise/Edu workspaces. The same remote MCP endpoint can be used by other Streamable HTTP MCP clients that support custom headers. Keep the server deployed even if the current ChatGPT plan cannot yet invoke its write tools directly.
