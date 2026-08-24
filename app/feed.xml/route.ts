@@ -1,4 +1,4 @@
-import { getBlogDate, getPublishedPosts } from '@/lib/blogs';
+import { type BlogPost, getBlogDate, getPublishedPosts } from '@/lib/blogs';
 
 const siteUrl = 'https://salman-butt.vercel.app';
 
@@ -12,7 +12,7 @@ function escapeXml(value: string) {
 }
 
 export async function GET() {
-  let posts = [];
+  let posts: BlogPost[] = [];
   try {
     posts = await getPublishedPosts(100);
   } catch {
