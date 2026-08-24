@@ -35,27 +35,26 @@ type SupabaseConfig = {
   anonKey: string;
 };
 
-function getSupabaseConfig(): SupabaseConfig | null {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL?.replace(/\/$/, '');
-  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+// These values are intentionally public browser credentials. Supabase RLS remains
+// the authorization boundary: anonymous visitors can only SELECT published posts.
+// Environment variables still take precedence when configured in Vercel.
+const PORTFOLIO_SUPABASE_URL = 'https://umfnlpueuoilhvtqefsk.supabase.co';
+const PORTFOLIO_SUPABASE_ANON_KEY =
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVtZm5scHVldW9pbGh2dHFlZnNrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc1NTExOTgsImV4cCI6MjEwMzEyNzE5OH0.3O5INlxke3LrjtTDVBCqhYEbcefK2jZzM4B4Nm_xcok';
 
-  if (!url || !anonKey) {
-    return null;
-  }
+function getSupabaseConfig(): SupabaseConfig {
+  const url = (process.env.NEXT_PUBLIC_SUPABASE_URL || PORTFOLIO_SUPABASE_URL).replace(/\/$/, '');
+  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || PORTFOLIO_SUPABASE_ANON_KEY;
 
   return { url, anonKey };
 }
 
 export function isBlogConfigured() {
-  return getSupabaseConfig() !== null;
+  return true;
 }
 
 async function queryBlogs(params: URLSearchParams): Promise<BlogPost[]> {
   const config = getSupabaseConfig();
-
-  if (!config) {
-    throw new Error('Supabase blog credentials are not configured.');
-  }
 
   const response = await fetch(`${config.url}/rest/v1/blogs?${params.toString()}`, {
     headers: {
