@@ -10,11 +10,10 @@ function secureEqual(left: string, right: string) {
 export function proxy(request: NextRequest) {
   const urlToken = request.nextUrl.searchParams.get('token');
   const expectedUrlToken = process.env.PORTFOLIO_MCP_URL_TOKEN;
+  const requestHeaders = new Headers(request.headers);
 
   // ChatGPT cannot send arbitrary headers from the custom MCP setup UI.
-  // A valid disposable URL token is converted into the private bearer token,
-  // then rewritten to the ChatGPT extension layer. The internal token never
-  // appears in the public MCP URL.
+  // A valid disposable URL token is converted into the private bearer token.
   if (urlToken && expectedUrlToken && secureEqual(urlToken, expectedUrlToken)) {
     const internalToken = process.env.PORTFOLIO_MCP_TOKEN;
 
@@ -25,23 +24,21 @@ export function proxy(request: NextRequest) {
       );
     }
 
-    const requestHeaders = new Headers(request.headers);
     requestHeaders.set('Authorization', `Bearer ${internalToken}`);
-
-    const rewriteUrl = request.nextUrl.clone();
-    rewriteUrl.pathname = '/api/mcp-chatgpt';
-    rewriteUrl.searchParams.delete('token');
-
-    return NextResponse.rewrite(rewriteUrl, {
-      request: {
-        headers: requestHeaders,
-      },
-    });
   }
 
-  // Preserve direct bearer-token authentication on /api/mcp for Cursor,
-  // CLI clients, and other MCP clients that support custom headers.
-  return NextResponse.next();
+  // Route every MCP request through the extension layer so both ChatGPT
+  // URL-token clients and normal bearer-token clients see the same complete
+  // tool set. The core MCP handler remains the final authentication boundary.
+  const rewriteUrl = request.nextUrl.clone();
+  rewriteUrl.pathname = '/api/mcp-chatgpt';
+  rewriteUrl.searchParams.delete('token');
+
+  return NextResponse.rewrite(rewriteUrl, {
+    request: {
+      headers: requestHeaders,
+    },
+  });
 }
 
 export const config = {
