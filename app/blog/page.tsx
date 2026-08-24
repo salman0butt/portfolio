@@ -2,15 +2,16 @@ import type { Metadata } from 'next';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import BlogList from '@/components/blog/BlogList';
-import { getPublishedPosts } from '@/lib/blogs';
+import { type BlogPost, getPublishedPosts } from '@/lib/blogs';
 
 const siteUrl = 'https://salman-butt.vercel.app';
+const blogDescription = 'Practical engineering articles on production Generative AI, system design, React, Next.js, Node.js, Python, TypeScript, real-time systems and reliable software delivery.';
 
 export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
   title: 'Engineering Blog',
-  description: 'Practical engineering articles on production Generative AI, system design, React, Next.js, Node.js, Python, TypeScript, real-time systems and reliable software delivery.',
+  description: blogDescription,
   keywords: [
     'software engineering blog',
     'senior software engineer',
@@ -46,7 +47,7 @@ export const metadata: Metadata = {
 };
 
 export default async function BlogPage() {
-  let posts = [];
+  let posts: BlogPost[] = [];
   try {
     posts = await getPublishedPosts();
   } catch {
@@ -59,9 +60,9 @@ export default async function BlogPage() {
     '@id': `${siteUrl}/blog#blog`,
     url: `${siteUrl}/blog`,
     name: 'Salman Butt Engineering Blog',
-    description: metadata.description,
+    description: blogDescription,
     inLanguage: 'en',
-    author: { '@type': 'Person', name: 'Salman Butt', url: siteUrl },
+    author: { '@type': 'Person', '@id': `${siteUrl}/#person`, name: 'Salman Butt', url: siteUrl },
     blogPost: posts.slice(0, 20).map((post) => ({
       '@type': 'BlogPosting',
       headline: post.title,
@@ -84,8 +85,8 @@ export default async function BlogPage() {
     <div className="min-h-screen overflow-x-clip">
       <Navbar />
       <main id="main-content" className="pb-20 pt-24 sm:pb-24 sm:pt-32">
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(blogStructuredData) }} />
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbStructuredData) }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(blogStructuredData).replace(/</g, '\\u003c') }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbStructuredData).replace(/</g, '\\u003c') }} />
         <div className="mx-auto w-full max-w-7xl min-w-0 px-4 sm:px-6 lg:px-8">
           <header className="mb-10 grid min-w-0 gap-6 sm:mb-12 lg:grid-cols-[minmax(0,1fr)_minmax(260px,.55fr)] lg:items-end lg:gap-8">
             <div className="min-w-0 max-w-4xl">
