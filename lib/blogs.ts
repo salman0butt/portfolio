@@ -32,21 +32,22 @@ const BLOG_FIELDS = [
 
 type SupabaseConfig = {
   url: string;
-  anonKey: string;
+  publishableKey: string;
 };
 
-// These values are intentionally public browser credentials. Supabase RLS remains
+// Supabase publishable keys are designed for public/client-side use. RLS remains
 // the authorization boundary: anonymous visitors can only SELECT published posts.
-// Environment variables still take precedence when configured in Vercel.
+// Environment variables take precedence when configured in Vercel.
 const PORTFOLIO_SUPABASE_URL = 'https://umfnlpueuoilhvtqefsk.supabase.co';
-const PORTFOLIO_SUPABASE_ANON_KEY =
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVtZm5scHVldW9pbGh2dHFlZnNrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc1NTExOTgsImV4cCI6MjEwMzEyNzE5OH0.3O5INlxke3LrjtTDVBCqhYEbcefK2jZzM4B4Nm_xcok';
+const PORTFOLIO_SUPABASE_PUBLISHABLE_KEY =
+  'sb_publishable_OXc-oFPkRujOLjnsmz_zrA_Nt7UuT6P';
 
 function getSupabaseConfig(): SupabaseConfig {
   const url = (process.env.NEXT_PUBLIC_SUPABASE_URL || PORTFOLIO_SUPABASE_URL).replace(/\/$/, '');
-  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || PORTFOLIO_SUPABASE_ANON_KEY;
+  const publishableKey =
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY || PORTFOLIO_SUPABASE_PUBLISHABLE_KEY;
 
-  return { url, anonKey };
+  return { url, publishableKey };
 }
 
 export function isBlogConfigured() {
@@ -58,8 +59,7 @@ async function queryBlogs(params: URLSearchParams): Promise<BlogPost[]> {
 
   const response = await fetch(`${config.url}/rest/v1/blogs?${params.toString()}`, {
     headers: {
-      apikey: config.anonKey,
-      Authorization: `Bearer ${config.anonKey}`,
+      apikey: config.publishableKey,
       Accept: 'application/json',
     },
     cache: 'no-store',

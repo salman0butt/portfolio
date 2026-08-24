@@ -1,6 +1,6 @@
 # Supabase Blog Setup
 
-The portfolio blog is intentionally built with Supabase's REST API and the public anon key, so there is no extra client dependency and no service-role secret in the browser.
+The portfolio blog is intentionally built with Supabase's REST API and the public publishable key, so there is no extra client dependency and no privileged server secret in the browser.
 
 ## 1. Create the database table
 
@@ -22,23 +22,21 @@ Add these to your deployment environment:
 
 ```env
 NEXT_PUBLIC_SUPABASE_URL=https://YOUR_PROJECT.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=YOUR_PUBLIC_ANON_KEY
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=sb_publishable_...
 ```
 
-Use the **anon / publishable key only**. Never add the Supabase `service_role` key to this repository or any `NEXT_PUBLIC_*` variable.
+Use the **publishable key only** for this public blog connection. Never add a Supabase secret key, legacy `service_role` key, or any other privileged credential to a `NEXT_PUBLIC_*` variable.
 
 ### Vercel
 
-Add both variables in **Project Settings -> Environment Variables**, then redeploy once so Next.js can bake the public values into the frontend bundle.
+Add both variables in **Project Settings -> Environment Variables**, enable them for the environments you use, and redeploy so the new values are available to the Next.js deployment.
 
 ### GitHub Pages
 
-Add repository Actions secrets named:
+If you deploy through GitHub Actions, add repository Actions secrets named:
 
 - `NEXT_PUBLIC_SUPABASE_URL`
-- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-
-The deployment workflow passes these into the static build.
+- `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`
 
 ## 3. Create blog posts
 
@@ -70,10 +68,13 @@ The renderer supports:
 - bullet and numbered lists
 - blockquotes
 - fenced code blocks
+- Markdown images and captions
+- Markdown tables
+- fenced `diagram` / `architecture` blocks
 
 ## Routes
 
 - `/blog` — searchable/filterable blog index
-- `/blog/post?slug=your-post-slug` — article page
+- `/blog/[slug]` — article page
 
-The query-based article route is deliberate: it keeps new Supabase posts immediately available even when the portfolio is deployed as a static GitHub Pages export. No rebuild is needed for each new article.
+Published content is loaded from Supabase at runtime, so article content remains database-driven rather than being hard-coded into the Next.js bundle.
