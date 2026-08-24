@@ -1,16 +1,24 @@
 import { timingSafeEqual } from 'node:crypto';
+import { createMcpHandler } from 'mcp-handler';
+import { z } from 'zod';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
-type JsonRpcId = string | number | null;
+const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
+const BLOG_FIELDS = 'id,title,slug,excerpt,content,cover_image_url,category,tags,featured,published,published_at,created_at,updated_at';
+const IMAGE_TYPES = ['image/png', 'image/jpeg', 'image/webp', 'image/gif', 'image/avif'] as const;
+const ALLOWED_IMAGE_TYPES = new Set<string>(IMAGE_TYPES);
 
-type JsonRpcRequest = {
-  jsonrpc?: string;
-  id?: JsonRpcId;
-  method?: string;
-  params?: Record<string, unknown>;
-};
+const slugSchema = z
+  .string()
+  .min(1)
+  .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'Use a lowercase kebab-case slug.');
+
+const publicationDateSchema = z
+  .string()
+  .min(1)
+  .describe('ISO 8601 date or datetime, e.g. 2026-08-20 or 2026-08-20T10:30:00+05:00.');
 
 type BlogPost = {
   id: string;
@@ -28,200 +36,6 @@ type BlogPost = {
   updated_at: string;
 };
 
-type ToolDefinition = {
-  name: string;
-  title: string;
-  description: string;
-  inputSchema: Record<string, unknown>;
-  annotations?: Record<string, boolean>;
-};
-
-const SUPPORTED_PROTOCOL = '2025-06-18';
-const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
-const BLOG_FIELDS = 'id,title,slug,excerpt,content,cover_image_url,category,tags,featured,published,published_at,created_at,updated_at';
-const ALLOWED_IMAGE_TYPES = new Set(['image/png', 'image/jpeg', 'image/webp', 'image/gif', 'image/avif']);
-
-const tools: ToolDefinition[] = [
-  {
-    name: 'list_blog_posts',
-    title: 'List blog posts',
-    description: 'List portfolio blog posts. Can return all posts, only published posts, or only drafts.',
-    inputSchema: {
-      type: 'object',
-      properties: {
-        state: { type: 'string', enum: ['all', 'published', 'draft'], default: 'all' },
-        limit: { type: 'integer', minimum: 1, maximum: 100, default: 50 },
-      },
-      additionalProperties: false,
-    },
-    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
-  },
-  {
-    name: 'get_blog_post',
-    title: 'Get blog post',
-    description: 'Get one portfolio blog post by slug, including full Markdown content.',
-    inputSchema: {
-      type: 'object',
-      properties: { slug: { type: 'string', minLength: 1 } },
-      required: ['slug'],
-      additionalProperties: false,
-    },
-    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
-  },
-  {
-    name: 'create_blog_post',
-    title: 'Create blog post',
-    description: 'Create a portfolio article. Defaults to an unpublished draft unless published=true is explicitly supplied.',
-    inputSchema: {
-      type: 'object',
-      properties: {
-        title: { type: 'string', minLength: 1, maxLength: 180 },
-        slug: { type: 'string', pattern: '^[a-z0-9]+(?:-[a-z0-9]+)*$' },
-        excerpt: { type: 'string' },
-        content: { type: 'string' },
-        cover_image_url: { type: ['string', 'null'] },
-        category: { type: ['string', 'null'] },
-        tags: { type: 'array', items: { type: 'string' }, default: [] },
-        featured: { type: 'boolean', default: false },
-        published: { type: 'boolean', default: false },
-      },
-      required: ['title', 'slug', 'excerpt', 'content'],
-      additionalProperties: false,
-    },
-    annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
-  },
-  {
-    name: 'update_blog_post',
-    title: 'Update blog post',
-    description: 'Update selected fields of an existing portfolio article identified by its current slug.',
-    inputSchema: {
-      type: 'object',
-      properties: {
-        slug: { type: 'string', minLength: 1 },
-        title: { type: 'string', minLength: 1, maxLength: 180 },
-        new_slug: { type: 'string', pattern: '^[a-z0-9]+(?:-[a-z0-9]+)*$' },
-        excerpt: { type: 'string' },
-        content: { type: 'string' },
-        cover_image_url: { type: ['string', 'null'] },
-        category: { type: ['string', 'null'] },
-        tags: { type: 'array', items: { type: 'string' } },
-        featured: { type: 'boolean' },
-      },
-      required: ['slug'],
-      additionalProperties: false,
-    },
-    annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: true },
-  },
-  {
-    name: 'publish_blog_post',
-    title: 'Publish blog post',
-    description: 'Publish an existing draft. The database trigger sets published_at when needed.',
-    inputSchema: {
-      type: 'object',
-      properties: { slug: { type: 'string', minLength: 1 } },
-      required: ['slug'],
-      additionalProperties: false,
-    },
-    annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: true },
-  },
-  {
-    name: 'unpublish_blog_post',
-    title: 'Unpublish blog post',
-    description: 'Remove an article from the public blog while keeping its content in Supabase.',
-    inputSchema: {
-      type: 'object',
-      properties: { slug: { type: 'string', minLength: 1 } },
-      required: ['slug'],
-      additionalProperties: false,
-    },
-    annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: true },
-  },
-  {
-    name: 'delete_blog_post',
-    title: 'Delete blog post',
-    description: 'Permanently delete a portfolio article by slug. This does not automatically remove images.',
-    inputSchema: {
-      type: 'object',
-      properties: { slug: { type: 'string', minLength: 1 } },
-      required: ['slug'],
-      additionalProperties: false,
-    },
-    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true },
-  },
-  {
-    name: 'upload_blog_image',
-    title: 'Upload blog image',
-    description: 'Upload a PNG, JPEG, WebP, GIF, or AVIF image (base64 encoded) to the public blog-images bucket and return its public URL.',
-    inputSchema: {
-      type: 'object',
-      properties: {
-        path: { type: 'string', description: 'Object path such as scalable-nodejs-apis/cover.webp' },
-        content_type: { type: 'string', enum: ['image/png', 'image/jpeg', 'image/webp', 'image/gif', 'image/avif'] },
-        base64: { type: 'string', minLength: 1 },
-        upsert: { type: 'boolean', default: false },
-      },
-      required: ['path', 'content_type', 'base64'],
-      additionalProperties: false,
-    },
-    annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
-  },
-  {
-    name: 'delete_blog_image',
-    title: 'Delete blog image',
-    description: 'Permanently delete one image from the blog-images bucket.',
-    inputSchema: {
-      type: 'object',
-      properties: { path: { type: 'string', minLength: 1 } },
-      required: ['path'],
-      additionalProperties: false,
-    },
-    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true },
-  },
-  {
-    name: 'get_blog_image_url',
-    title: 'Get blog image URL',
-    description: 'Build the public URL for an object in the blog-images bucket.',
-    inputSchema: {
-      type: 'object',
-      properties: { path: { type: 'string', minLength: 1 } },
-      required: ['path'],
-      additionalProperties: false,
-    },
-    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
-  },
-];
-
-function jsonHeaders() {
-  return {
-    'Content-Type': 'application/json; charset=utf-8',
-    'Cache-Control': 'no-store',
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Headers': 'authorization, content-type, mcp-protocol-version, mcp-method, mcp-name',
-    'Access-Control-Allow-Methods': 'POST, OPTIONS',
-  };
-}
-
-function jsonRpcResult(id: JsonRpcId | undefined, result: unknown, status = 200) {
-  return new Response(JSON.stringify({ jsonrpc: '2.0', id: id ?? null, result }), { status, headers: jsonHeaders() });
-}
-
-function jsonRpcError(id: JsonRpcId | undefined, code: number, message: string, status = 200) {
-  return new Response(JSON.stringify({ jsonrpc: '2.0', id: id ?? null, error: { code, message } }), { status, headers: jsonHeaders() });
-}
-
-function toolSuccess(data: unknown) {
-  return {
-    content: [{ type: 'text', text: typeof data === 'string' ? data : JSON.stringify(data, null, 2) }],
-    structuredContent: typeof data === 'object' && data !== null ? data : { value: data },
-    isError: false,
-  };
-}
-
-function toolFailure(error: unknown) {
-  const message = error instanceof Error ? error.message : 'Unknown tool error';
-  return { content: [{ type: 'text', text: message }], isError: true };
-}
-
 function secureEqual(left: string, right: string) {
   const a = Buffer.from(left);
   const b = Buffer.from(right);
@@ -229,11 +43,20 @@ function secureEqual(left: string, right: string) {
 }
 
 function isAuthorized(request: Request) {
-  const expected = process.env.PORTFOLIO_MCP_TOKEN;
-  if (!expected) return false;
-  const value = request.headers.get('authorization');
-  if (!value?.startsWith('Bearer ')) return false;
-  return secureEqual(value.slice(7), expected);
+  const urlToken = new URL(request.url).searchParams.get('token');
+  const expectedUrlToken = process.env.PORTFOLIO_MCP_URL_TOKEN;
+
+  if (urlToken && expectedUrlToken && secureEqual(urlToken, expectedUrlToken)) {
+    return true;
+  }
+
+  const auth = request.headers.get('authorization');
+  const expectedBearer = process.env.PORTFOLIO_MCP_TOKEN;
+  if (auth?.startsWith('Bearer ') && expectedBearer) {
+    return secureEqual(auth.slice(7), expectedBearer);
+  }
+
+  return false;
 }
 
 function requireConfig() {
@@ -243,6 +66,7 @@ function requireConfig() {
 
   if (!url) throw new Error('SUPABASE_URL or NEXT_PUBLIC_SUPABASE_URL is not configured.');
   if (!secretKey) throw new Error('SUPABASE_SECRET_KEY is not configured.');
+
   return { url, secretKey, bucket };
 }
 
@@ -253,33 +77,49 @@ async function supabaseFetch(path: string, init: RequestInit = {}) {
   headers.set('Authorization', `Bearer ${secretKey}`);
   if (!headers.has('Accept')) headers.set('Accept', 'application/json');
 
-  const response = await fetch(`${url}${path}`, { ...init, headers, cache: 'no-store' });
+  const response = await fetch(`${url}${path}`, {
+    ...init,
+    headers,
+    cache: 'no-store',
+  });
+
   if (!response.ok) {
     const detail = await response.text();
     throw new Error(`Supabase request failed (${response.status}): ${detail.slice(0, 500)}`);
   }
+
   return response;
 }
 
-function asString(value: unknown, name: string) {
-  if (typeof value !== 'string' || !value.trim()) throw new Error(`${name} must be a non-empty string.`);
-  return value.trim();
+function cleanTags(value: string[]) {
+  return value.map((item) => item.trim()).filter(Boolean).slice(0, 30);
 }
 
-function asBoolean(value: unknown, fallback?: boolean) {
-  return typeof value === 'boolean' ? value : fallback;
+function normalizePublishedAt(value: string) {
+  const raw = value.trim();
+  const date = /^\d{4}-\d{2}-\d{2}$/.test(raw)
+    ? new Date(`${raw}T00:00:00.000Z`)
+    : new Date(raw);
+
+  if (Number.isNaN(date.getTime())) {
+    throw new Error('published_at must be a valid ISO 8601 date or datetime.');
+  }
+
+  return date.toISOString();
 }
 
-function cleanTags(value: unknown) {
-  if (!Array.isArray(value)) return [];
-  return value.filter((item): item is string => typeof item === 'string').map((item) => item.trim()).filter(Boolean).slice(0, 30);
-}
-
-function normalizeObjectPath(value: unknown) {
-  const raw = asString(value, 'path').replace(/^\/+|\/+$/g, '').replace(/\/{2,}/g, '/');
+function normalizeObjectPath(value: string) {
+  const raw = value.trim().replace(/^\/+|\/+$/g, '').replace(/\/{2,}/g, '/');
   const segments = raw.split('/');
-  if (segments.some((segment) => !segment || segment === '.' || segment === '..')) throw new Error('Invalid storage path.');
-  if (!/^[a-zA-Z0-9._/-]+$/.test(raw)) throw new Error('Storage path may only contain letters, numbers, dots, underscores, hyphens, and slashes.');
+
+  if (!raw || segments.some((segment) => !segment || segment === '.' || segment === '..')) {
+    throw new Error('Invalid storage path.');
+  }
+
+  if (!/^[a-zA-Z0-9._/-]+$/.test(raw)) {
+    throw new Error('Storage path may only contain letters, numbers, dots, underscores, hyphens, and slashes.');
+  }
+
   return raw;
 }
 
@@ -292,102 +132,132 @@ function publicImageUrl(path: string) {
   return `${url}/storage/v1/object/public/${encodeURIComponent(bucket)}/${encodeObjectPath(path)}`;
 }
 
-async function listPosts(args: Record<string, unknown>) {
-  const state = typeof args.state === 'string' ? args.state : 'all';
-  const requestedLimit = typeof args.limit === 'number' ? Math.trunc(args.limit) : 50;
-  const limit = Math.min(100, Math.max(1, requestedLimit));
-  const params = new URLSearchParams({ select: BLOG_FIELDS, order: 'featured.desc,published_at.desc.nullslast,created_at.desc', limit: String(limit) });
+async function listPosts(state: 'all' | 'published' | 'draft', limit: number) {
+  const params = new URLSearchParams({
+    select: BLOG_FIELDS,
+    order: 'featured.desc,published_at.desc.nullslast,created_at.desc',
+    limit: String(limit),
+  });
+
   if (state === 'published') params.set('published', 'eq.true');
   if (state === 'draft') params.set('published', 'eq.false');
+
   const response = await supabaseFetch(`/rest/v1/blogs?${params.toString()}`);
   return (await response.json()) as BlogPost[];
 }
 
-async function getPost(slugValue: unknown) {
-  const slug = asString(slugValue, 'slug');
+async function getPost(slug: string) {
   const params = new URLSearchParams({ select: BLOG_FIELDS, slug: `eq.${slug}`, limit: '1' });
   const response = await supabaseFetch(`/rest/v1/blogs?${params.toString()}`);
   const rows = (await response.json()) as BlogPost[];
+
   if (!rows[0]) throw new Error(`Blog post not found: ${slug}`);
   return rows[0];
 }
 
-async function createPost(args: Record<string, unknown>) {
-  const payload = {
-    title: asString(args.title, 'title'),
-    slug: asString(args.slug, 'slug'),
-    excerpt: typeof args.excerpt === 'string' ? args.excerpt : '',
-    content: typeof args.content === 'string' ? args.content : '',
-    cover_image_url: typeof args.cover_image_url === 'string' ? args.cover_image_url : null,
-    category: typeof args.category === 'string' ? args.category : null,
-    tags: cleanTags(args.tags),
-    featured: asBoolean(args.featured, false),
-    published: asBoolean(args.published, false),
+async function createPost(input: {
+  title: string;
+  slug: string;
+  excerpt: string;
+  content: string;
+  cover_image_url?: string | null;
+  category?: string | null;
+  tags: string[];
+  featured: boolean;
+  published: boolean;
+  published_at?: string;
+}) {
+  const payload: Record<string, unknown> = {
+    title: input.title.trim(),
+    slug: input.slug,
+    excerpt: input.excerpt,
+    content: input.content,
+    cover_image_url: input.cover_image_url ?? null,
+    category: input.category ?? null,
+    tags: cleanTags(input.tags),
+    featured: input.featured,
+    published: input.published,
   };
+
+  if (input.published_at) payload.published_at = normalizePublishedAt(input.published_at);
 
   const response = await supabaseFetch('/rest/v1/blogs?select=*', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', Prefer: 'return=representation' },
     body: JSON.stringify(payload),
   });
+
   const rows = (await response.json()) as BlogPost[];
+  if (!rows[0]) throw new Error('Supabase did not return the created blog post.');
   return rows[0];
 }
 
-async function patchPost(slugValue: unknown, patch: Record<string, unknown>) {
-  const slug = asString(slugValue, 'slug');
+async function patchPost(slug: string, patch: Record<string, unknown>) {
   if (Object.keys(patch).length === 0) return getPost(slug);
+
   const params = new URLSearchParams({ slug: `eq.${slug}`, select: '*' });
   const response = await supabaseFetch(`/rest/v1/blogs?${params.toString()}`, {
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json', Prefer: 'return=representation' },
     body: JSON.stringify(patch),
   });
+
   const rows = (await response.json()) as BlogPost[];
   if (!rows[0]) throw new Error(`Blog post not found: ${slug}`);
   return rows[0];
 }
 
-async function updatePost(args: Record<string, unknown>) {
-  const patch: Record<string, unknown> = {};
-  if (typeof args.title === 'string') patch.title = args.title;
-  if (typeof args.new_slug === 'string') patch.slug = args.new_slug;
-  if (typeof args.excerpt === 'string') patch.excerpt = args.excerpt;
-  if (typeof args.content === 'string') patch.content = args.content;
-  if (args.cover_image_url === null || typeof args.cover_image_url === 'string') patch.cover_image_url = args.cover_image_url;
-  if (args.category === null || typeof args.category === 'string') patch.category = args.category;
-  if (Array.isArray(args.tags)) patch.tags = cleanTags(args.tags);
-  if (typeof args.featured === 'boolean') patch.featured = args.featured;
-  return patchPost(args.slug, patch);
-}
-
-async function deletePost(slugValue: unknown) {
-  const slug = asString(slugValue, 'slug');
+async function deletePost(slug: string) {
   await getPost(slug);
   const params = new URLSearchParams({ slug: `eq.${slug}` });
-  await supabaseFetch(`/rest/v1/blogs?${params.toString()}`, { method: 'DELETE', headers: { Prefer: 'return=minimal' } });
+
+  await supabaseFetch(`/rest/v1/blogs?${params.toString()}`, {
+    method: 'DELETE',
+    headers: { Prefer: 'return=minimal' },
+  });
+
   return { deleted: true, slug };
 }
 
-async function uploadImage(args: Record<string, unknown>) {
-  const path = normalizeObjectPath(args.path);
-  const contentType = asString(args.content_type, 'content_type').toLowerCase();
-  if (!ALLOWED_IMAGE_TYPES.has(contentType)) throw new Error(`Unsupported image content type: ${contentType}`);
-  const encoded = asString(args.base64, 'base64').replace(/^data:[^;]+;base64,/, '');
+async function uploadImage(input: {
+  path: string;
+  content_type: (typeof IMAGE_TYPES)[number];
+  base64: string;
+  upsert: boolean;
+}) {
+  const path = normalizeObjectPath(input.path);
+  const contentType = input.content_type.toLowerCase();
+
+  if (!ALLOWED_IMAGE_TYPES.has(contentType)) {
+    throw new Error(`Unsupported image content type: ${contentType}`);
+  }
+
+  const encoded = input.base64.replace(/^data:[^;]+;base64,/, '');
   const bytes = Buffer.from(encoded, 'base64');
+
   if (bytes.length === 0) throw new Error('Decoded image is empty.');
   if (bytes.length > MAX_IMAGE_BYTES) throw new Error('Image exceeds the 5 MB MCP upload limit.');
 
   const { bucket } = requireConfig();
   await supabaseFetch(`/storage/v1/object/${encodeURIComponent(bucket)}/${encodeObjectPath(path)}`, {
     method: 'POST',
-    headers: { 'Content-Type': contentType, 'x-upsert': asBoolean(args.upsert, false) ? 'true' : 'false', 'Cache-Control': '3600' },
+    headers: {
+      'Content-Type': contentType,
+      'x-upsert': input.upsert ? 'true' : 'false',
+      'Cache-Control': '3600',
+    },
     body: new Uint8Array(bytes),
   });
-  return { path, content_type: contentType, bytes: bytes.length, public_url: publicImageUrl(path) };
+
+  return {
+    path,
+    content_type: contentType,
+    bytes: bytes.length,
+    public_url: publicImageUrl(path),
+  };
 }
 
-async function deleteImage(pathValue: unknown) {
+async function deleteImage(pathValue: string) {
   const path = normalizeObjectPath(pathValue);
   const { bucket } = requireConfig();
   const response = await supabaseFetch(`/storage/v1/object/${encodeURIComponent(bucket)}`, {
@@ -395,79 +265,242 @@ async function deleteImage(pathValue: unknown) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ prefixes: [path] }),
   });
-  const data = await response.json().catch(() => []);
-  return { deleted: true, path, result: data };
+
+  const result = await response.json().catch(() => []);
+  return { deleted: true, path, result };
 }
 
-async function callTool(name: string, args: Record<string, unknown>) {
-  switch (name) {
-    case 'list_blog_posts': return listPosts(args);
-    case 'get_blog_post': return getPost(args.slug);
-    case 'create_blog_post': return createPost(args);
-    case 'update_blog_post': return updatePost(args);
-    case 'publish_blog_post': return patchPost(args.slug, { published: true });
-    case 'unpublish_blog_post': return patchPost(args.slug, { published: false });
-    case 'delete_blog_post': return deletePost(args.slug);
-    case 'upload_blog_image': return uploadImage(args);
-    case 'delete_blog_image': return deleteImage(args.path);
-    case 'get_blog_image_url': return { path: normalizeObjectPath(args.path), public_url: publicImageUrl(normalizeObjectPath(args.path)) };
-    default: throw new Error(`Unknown tool: ${name}`);
-  }
+function toolSuccess(data: unknown) {
+  const structuredContent = Array.isArray(data)
+    ? { items: data }
+    : typeof data === 'object' && data !== null
+      ? data as Record<string, unknown>
+      : { value: data };
+
+  return {
+    content: [{ type: 'text' as const, text: typeof data === 'string' ? data : JSON.stringify(data, null, 2) }],
+    structuredContent,
+    isError: false,
+  };
 }
 
-export async function POST(request: Request) {
-  if (!isAuthorized(request)) {
-    return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401, headers: { ...jsonHeaders(), 'WWW-Authenticate': 'Bearer' } });
-  }
+function toolFailure(error: unknown) {
+  const message = error instanceof Error ? error.message : 'Unknown tool error';
+  return {
+    content: [{ type: 'text' as const, text: message }],
+    isError: true,
+  };
+}
 
-  let payload: JsonRpcRequest;
+async function runTool<T>(operation: () => Promise<T>) {
   try {
-    payload = (await request.json()) as JsonRpcRequest;
-  } catch {
-    return jsonRpcError(null, -32700, 'Parse error', 400);
+    return toolSuccess(await operation());
+  } catch (error) {
+    return toolFailure(error);
   }
+}
 
-  if (payload.jsonrpc !== '2.0' || typeof payload.method !== 'string') return jsonRpcError(payload.id, -32600, 'Invalid Request');
+const handler = createMcpHandler((server) => {
+  server.registerTool(
+    'list_blog_posts',
+    {
+      title: 'List blog posts',
+      description: 'List portfolio blog posts, including drafts when requested.',
+      inputSchema: z.object({
+        state: z.enum(['all', 'published', 'draft']).default('all'),
+        limit: z.number().int().min(1).max(100).default(50),
+      }).strict(),
+      annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false },
+    },
+    async ({ state, limit }) => runTool(() => listPosts(state, limit)),
+  );
 
-  if (payload.method === 'notifications/initialized') return new Response(null, { status: 202, headers: jsonHeaders() });
-  if (payload.method === 'ping') return jsonRpcResult(payload.id, {});
+  server.registerTool(
+    'get_blog_post',
+    {
+      title: 'Get blog post',
+      description: 'Get one portfolio blog post by slug, including its full Markdown content.',
+      inputSchema: z.object({ slug: slugSchema }).strict(),
+      annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false },
+    },
+    async ({ slug }) => runTool(() => getPost(slug)),
+  );
 
-  if (payload.method === 'initialize') {
-    return jsonRpcResult(payload.id, {
-      protocolVersion: SUPPORTED_PROTOCOL,
-      capabilities: { tools: { listChanged: false } },
-      serverInfo: { name: 'salman-portfolio-mcp', version: '1.0.0' },
-      instructions: 'Manage Salman Butt portfolio engineering blog posts and blog images. Prefer creating drafts first and only publish when the user explicitly requests publication.',
+  server.registerTool(
+    'create_blog_post',
+    {
+      title: 'Create blog post',
+      description: 'Create a portfolio article. Defaults to a draft. Supports a custom publication date when published.',
+      inputSchema: z.object({
+        title: z.string().min(1).max(180),
+        slug: slugSchema,
+        excerpt: z.string(),
+        content: z.string(),
+        cover_image_url: z.string().nullable().optional(),
+        category: z.string().nullable().optional(),
+        tags: z.array(z.string()).max(30).default([]),
+        featured: z.boolean().default(false),
+        published: z.boolean().default(false),
+        published_at: publicationDateSchema.optional(),
+      }).strict(),
+      annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: false },
+    },
+    async (input) => runTool(() => createPost(input)),
+  );
+
+  server.registerTool(
+    'update_blog_post',
+    {
+      title: 'Update blog post',
+      description: 'Update an existing article, including content, metadata, slug, cover image URL, or custom publication date.',
+      inputSchema: z.object({
+        slug: slugSchema,
+        title: z.string().min(1).max(180).optional(),
+        new_slug: slugSchema.optional(),
+        excerpt: z.string().optional(),
+        content: z.string().optional(),
+        cover_image_url: z.string().nullable().optional(),
+        category: z.string().nullable().optional(),
+        tags: z.array(z.string()).max(30).optional(),
+        featured: z.boolean().optional(),
+        published_at: publicationDateSchema.optional(),
+      }).strict(),
+      annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: true, openWorldHint: false },
+    },
+    async ({ slug, new_slug, published_at, ...changes }) => runTool(async () => {
+      const patch: Record<string, unknown> = { ...changes };
+      if (new_slug) patch.slug = new_slug;
+      if (changes.tags) patch.tags = cleanTags(changes.tags);
+      if (published_at) patch.published_at = normalizePublishedAt(published_at);
+      return patchPost(slug, patch);
+    }),
+  );
+
+  server.registerTool(
+    'publish_blog_post',
+    {
+      title: 'Publish blog post',
+      description: 'Publish an existing draft, optionally using a custom publication date.',
+      inputSchema: z.object({
+        slug: slugSchema,
+        published_at: publicationDateSchema.optional(),
+      }).strict(),
+      annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: true, openWorldHint: false },
+    },
+    async ({ slug, published_at }) => runTool(() => patchPost(slug, {
+      published: true,
+      ...(published_at ? { published_at: normalizePublishedAt(published_at) } : {}),
+    })),
+  );
+
+  server.registerTool(
+    'unpublish_blog_post',
+    {
+      title: 'Unpublish blog post',
+      description: 'Remove an article from the public blog while retaining it in Supabase.',
+      inputSchema: z.object({ slug: slugSchema }).strict(),
+      annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: true, openWorldHint: false },
+    },
+    async ({ slug }) => runTool(() => patchPost(slug, { published: false })),
+  );
+
+  server.registerTool(
+    'delete_blog_post',
+    {
+      title: 'Delete blog post',
+      description: 'Permanently delete an article by slug. Images are managed separately.',
+      inputSchema: z.object({ slug: slugSchema }).strict(),
+      annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true, openWorldHint: false },
+    },
+    async ({ slug }) => runTool(() => deletePost(slug)),
+  );
+
+  server.registerTool(
+    'upload_blog_image',
+    {
+      title: 'Upload blog image',
+      description: 'Upload a new PNG, JPEG, WebP, GIF, or AVIF image to the public blog-images bucket.',
+      inputSchema: z.object({
+        path: z.string().min(1),
+        content_type: z.enum(IMAGE_TYPES),
+        base64: z.string().min(1),
+      }).strict(),
+      annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: false },
+    },
+    async ({ path, content_type, base64 }) => runTool(() => uploadImage({ path, content_type, base64, upsert: false })),
+  );
+
+  server.registerTool(
+    'replace_blog_image',
+    {
+      title: 'Replace blog image',
+      description: 'Replace an existing blog image at the same Storage path.',
+      inputSchema: z.object({
+        path: z.string().min(1),
+        content_type: z.enum(IMAGE_TYPES),
+        base64: z.string().min(1),
+      }).strict(),
+      annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: true, openWorldHint: false },
+    },
+    async ({ path, content_type, base64 }) => runTool(() => uploadImage({ path, content_type, base64, upsert: true })),
+  );
+
+  server.registerTool(
+    'delete_blog_image',
+    {
+      title: 'Delete blog image',
+      description: 'Permanently delete one image from the blog-images bucket.',
+      inputSchema: z.object({ path: z.string().min(1) }).strict(),
+      annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true, openWorldHint: false },
+    },
+    async ({ path }) => runTool(() => deleteImage(path)),
+  );
+
+  server.registerTool(
+    'get_blog_image_url',
+    {
+      title: 'Get blog image URL',
+      description: 'Return the public URL for an object in the blog-images bucket.',
+      inputSchema: z.object({ path: z.string().min(1) }).strict(),
+      annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false },
+    },
+    async ({ path }) => runTool(async () => {
+      const normalized = normalizeObjectPath(path);
+      return { path: normalized, public_url: publicImageUrl(normalized) };
+    }),
+  );
+}, {
+  serverInfo: {
+    name: 'salman-portfolio-mcp',
+    version: '2.0.0',
+  },
+});
+
+async function authenticatedHandler(request: Request) {
+  if (!isAuthorized(request)) {
+    return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+      status: 401,
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+        'Cache-Control': 'no-store',
+        'WWW-Authenticate': 'Bearer',
+      },
     });
   }
 
-  if (payload.method === 'tools/list') return jsonRpcResult(payload.id, { tools });
-
-  if (payload.method === 'tools/call') {
-    const params = payload.params ?? {};
-    const name = typeof params.name === 'string' ? params.name : '';
-    if (!name) return jsonRpcError(payload.id, -32602, 'Tool name is required.');
-    const args = typeof params.arguments === 'object' && params.arguments !== null ? params.arguments as Record<string, unknown> : {};
-    try {
-      return jsonRpcResult(payload.id, toolSuccess(await callTool(name, args)));
-    } catch (error) {
-      return jsonRpcResult(payload.id, toolFailure(error));
-    }
-  }
-
-  return jsonRpcError(payload.id, -32601, `Method not found: ${payload.method}`);
+  return handler(request);
 }
+
+export { authenticatedHandler as GET, authenticatedHandler as POST };
 
 export function OPTIONS() {
-  return new Response(null, { status: 204, headers: jsonHeaders() });
-}
-
-export function GET() {
-  return new Response(JSON.stringify({
-    name: 'salman-portfolio-mcp',
-    status: 'ready',
-    protocol: SUPPORTED_PROTOCOL,
-    endpoint: '/api/mcp',
-    authentication: 'Bearer token required',
-  }), { status: 200, headers: jsonHeaders() });
+  return new Response(null, {
+    status: 204,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Headers': 'authorization, content-type, mcp-protocol-version',
+      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+      'Cache-Control': 'no-store',
+    },
+  });
 }
