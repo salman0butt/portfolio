@@ -27,11 +27,9 @@ export function proxy(request: NextRequest) {
     requestHeaders.set('Authorization', `Bearer ${internalToken}`);
   }
 
-  // Route every MCP request through the extension layer so both ChatGPT
-  // URL-token clients and normal bearer-token clients see the same complete
-  // tool set. The core MCP handler remains the final authentication boundary.
+  // Route all public MCP traffic through the stateless-compliant wrapper.
   const rewriteUrl = request.nextUrl.clone();
-  rewriteUrl.pathname = '/api/mcp-chatgpt';
+  rewriteUrl.pathname = '/api/mcp-streamable';
   rewriteUrl.searchParams.delete('token');
 
   return NextResponse.rewrite(rewriteUrl, {
