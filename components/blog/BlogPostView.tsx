@@ -43,6 +43,7 @@ export default function BlogPostView({ post, related }: { post: BlogPost; relate
 
   const publishedDate = getBlogDate(post);
   const readTime = estimateReadTime(post.content);
+  const coverIsSvg = post.cover_image_url?.toLowerCase().split('?')[0].endsWith('.svg') ?? false;
 
   return (
     <article className="mx-auto max-w-6xl">
@@ -69,6 +70,7 @@ export default function BlogPostView({ post, related }: { post: BlogPost; relate
             alt={`Cover image for ${post.title}`}
             fill
             priority
+            unoptimized={coverIsSvg}
             sizes="(max-width: 1280px) 100vw, 1152px"
             className="object-cover"
           />
