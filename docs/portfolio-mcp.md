@@ -59,7 +59,7 @@ ChatGPT's custom MCP form does not provide an arbitrary HTTP header field, so co
 https://salman-butt.vercel.app/api/mcp?token=YOUR_PORTFOLIO_MCP_URL_TOKEN
 ```
 
-The root `proxy.ts` only matches `/api/mcp`. If the query token matches `PORTFOLIO_MCP_URL_TOKEN`, it injects the private internal bearer token and rewrites the request through the ChatGPT MCP extension layer. That layer exposes custom article dates and explicit image replacement while reusing the core MCP implementation.
+The root `proxy.ts` only matches `/api/mcp`. It rewrites every MCP request through the extension layer. If the query token matches `PORTFOLIO_MCP_URL_TOKEN`, the proxy also injects the private internal bearer token before the MCP route runs. Header-authenticated MCP clients use the same complete tool set.
 
 Because URL query parameters can appear in infrastructure/request logs, treat `PORTFOLIO_MCP_URL_TOKEN` as disposable and rotate it if it is exposed. Do not reuse `PORTFOLIO_MCP_TOKEN` as the URL token.
 
@@ -90,7 +90,7 @@ Do not commit either real token to a repository.
 
 ## Article dates
 
-The `blogs` table already has a timezone-aware `published_at` column, and the public portfolio uses `published_at` as the displayed article date before falling back to `created_at`.
+The `blogs` table already has a timezone-aware `published_at` column, and the public portfolio uses `published_at` as the displayed article date before falling back to `created_at`. The same value is also used for Open Graph `publishedTime` and structured-data `datePublished`.
 
 ChatGPT can pass a custom date to `create_blog_post`, `update_blog_post`, or `publish_blog_post`:
 
