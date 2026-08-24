@@ -2,7 +2,7 @@ import { ImageResponse } from 'next/og';
 import { NextRequest } from 'next/server';
 import { getPublishedPostBySlug } from '@/lib/blogs';
 
-export const runtime = 'edge';
+export const runtime = 'nodejs';
 
 export async function GET(request: NextRequest) {
   const slug = request.nextUrl.searchParams.get('slug') ?? '';
