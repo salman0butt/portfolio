@@ -1,168 +1,138 @@
 # Portfolio MCP
 
-The portfolio exposes a private Model Context Protocol endpoint at `/api/mcp` for managing engineering blog content and blog media.
+The portfolio exposes one private MCP endpoint at `/api/mcp` for managing engineering articles and blog media.
 
-## What it can do
+## Architecture
 
-- List all posts, published posts, or drafts
-- Fetch a post by slug
-- Create draft or published posts
-- Set a custom article publication date with `published_at`
-- Update article title, slug, excerpt, Markdown content, cover image URL, category, tags, featured state, and publication date
-- Publish and unpublish posts
-- Permanently delete posts
-- Upload new blog images to Supabase Storage
-- Replace/update an existing blog image at the same Storage path
-- Permanently delete blog images
-- Build public image URLs
+```text
+ChatGPT / MCP client
+        |
+        v
+/api/mcp?token=...
+        |
+        v
+URL-token or bearer-token guard
+        |
+        v
+Vercel mcp-handler 2.x
+        |
+        v
+MCP SDK v2
+        |
+        +--> Supabase blogs table
+        |
+        +--> Supabase blog-images bucket
+```
 
-The public Next.js application remains read-only. MCP writes happen only on the server with a Supabase secret key.
+The MCP transport is no longer hand-written. It uses Vercel's `mcp-handler` 2.x with MCP SDK v2, which natively supports the current MCP protocol and stateless 2025-era Streamable HTTP fallback.
 
-## Required Vercel environment variables
+There is exactly one MCP route. No proxy rewrite, custom `server/discover` implementation, compatibility route, or separate streamable wrapper is required.
 
-Set these for Production and Preview as appropriate:
+## Required Vercel variables
 
-```bash
+```env
 SUPABASE_SECRET_KEY=sb_secret_...
 SUPABASE_BLOG_BUCKET=blog-images
 PORTFOLIO_MCP_TOKEN=<long-random-internal-token>
 PORTFOLIO_MCP_URL_TOKEN=<different-long-random-chatgpt-token>
 ```
 
-`NEXT_PUBLIC_SUPABASE_URL` is already used by the portfolio and is reused by the MCP endpoint. All MCP secrets must remain server-side and must never be prefixed with `NEXT_PUBLIC_`.
+The existing `NEXT_PUBLIC_SUPABASE_URL` provides the project URL. MCP secrets are server-side only.
 
-Use two different random tokens:
+Generate tokens with:
 
 ```bash
 node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 ```
 
-Run it twice: one value for `PORTFOLIO_MCP_TOKEN`, and a different value for `PORTFOLIO_MCP_URL_TOKEN`.
+Run it twice and use different values for the internal bearer token and the disposable ChatGPT URL token.
 
-`PORTFOLIO_MCP_TOKEN` is the internal bearer token used by the core MCP route. `PORTFOLIO_MCP_URL_TOKEN` is a disposable ChatGPT connection token that the Next.js proxy validates and converts to the internal bearer header. The internal token therefore never appears in the URL.
+## ChatGPT connection
 
-## Endpoint
-
-Production:
-
-```text
-https://salman-butt.vercel.app/api/mcp
-```
-
-The endpoint implements stateless Streamable HTTP JSON-RPC compatible with MCP protocol `2025-06-18`.
-
-### ChatGPT
-
-ChatGPT's custom MCP form does not provide an arbitrary HTTP header field, so connect with the URL token and choose **No Auth**:
+Use:
 
 ```text
 https://salman-butt.vercel.app/api/mcp?token=YOUR_PORTFOLIO_MCP_URL_TOKEN
 ```
 
-The root `proxy.ts` only matches `/api/mcp`. It rewrites every MCP request through the extension layer. If the query token matches `PORTFOLIO_MCP_URL_TOKEN`, the proxy also injects the private internal bearer token before the MCP route runs. Header-authenticated MCP clients use the same complete tool set.
+Authentication in the ChatGPT form:
 
-Because URL query parameters can appear in infrastructure/request logs, treat `PORTFOLIO_MCP_URL_TOKEN` as disposable and rotate it if it is exposed. Do not reuse `PORTFOLIO_MCP_TOKEN` as the URL token.
+```text
+No Auth
+```
 
-### Clients that support custom headers
+The `/api/mcp` route validates the query token directly and then passes the original request to the official MCP handler. There is no middleware/proxy rewrite between ChatGPT and the MCP transport.
 
-Cursor, CLI clients, and other MCP clients can continue using the private bearer-token flow:
+Because query-string credentials can appear in logs, treat `PORTFOLIO_MCP_URL_TOKEN` as disposable and rotate it if exposed.
+
+## Header-authenticated clients
+
+Clients that can set headers may instead use:
 
 ```http
 Authorization: Bearer <PORTFOLIO_MCP_TOKEN>
 ```
 
-Cursor example:
+Both authentication methods expose the same tool catalog.
 
-```json
-{
-  "mcpServers": {
-    "portfolio": {
-      "url": "https://salman-butt.vercel.app/api/mcp",
-      "headers": {
-        "Authorization": "Bearer YOUR_PORTFOLIO_MCP_TOKEN"
-      }
-    }
-  }
-}
-```
+## Article tools
 
-Do not commit either real token to a repository.
+- `list_blog_posts`
+- `get_blog_post`
+- `create_blog_post`
+- `update_blog_post`
+- `publish_blog_post`
+- `unpublish_blog_post`
+- `delete_blog_post`
 
-## Article dates
+`create_blog_post`, `update_blog_post`, and `publish_blog_post` support `published_at` using an ISO 8601 date or datetime.
 
-The `blogs` table already has a timezone-aware `published_at` column, and the public portfolio uses `published_at` as the displayed article date before falling back to `created_at`. The same value is also used for Open Graph `publishedTime` and structured-data `datePublished`.
-
-ChatGPT can pass a custom date to `create_blog_post`, `update_blog_post`, or `publish_blog_post`:
-
-```json
-{
-  "slug": "scaling-nodejs-apis",
-  "published_at": "2026-08-20T10:30:00+05:00"
-}
-```
-
-A date-only value is also supported:
+Examples:
 
 ```text
 2026-08-20
+2026-08-20T10:30:00+05:00
 ```
 
-For drafts, set the custom date when calling `publish_blog_post`. The database clears `published_at` while an article is unpublished, so a draft cannot retain a publication date until it is published.
+The portfolio displays `published_at`, and the same value is used by article SEO metadata.
 
-## Article management tools
+The database clears `published_at` when a post is unpublished, so for a draft supply the desired custom date when publishing it.
 
-- `create_blog_post` — create a draft or published article
-- `update_blog_post` — edit article content and metadata, including `published_at`
-- `publish_blog_post` — publish a draft, optionally with a custom `published_at`
-- `unpublish_blog_post` — remove a post from the public site without deleting it
-- `delete_blog_post` — permanently delete the article row
+## Image tools
 
-Deleting an article does not automatically delete its Storage images. This is intentional so shared images are not accidentally removed. Use `delete_blog_image` explicitly for assets that should also be removed.
+- `upload_blog_image` — create a new object
+- `replace_blog_image` — overwrite an existing object at the same path
+- `delete_blog_image` — permanently remove an object
+- `get_blog_image_url` — return its public URL
 
-## Blog image bucket
+The default bucket is `blog-images`.
 
-The MCP uses a public Supabase Storage bucket named `blog-images` by default. Public access is intentional because portfolio visitors need to load article images. Upload, replace, and delete operations still require the server-side secret key.
-
-Recommended layout:
+Recommended paths:
 
 ```text
-blog-images/
-  scalable-nodejs-apis/
-    cover.webp
-    architecture.webp
-  production-rag-systems/
-    cover.webp
-    pipeline.webp
+scaling-nodejs-apis/cover.webp
+scaling-nodejs-apis/architecture.webp
+production-rag-systems/cover.webp
 ```
 
-Image tools:
+Uploads are limited to 5 MB and accept PNG, JPEG, WebP, GIF, and AVIF.
 
-- `upload_blog_image` — create a new image object
-- `replace_blog_image` — overwrite/update an existing object at the same path
-- `delete_blog_image` — permanently delete one image object
-- `get_blog_image_url` — return the public URL for an object path
+Deleting an article does not automatically delete its images. This prevents accidental removal of shared assets; image deletion is explicit.
 
-The MCP limits each image upload to 5 MB and only accepts PNG, JPEG, WebP, GIF, and AVIF.
+## Recommended publishing workflow
 
-## Publishing workflow
-
-Recommended workflow for AI clients:
-
-1. Create the article with `published=false`.
+1. Create a draft.
 2. Upload cover/diagram images.
-3. Update the article with the returned image URLs.
-4. Review the final Markdown and metadata.
-5. Call `publish_blog_post`, optionally with a custom `published_at`, only after explicit user approval/request.
-6. Later use `update_blog_post`, `replace_blog_image`, `delete_blog_image`, or `delete_blog_post` when changes are requested.
+3. Update the draft with the returned image URLs.
+4. Review content and metadata.
+5. Publish with `publish_blog_post`, optionally providing a custom `published_at`.
+6. Later update/delete the article or replace/delete its images as requested.
 
-The server instructions also tell MCP clients to prefer this draft-first workflow.
+## Security
 
-## Security notes
-
-- The public portfolio keeps its existing anonymous/read-only Supabase access.
-- Direct MCP requests are rejected unless the bearer token matches `PORTFOLIO_MCP_TOKEN`.
-- ChatGPT URL-token requests are accepted only when `token` matches `PORTFOLIO_MCP_URL_TOKEN`, then converted internally to bearer authentication.
-- The Supabase secret key exists only in Vercel server environment variables.
-- Secret keys bypass RLS, so the MCP deliberately exposes only portfolio blog operations instead of arbitrary SQL/database tools.
-- Image paths are sanitized and file size/type are restricted.
-- Destructive tools are marked as destructive in MCP tool metadata so compatible clients can request confirmation.
+- Public portfolio reads remain restricted by Supabase RLS.
+- MCP database/storage writes use the server-only Supabase secret key.
+- The MCP does not expose arbitrary SQL.
+- Image paths, types, and sizes are validated.
+- Destructive article/image tools are marked destructive in MCP metadata.
+- `PORTFOLIO_MCP_TOKEN` and `PORTFOLIO_MCP_URL_TOKEN` must never be committed.
