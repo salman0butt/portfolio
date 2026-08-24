@@ -29,6 +29,22 @@ test.describe('engineering blog', () => {
     }
   });
 
+  test('mobile architecture diagrams use a compact deduplicated tree', async ({ page, isMobile }) => {
+    test.skip(!isMobile, 'mobile-only diagram assertion');
+    await page.goto(articlePath);
+
+    const diagram = page.locator('figure[data-diagram-title="Example full-stack production boundary"]');
+    const mobileView = diagram.locator('[data-diagram-view="mobile"]');
+
+    await expect(mobileView).toBeVisible();
+    await expect(diagram.locator('[data-diagram-view="desktop"]')).toBeHidden();
+    await expect(mobileView.getByText('Application service', { exact: true })).toHaveCount(1);
+
+    const bounds = await mobileView.boundingBox();
+    expect(bounds).not.toBeNull();
+    expect(bounds!.height).toBeLessThan(1000);
+  });
+
   test('machine-readable discovery endpoints are available', async ({ request }) => {
     const [feed, llms, llmsFull] = await Promise.all([
       request.get('/feed.xml'),
