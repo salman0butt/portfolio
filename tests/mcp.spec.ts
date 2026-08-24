@@ -42,7 +42,7 @@ test.describe('Portfolio MCP', () => {
     expect(body.jsonrpc).toBe('2.0');
     expect(body.result.resultType).toBe('complete');
     expect(body.result.supportedVersions).toContain(MODERN_PROTOCOL);
-    expect(body.result.capabilities.tools).toEqual({});
+    expect(body.result.capabilities.tools).toMatchObject({ listChanged: true });
     expect(body.result.ttlMs).toBe(0);
     expect(body.result.cacheScope).toBe('private');
     expect(body.result._meta['io.modelcontextprotocol/serverInfo'].name).toBe('salman-portfolio-mcp');
