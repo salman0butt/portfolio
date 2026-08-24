@@ -67,14 +67,72 @@ The renderer supports:
 - Markdown links
 - bullet and numbered lists
 - blockquotes
-- fenced code blocks
+- fenced code blocks with copy support
 - Markdown images and captions
-- Markdown tables
+- horizontally scrollable Markdown tables
 - fenced `diagram` / `architecture` blocks
+- synchronized TypeScript / JavaScript / Python code groups
+
+### Switchable code groups
+
+Use `:::code-group` to provide equivalent implementations. The reader's selected language is remembered and synchronized across all compatible examples in the article.
+
+````md
+:::code-group
+```ts
+const [profile, preferences] = await Promise.all([
+  getProfile(userId),
+  getPreferences(userId),
+]);
+```
+
+```js
+const [profile, preferences] = await Promise.all([
+  getProfile(userId),
+  getPreferences(userId),
+]);
+```
+
+```py
+import asyncio
+
+profile, preferences = await asyncio.gather(
+    get_profile(user_id),
+    get_preferences(user_id),
+)
+```
+:::
+````
+
+### Architecture diagrams
+
+```md
+```diagram
+title: Request path
+Browser -> Next.js | request
+Next.js -> Application service | validated intent
+Application service -> PostgreSQL | durable state
+```
+```
+
+## SEO and AI discovery
+
+Published posts are included in or exposed through:
+
+- `/sitemap.xml` — search-engine discovery using real `updated_at` timestamps
+- `/robots.txt` — public crawler policy
+- `/feed.xml` — RSS feed
+- `/llms.txt` — concise AI-agent discovery index
+- `/llms-full.txt` — AI-readable full-text article export
+- per-article canonical metadata
+- Open Graph / Twitter metadata with article-specific generated social cards
+- `Blog`, `BlogPosting`, `TechArticle` and `BreadcrumbList` structured data
+
+The `/blog` index receives its initial published posts on the server so article links and summaries are present in the HTML returned to crawlers instead of appearing only after client-side JavaScript runs.
 
 ## Routes
 
 - `/blog` — searchable/filterable blog index
-- `/blog/[slug]` — article page
+- `/blog/[slug]` — canonical article page
 
 Published content is loaded from Supabase at runtime, so article content remains database-driven rather than being hard-coded into the Next.js bundle.

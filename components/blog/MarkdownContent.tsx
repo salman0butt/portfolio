@@ -2,6 +2,7 @@
 import type { ReactNode } from 'react';
 import { ArrowRight } from 'lucide-react';
 import CodeBlock from '@/components/blog/CodeBlock';
+import CodeGroup from '@/components/blog/CodeGroup';
 
 function safeHref(href: string) {
   return /^(https?:\/\/|\/)/i.test(href) ? href : '#';
@@ -112,7 +113,7 @@ function isTableDivider(line: string) {
 }
 
 function isSpecialLine(line: string) {
-  return /^(#{1,3}\s|>\s|[-*]\s|\d+\.\s|```|!\[|\|)/.test(line);
+  return /^(#{1,3}\s|>\s|[-*]\s|\d+\.\s|```|:::|!\[|\|)/.test(line);
 }
 
 export default function MarkdownContent({ content }: { content: string }) {
@@ -125,6 +126,39 @@ export default function MarkdownContent({ content }: { content: string }) {
 
     if (!line.trim()) {
       index += 1;
+      continue;
+    }
+
+    if (line.trim() === ':::code-group') {
+      const examples: Array<{ language: string; code: string }> = [];
+      index += 1;
+
+      while (index < lines.length && lines[index].trim() !== ':::') {
+        if (!lines[index].trim()) {
+          index += 1;
+          continue;
+        }
+
+        if (lines[index].startsWith('```')) {
+          const language = lines[index].slice(3).trim().toLowerCase();
+          const code: string[] = [];
+          index += 1;
+
+          while (index < lines.length && !lines[index].startsWith('```')) {
+            code.push(lines[index]);
+            index += 1;
+          }
+
+          if (index < lines.length) index += 1;
+          if (language && code.length > 0) examples.push({ language, code: code.join('\n') });
+          continue;
+        }
+
+        index += 1;
+      }
+
+      if (index < lines.length && lines[index].trim() === ':::') index += 1;
+      if (examples.length > 0) blocks.push(<CodeGroup key={`code-group-${index}`} examples={examples} />);
       continue;
     }
 

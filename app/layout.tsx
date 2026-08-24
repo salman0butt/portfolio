@@ -64,6 +64,7 @@ export const metadata: Metadata = {
 const personStructuredData = {
   '@context': 'https://schema.org',
   '@type': 'Person',
+  '@id': `${siteUrl}/#person`,
   name: 'Salman Butt',
   url: siteUrl,
   jobTitle: 'Senior Full-Stack & Generative AI Engineer',
@@ -80,6 +81,9 @@ const personStructuredData = {
     'React',
     'Next.js',
     'Node.js',
+    'TypeScript',
+    'JavaScript',
+    'Python',
     'Laravel',
     'System Design',
     'Generative AI',
@@ -111,7 +115,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
       <body className={`${inter.variable} ${spaceGrotesk.variable} antialiased`} suppressHydrationWarning>
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(personStructuredData) }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(personStructuredData).replace(/</g, '\\u003c') }} />
         <a
           href="#main-content"
           className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:bg-emerald-600 focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:text-white"
