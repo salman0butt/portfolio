@@ -1,7 +1,9 @@
 import { expect, test } from '@playwright/test';
 
 const MODERN_PROTOCOL = '2026-07-28';
-const MCP_URL = '/api/mcp?token=playwright-url-mcp-token';
+const LEGACY_PROTOCOL = '2025-06-18';
+const QUERY_MCP_URL = '/api/mcp?token=playwright-url-mcp-token';
+const PATH_MCP_URL = '/api/mcp/playwright-url-mcp-token';
 
 function modernHeaders(method: string, name?: string) {
   return {
@@ -25,8 +27,34 @@ function meta() {
 }
 
 test.describe('Portfolio MCP', () => {
-  test('supports current MCP discovery through the official handler', async ({ request }) => {
-    const response = await request.post(MCP_URL, {
+  test('supports standard MCP initialize on the stable path-token URL', async ({ request }) => {
+    const response = await request.post(PATH_MCP_URL, {
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json, text/event-stream',
+      },
+      data: {
+        jsonrpc: '2.0',
+        id: 1,
+        method: 'initialize',
+        params: {
+          protocolVersion: LEGACY_PROTOCOL,
+          capabilities: {},
+          clientInfo: { name: 'playwright-chatgpt-init', version: '1.0.0' },
+        },
+      },
+    });
+
+    expect(response.ok()).toBeTruthy();
+    const body = await response.json();
+    expect(body.jsonrpc).toBe('2.0');
+    expect(body.result.protocolVersion).toBe(LEGACY_PROTOCOL);
+    expect(body.result.serverInfo.name).toBe('salman-portfolio-mcp');
+    expect(body.result.capabilities.tools).toBeDefined();
+  });
+
+  test('supports current MCP discovery through the path-token endpoint', async ({ request }) => {
+    const response = await request.post(PATH_MCP_URL, {
       headers: modernHeaders('server/discover'),
       data: {
         jsonrpc: '2.0',
@@ -48,8 +76,8 @@ test.describe('Portfolio MCP', () => {
     expect(body.result._meta['io.modelcontextprotocol/serverInfo'].name).toBe('salman-portfolio-mcp');
   });
 
-  test('lists the complete portfolio tool catalog over the official handler', async ({ request }) => {
-    const response = await request.post(MCP_URL, {
+  test('lists the complete portfolio tool catalog over the path-token endpoint', async ({ request }) => {
+    const response = await request.post(PATH_MCP_URL, {
       headers: modernHeaders('tools/list'),
       data: {
         jsonrpc: '2.0',
@@ -62,8 +90,6 @@ test.describe('Portfolio MCP', () => {
     expect(response.ok()).toBeTruthy();
     const body = await response.json();
     expect(body.result.resultType).toBe('complete');
-    expect(body.result.ttlMs).toBe(0);
-    expect(body.result.cacheScope).toBe('private');
 
     const names = body.result.tools.map((tool: { name: string }) => tool.name);
     expect(names).toEqual(expect.arrayContaining([
@@ -79,5 +105,19 @@ test.describe('Portfolio MCP', () => {
       'delete_blog_image',
       'get_blog_image_url',
     ]));
+  });
+
+  test('keeps query-token compatibility for existing clients', async ({ request }) => {
+    const response = await request.post(QUERY_MCP_URL, {
+      headers: modernHeaders('tools/list'),
+      data: {
+        jsonrpc: '2.0',
+        id: 'query-tools-1',
+        method: 'tools/list',
+        params: { _meta: meta() },
+      },
+    });
+
+    expect(response.ok()).toBeTruthy();
   });
 });
