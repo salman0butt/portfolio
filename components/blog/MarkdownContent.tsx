@@ -62,6 +62,47 @@ type DiagramEdge = {
   label?: string;
 };
 
+type DiagramAdjacency = Map<string, DiagramEdge[]>;
+
+function MobileDiagramNode({ node, adjacency, path }: { node: string; adjacency: DiagramAdjacency; path: Set<string> }) {
+  const outgoing = adjacency.get(node) ?? [];
+  const hasChildren = outgoing.length > 0;
+  const nextPath = new Set(path);
+  nextPath.add(node);
+
+  return (
+    <div className="min-w-0">
+      <div
+        className={`min-w-0 rounded-xl border px-3.5 py-3 text-sm font-semibold leading-5 ${
+          hasChildren
+            ? 'border-gray-200 bg-white text-gray-900 dark:border-gray-700 dark:bg-gray-900 dark:text-white'
+            : 'border-emerald-200 bg-emerald-50 text-emerald-950 dark:border-emerald-900/60 dark:bg-emerald-950/30 dark:text-emerald-100'
+        }`}
+      >
+        {node}
+      </div>
+
+      {outgoing.length > 0 && (
+        <div className="ml-3 mt-2 space-y-2.5 border-l border-gray-200 pl-3 dark:border-white/10">
+          {outgoing.map((edge, edgeIndex) => (
+            <div key={`${edge.from}-${edge.to}-${edgeIndex}`} className="min-w-0">
+              <div className="mb-1.5 flex min-w-0 items-center gap-2 text-[11px] font-medium leading-4 text-gray-500 dark:text-gray-400">
+                <span className="h-px w-3 shrink-0 bg-gray-300 dark:bg-gray-700" aria-hidden="true" />
+                <span className="min-w-0 break-words">{edge.label || 'flows to'}</span>
+              </div>
+              {nextPath.has(edge.to) ? (
+                <div className="rounded-lg border border-dashed border-gray-300 px-3 py-2 text-xs text-gray-500 dark:border-gray-700 dark:text-gray-400">{edge.to} · already shown</div>
+              ) : (
+                <MobileDiagramNode node={edge.to} adjacency={adjacency} path={nextPath} />
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function DiagramBlock({ source }: { source: string }) {
   const rawLines = source.split('\n').map((line) => line.trim()).filter(Boolean);
   const titleLine = rawLines.find((line) => /^title\s*:/i.test(line));
@@ -79,17 +120,35 @@ function DiagramBlock({ source }: { source: string }) {
     return <CodeBlock code={source} language="text" />;
   }
 
+  const adjacency: DiagramAdjacency = new Map();
+  const incoming = new Set(edges.map((edge) => edge.to));
+
+  for (const edge of edges) {
+    const outgoing = adjacency.get(edge.from) ?? [];
+    outgoing.push(edge);
+    adjacency.set(edge.from, outgoing);
+  }
+
+  const roots = Array.from(new Set(edges.map((edge) => edge.from))).filter((node) => !incoming.has(node));
+  const mobileRoots = roots.length > 0 ? roots : [edges[0].from];
+
   return (
-    <figure className="my-8 overflow-hidden rounded-2xl border border-gray-200 bg-gray-50/80 dark:border-white/10 dark:bg-white/[0.025]">
-      <figcaption className="border-b border-gray-200 px-5 py-4 text-sm font-semibold text-gray-950 dark:border-white/10 dark:text-white">{title}</figcaption>
-      <div className="space-y-3 p-4 sm:p-5">
+    <figure data-diagram-title={title} className="my-8 min-w-0 overflow-hidden rounded-2xl border border-gray-200 bg-gray-50/80 dark:border-white/10 dark:bg-white/[0.025]">
+      <figcaption className="border-b border-gray-200 px-4 py-4 text-sm font-semibold text-gray-950 sm:px-5 dark:border-white/10 dark:text-white">{title}</figcaption>
+
+      <div data-diagram-view="mobile" className="space-y-4 p-3.5 sm:hidden">
+        {mobileRoots.map((root) => (
+          <MobileDiagramNode key={root} node={root} adjacency={adjacency} path={new Set()} />
+        ))}
+      </div>
+
+      <div data-diagram-view="desktop" className="hidden space-y-3 p-5 sm:block">
         {edges.map((edge, edgeIndex) => (
           <div key={`${edge.from}-${edge.to}-${edgeIndex}`} className="grid items-center gap-3 sm:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)]">
             <div className="rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm font-semibold text-gray-900 dark:border-gray-700 dark:bg-gray-900 dark:text-white">{edge.from}</div>
             <div className="flex items-center justify-center gap-2 text-xs font-medium text-gray-500 dark:text-gray-400">
               {edge.label && <span className="max-w-28 text-center">{edge.label}</span>}
-              <ArrowRight className="hidden sm:block" size={17} aria-hidden="true" />
-              <span className="sm:hidden" aria-hidden="true">↓</span>
+              <ArrowRight size={17} aria-hidden="true" />
             </div>
             <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-950 dark:border-emerald-900/60 dark:bg-emerald-950/30 dark:text-emerald-100">{edge.to}</div>
           </div>
