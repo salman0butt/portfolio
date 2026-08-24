@@ -12,9 +12,7 @@ const getPost = cache((slug: string) => getPublishedPostBySlug(slug));
 export const dynamic = 'force-dynamic';
 
 function socialImage(post: BlogPost) {
-  const cover = post.cover_image_url;
-  if (!cover || cover.toLowerCase().split('?')[0].endsWith('.svg')) return '/opengraph-image';
-  return cover;
+  return `/api/og/blog?slug=${encodeURIComponent(post.slug)}`;
 }
 
 function jsonLd(value: unknown) {
@@ -93,7 +91,7 @@ export default async function BlogArticlePage({ params }: { params: Promise<{ sl
     url: articleUrl,
     headline: post.title,
     description: post.excerpt,
-    image: socialImage(post).startsWith('http') ? socialImage(post) : `${siteUrl}${socialImage(post)}`,
+    image: `${siteUrl}${socialImage(post)}`,
     datePublished: getBlogDate(post),
     dateModified: post.updated_at,
     mainEntityOfPage: { '@type': 'WebPage', '@id': articleUrl },
