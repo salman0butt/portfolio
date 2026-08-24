@@ -6,6 +6,7 @@ import { BlogPost, estimateReadTime, getBlogDate } from '@/lib/blogs';
 type BlogCardProps = {
   post: BlogPost;
   compact?: boolean;
+  eager?: boolean;
 };
 
 const dateFormatter = new Intl.DateTimeFormat('en', {
@@ -14,7 +15,7 @@ const dateFormatter = new Intl.DateTimeFormat('en', {
   year: 'numeric',
 });
 
-export default function BlogCard({ post, compact = false }: BlogCardProps) {
+export default function BlogCard({ post, compact = false, eager = false }: BlogCardProps) {
   const href = `/blog/${post.slug}`;
   const readTime = estimateReadTime(post.content);
   const coverIsSvg = post.cover_image_url?.toLowerCase().split('?')[0].endsWith('.svg') ?? false;
@@ -27,8 +28,10 @@ export default function BlogCard({ post, compact = false }: BlogCardProps) {
             src={post.cover_image_url}
             alt={`Cover image for ${post.title}`}
             fill
+            loading={eager ? 'eager' : 'lazy'}
+            fetchPriority={eager ? 'high' : 'auto'}
             unoptimized={coverIsSvg}
-            sizes={compact ? '(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw' : '(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw'}
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             className="object-cover transition-transform duration-500 group-hover:scale-[1.03] motion-reduce:transition-none motion-reduce:transform-none"
           />
         </Link>
