@@ -69,8 +69,8 @@ export default function BlogList({ initialPosts }: { initialPosts: BlogPost[] })
 
       {filteredPosts.length > 0 ? (
         <div className="grid min-w-0 gap-5 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6">
-          {filteredPosts.map((post) => (
-            <BlogCard key={post.id} post={post} />
+          {filteredPosts.map((post, index) => (
+            <BlogCard key={post.id} post={post} eager={index === 0} />
           ))}
         </div>
       ) : (
