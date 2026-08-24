@@ -1,9 +1,30 @@
 'use client';
 
 import { useState } from 'react';
+import SyntaxHighlightedCode from '@/components/blog/SyntaxHighlightedCode';
+
+const LANGUAGE_LABELS: Record<string, string> = {
+  ts: 'TypeScript',
+  typescript: 'TypeScript',
+  tsx: 'TSX',
+  js: 'JavaScript',
+  javascript: 'JavaScript',
+  jsx: 'JSX',
+  py: 'Python',
+  python: 'Python',
+  json: 'JSON',
+  bash: 'Bash',
+  shell: 'Shell',
+  sql: 'SQL',
+  css: 'CSS',
+  html: 'HTML',
+  text: 'Text',
+};
 
 export default function CodeBlock({ code, language }: { code: string; language?: string }) {
   const [copied, setCopied] = useState(false);
+  const normalizedLanguage = language?.toLowerCase() || 'code';
+  const languageLabel = LANGUAGE_LABELS[normalizedLanguage] ?? normalizedLanguage;
 
   const copy = async () => {
     await navigator.clipboard.writeText(code);
@@ -12,12 +33,25 @@ export default function CodeBlock({ code, language }: { code: string; language?:
   };
 
   return (
-    <div className="my-7 min-w-0 max-w-full overflow-hidden rounded-xl border border-gray-800 bg-gray-950 sm:rounded-2xl">
-      <div className="flex items-center justify-between gap-3 border-b border-white/10 px-3 py-2.5 text-xs text-gray-400 sm:px-4">
-        <span className="truncate">{language || 'code'}</span>
-        <button type="button" onClick={copy} className="shrink-0 rounded-md px-2 py-1 font-medium text-gray-300 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400">{copied ? 'Copied' : 'Copy'}</button>
+    <div className="my-7 min-w-0 max-w-full overflow-hidden rounded-xl border border-[#30363d] bg-[#0d1117] shadow-[0_18px_50px_rgba(0,0,0,0.16)] sm:rounded-2xl">
+      <div className="flex items-center justify-between gap-3 border-b border-[#30363d] bg-[#161b22] px-3 py-2.5 text-xs sm:px-4">
+        <div className="flex min-w-0 items-center gap-3">
+          <div className="flex shrink-0 items-center gap-1.5" aria-hidden="true">
+            <span className="h-2.5 w-2.5 rounded-full bg-[#ff5f57]" />
+            <span className="h-2.5 w-2.5 rounded-full bg-[#febc2e]" />
+            <span className="h-2.5 w-2.5 rounded-full bg-[#28c840]" />
+          </div>
+          <span className="truncate font-medium text-[#8b949e]">{languageLabel}</span>
+        </div>
+        <button
+          type="button"
+          onClick={copy}
+          className="shrink-0 rounded-md border border-transparent px-2 py-1 font-medium text-[#c9d1d9] transition-colors hover:border-[#30363d] hover:bg-white/[0.06] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
+        >
+          {copied ? 'Copied' : 'Copy'}
+        </button>
       </div>
-      <pre className="max-w-full overflow-x-auto p-4 text-[13px] leading-6 text-gray-100 sm:p-5 sm:text-sm"><code data-language={language || undefined}>{code}</code></pre>
+      <SyntaxHighlightedCode code={code} language={language} />
     </div>
   );
 }
