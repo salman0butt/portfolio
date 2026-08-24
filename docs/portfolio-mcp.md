@@ -7,11 +7,13 @@ The portfolio exposes a private Model Context Protocol endpoint at `/api/mcp` fo
 - List all posts, published posts, or drafts
 - Fetch a post by slug
 - Create draft or published posts
-- Update article content and metadata
+- Set a custom article publication date with `published_at`
+- Update article title, slug, excerpt, Markdown content, cover image URL, category, tags, featured state, and publication date
 - Publish and unpublish posts
-- Delete posts
-- Upload blog images to Supabase Storage
-- Delete blog images
+- Permanently delete posts
+- Upload new blog images to Supabase Storage
+- Replace/update an existing blog image at the same Storage path
+- Permanently delete blog images
 - Build public image URLs
 
 The public Next.js application remains read-only. MCP writes happen only on the server with a Supabase secret key.
@@ -57,7 +59,7 @@ ChatGPT's custom MCP form does not provide an arbitrary HTTP header field, so co
 https://salman-butt.vercel.app/api/mcp?token=YOUR_PORTFOLIO_MCP_URL_TOKEN
 ```
 
-The root `proxy.ts` only matches `/api/mcp`. If the query token matches `PORTFOLIO_MCP_URL_TOKEN`, it injects the private internal bearer token into the request before the MCP route runs.
+The root `proxy.ts` only matches `/api/mcp`. If the query token matches `PORTFOLIO_MCP_URL_TOKEN`, it injects the private internal bearer token and rewrites the request through the ChatGPT MCP extension layer. That layer exposes custom article dates and explicit image replacement while reusing the core MCP implementation.
 
 Because URL query parameters can appear in infrastructure/request logs, treat `PORTFOLIO_MCP_URL_TOKEN` as disposable and rotate it if it is exposed. Do not reuse `PORTFOLIO_MCP_TOKEN` as the URL token.
 
@@ -86,9 +88,40 @@ Cursor example:
 
 Do not commit either real token to a repository.
 
+## Article dates
+
+The `blogs` table already has a timezone-aware `published_at` column, and the public portfolio uses `published_at` as the displayed article date before falling back to `created_at`.
+
+ChatGPT can pass a custom date to `create_blog_post`, `update_blog_post`, or `publish_blog_post`:
+
+```json
+{
+  "slug": "scaling-nodejs-apis",
+  "published_at": "2026-08-20T10:30:00+05:00"
+}
+```
+
+A date-only value is also supported:
+
+```text
+2026-08-20
+```
+
+For drafts, set the custom date when calling `publish_blog_post`. The database clears `published_at` while an article is unpublished, so a draft cannot retain a publication date until it is published.
+
+## Article management tools
+
+- `create_blog_post` — create a draft or published article
+- `update_blog_post` — edit article content and metadata, including `published_at`
+- `publish_blog_post` — publish a draft, optionally with a custom `published_at`
+- `unpublish_blog_post` — remove a post from the public site without deleting it
+- `delete_blog_post` — permanently delete the article row
+
+Deleting an article does not automatically delete its Storage images. This is intentional so shared images are not accidentally removed. Use `delete_blog_image` explicitly for assets that should also be removed.
+
 ## Blog image bucket
 
-The MCP uses a public Supabase Storage bucket named `blog-images` by default. Public access is intentional because portfolio visitors need to load article images. Upload/delete operations still require the server-side secret key.
+The MCP uses a public Supabase Storage bucket named `blog-images` by default. Public access is intentional because portfolio visitors need to load article images. Upload, replace, and delete operations still require the server-side secret key.
 
 Recommended layout:
 
@@ -102,6 +135,13 @@ blog-images/
     pipeline.webp
 ```
 
+Image tools:
+
+- `upload_blog_image` — create a new image object
+- `replace_blog_image` — overwrite/update an existing object at the same path
+- `delete_blog_image` — permanently delete one image object
+- `get_blog_image_url` — return the public URL for an object path
+
 The MCP limits each image upload to 5 MB and only accepts PNG, JPEG, WebP, GIF, and AVIF.
 
 ## Publishing workflow
@@ -112,7 +152,8 @@ Recommended workflow for AI clients:
 2. Upload cover/diagram images.
 3. Update the article with the returned image URLs.
 4. Review the final Markdown and metadata.
-5. Call `publish_blog_post` only after explicit user approval/request.
+5. Call `publish_blog_post`, optionally with a custom `published_at`, only after explicit user approval/request.
+6. Later use `update_blog_post`, `replace_blog_image`, `delete_blog_image`, or `delete_blog_post` when changes are requested.
 
 The server instructions also tell MCP clients to prefer this draft-first workflow.
 
