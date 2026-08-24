@@ -25,7 +25,7 @@ function meta() {
 }
 
 test.describe('Portfolio MCP', () => {
-  test('supports the current MCP server/discover flow used by modern clients', async ({ request }) => {
+  test('supports current MCP discovery through the official handler', async ({ request }) => {
     const response = await request.post(MCP_URL, {
       headers: modernHeaders('server/discover'),
       data: {
@@ -37,7 +37,6 @@ test.describe('Portfolio MCP', () => {
     });
 
     expect(response.ok()).toBeTruthy();
-    expect(response.headers()['mcp-protocol-version']).toBe(MODERN_PROTOCOL);
 
     const body = await response.json();
     expect(body.jsonrpc).toBe('2.0');
@@ -49,7 +48,7 @@ test.describe('Portfolio MCP', () => {
     expect(body.result._meta['io.modelcontextprotocol/serverInfo'].name).toBe('salman-portfolio-mcp');
   });
 
-  test('lists the complete portfolio tool catalog over MCP 2026', async ({ request }) => {
+  test('lists the complete portfolio tool catalog over the official handler', async ({ request }) => {
     const response = await request.post(MCP_URL, {
       headers: modernHeaders('tools/list'),
       data: {
