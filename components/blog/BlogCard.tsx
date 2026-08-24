@@ -17,25 +17,27 @@ const dateFormatter = new Intl.DateTimeFormat('en', {
 export default function BlogCard({ post, compact = false }: BlogCardProps) {
   const href = `/blog/${post.slug}`;
   const readTime = estimateReadTime(post.content);
+  const coverIsSvg = post.cover_image_url?.toLowerCase().split('?')[0].endsWith('.svg') ?? false;
 
   return (
-    <article className="group overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl dark:border-gray-800 dark:bg-gray-900/70">
+    <article className="group min-w-0 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl dark:border-gray-800 dark:bg-gray-900/70">
       {post.cover_image_url && (
-        <Link href={href} className={`relative block overflow-hidden bg-gray-100 dark:bg-gray-800 ${compact ? 'h-44' : 'h-52'}`}>
+        <Link href={href} className={`relative block w-full overflow-hidden bg-gray-100 dark:bg-gray-800 ${compact ? 'h-44' : 'h-48 sm:h-52'}`}>
           <Image
             src={post.cover_image_url}
             alt={`Cover image for ${post.title}`}
             fill
-            sizes={compact ? '(max-width: 768px) 100vw, 33vw' : '(max-width: 1024px) 100vw, 50vw'}
+            unoptimized={coverIsSvg}
+            sizes={compact ? '(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw' : '(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw'}
             className="object-cover transition-transform duration-500 group-hover:scale-[1.03] motion-reduce:transition-none motion-reduce:transform-none"
           />
         </Link>
       )}
 
-      <div className={compact ? 'p-5' : 'p-6'}>
+      <div className={compact ? 'p-5' : 'p-5 sm:p-6'}>
         <div className="mb-3 flex flex-wrap items-center gap-2 text-xs font-medium text-gray-500 dark:text-gray-400">
           {post.category && (
-            <span className="rounded-full bg-emerald-50 px-2.5 py-1 text-emerald-800 dark:bg-emerald-500/10 dark:text-emerald-300">
+            <span className="max-w-full break-words rounded-full bg-emerald-50 px-2.5 py-1 text-emerald-800 dark:bg-emerald-500/10 dark:text-emerald-300">
               {post.category}
             </span>
           )}
@@ -47,14 +49,14 @@ export default function BlogCard({ post, compact = false }: BlogCardProps) {
           </span>
         </div>
 
-        <h2 className={`${compact ? 'text-lg' : 'text-xl'} font-[family-name:var(--font-space-grotesk)] font-semibold leading-snug text-gray-950 dark:text-white`}>
+        <h2 className={`${compact ? 'text-lg' : 'text-xl'} break-words font-[family-name:var(--font-space-grotesk)] font-semibold leading-snug text-gray-950 dark:text-white`}>
           <Link href={href} className="rounded-sm transition-colors hover:text-emerald-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 dark:hover:text-emerald-300">
             {post.title}
           </Link>
         </h2>
 
         {post.excerpt && (
-          <p className="mt-3 line-clamp-3 text-sm leading-6 text-gray-600 dark:text-gray-300">
+          <p className="mt-3 line-clamp-3 break-words text-sm leading-6 text-gray-600 dark:text-gray-300">
             {post.excerpt}
           </p>
         )}
