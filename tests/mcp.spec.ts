@@ -55,6 +55,7 @@ test.describe('Portfolio MCP', () => {
     });
 
     expect(response.ok()).toBeTruthy();
+    expect(response.headers()['access-control-allow-origin']).toBe('*');
     expect(response.headers()['content-type']).toContain('text/event-stream');
 
     const body = parseSseJson(await response.text());
@@ -64,7 +65,7 @@ test.describe('Portfolio MCP', () => {
     expect(body.result.capabilities.tools).toBeDefined();
   });
 
-  test('supports current MCP discovery through the path-token endpoint', async ({ request }) => {
+  test('supports current MCP discovery as JSON through the path-token endpoint', async ({ request }) => {
     const response = await request.post(PATH_MCP_URL, {
       headers: modernHeaders('server/discover'),
       data: {
@@ -76,6 +77,8 @@ test.describe('Portfolio MCP', () => {
     });
 
     expect(response.ok()).toBeTruthy();
+    expect(response.headers()['content-type']).toContain('application/json');
+    expect(response.headers()['access-control-allow-origin']).toBe('*');
 
     const body = await response.json();
     expect(body.jsonrpc).toBe('2.0');
@@ -99,6 +102,7 @@ test.describe('Portfolio MCP', () => {
     });
 
     expect(response.ok()).toBeTruthy();
+    expect(response.headers()['content-type']).toContain('application/json');
     const body = await response.json();
     expect(body.result.resultType).toBe('complete');
 
@@ -130,5 +134,21 @@ test.describe('Portfolio MCP', () => {
     });
 
     expect(response.ok()).toBeTruthy();
+  });
+
+  test('exposes ChatGPT-compatible MCP preflight headers', async ({ request }) => {
+    const response = await request.fetch(PATH_MCP_URL, {
+      method: 'OPTIONS',
+      headers: { Origin: 'https://chatgpt.com' },
+    });
+
+    expect(response.status()).toBe(204);
+    expect(response.headers()['access-control-allow-origin']).toBe('*');
+    const allowed = response.headers()['access-control-allow-headers'];
+    expect(allowed).toContain('accept');
+    expect(allowed).toContain('mcp-method');
+    expect(allowed).toContain('mcp-name');
+    expect(allowed).toContain('last-event-id');
+    expect(response.headers()['access-control-allow-methods']).toContain('DELETE');
   });
 });
