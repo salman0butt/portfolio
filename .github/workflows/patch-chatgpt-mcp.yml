@@ -1,0 +1,255 @@
+name: Patch ChatGPT MCP transport
+
+on:
+  push:
+    branches:
+      - fix/chatgpt-mcp-transport
+    paths:
+      - .github/workflows/patch-chatgpt-mcp.yml
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/chatgpt-mcp-transport
+
+      - name: Patch MCP transport
+        shell: bash
+        run: |
+          python <<'PY'
+          from pathlib import Path
+
+          route_path = Path('app/api/mcp/route.ts')
+          text = route_path.read_text()
+
+          old_import = "import { createMcpHandler } from 'mcp-handler';"
+          new_import = "import { createMcpHandler, McpServer } from '@modelcontextprotocol/server';"
+          if old_import not in text:
+              raise SystemExit('mcp-handler import not found')
+          text = text.replace(old_import, new_import, 1)
+
+          old_auth = """  const urlToken = new URL(request.url).searchParams.get('token');
+          const expectedUrlToken = process.env.PORTFOLIO_MCP_URL_TOKEN;
+
+          if (urlToken && expectedUrlToken && secureEqual(urlToken, expectedUrlToken)) {
+            return true;
+          }
+"""
+          new_auth = """  const url = new URL(request.url);
+          const urlToken = url.searchParams.get('token');
+          const expectedUrlToken = process.env.PORTFOLIO_MCP_URL_TOKEN;
+
+          if (urlToken && expectedUrlToken && secureEqual(urlToken, expectedUrlToken)) {
+            return true;
+          }
+
+          // ChatGPT can use a stable path-token URL with Authentication = No Auth.
+          // createMcpHandler does not inspect the request pathname, so we can validate
+          // the path token without rewriting/canonicalizing the MCP request URL.
+          const pathMatch = url.pathname.match(/^\\/api\\/mcp\\/([^/]+)$/);
+          const pathToken = pathMatch?.[1] ? decodeURIComponent(pathMatch[1]) : null;
+          if (pathToken && expectedUrlToken && secureEqual(pathToken, expectedUrlToken)) {
+            return true;
+          }
+"""
+          if old_auth not in text:
+              raise SystemExit('auth block not found')
+          text = text.replace(old_auth, new_auth, 1)
+
+          old_start = "const handler = createMcpHandler((server) => {"
+          new_start = """function createPortfolioMcpServer() {
+            const server = new McpServer(
+              { name: 'salman-portfolio-mcp', version: '2.1.0' },
+              {
+                instructions: 'Manage Salman portfolio blog articles and blog images. Preserve factual content, use drafts for review when appropriate, and require explicit user intent before destructive operations.',
+              },
+            );
+"""
+          if old_start not in text:
+              raise SystemExit('handler start not found')
+          text = text.replace(old_start, new_start, 1)
+
+          old_end = """  );
+          }, {
+            serverInfo: {
+              name: 'salman-portfolio-mcp',
+              version: '2.0.0',
+            },
+          });
+
+          async function authenticatedHandler(request: Request) {
+"""
+          new_end = """  );
+
+            return server;
+          }
+
+          // Match the transport used by the known-working LinkedIn MCP: official
+          // MCP SDK v2 handler with JSON response mode for modern ChatGPT requests.
+          // Stateless legacy fallback remains enabled for older MCP clients.
+          const mcpHandler = createMcpHandler(createPortfolioMcpServer, {
+            responseMode: 'json',
+            legacy: 'stateless',
+            onerror: (error) => console.error('Portfolio MCP request failed', error),
+          });
+
+          const MCP_CORS_HEADERS = {
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'GET, POST, DELETE, OPTIONS',
+            'Access-Control-Allow-Headers': 'content-type, accept, authorization, mcp-protocol-version, mcp-method, mcp-name, last-event-id',
+            'Access-Control-Max-Age': '600',
+            'Cache-Control': 'no-store',
+          } as const;
+
+          function withMcpHeaders(response: Response) {
+            const headers = new Headers(response.headers);
+            for (const [name, value] of Object.entries(MCP_CORS_HEADERS)) {
+              headers.set(name, value);
+            }
+            return new Response(response.body, {
+              status: response.status,
+              statusText: response.statusText,
+              headers,
+            });
+          }
+
+          async function authenticatedHandler(request: Request) {
+"""
+          if old_end not in text:
+              raise SystemExit('handler end not found')
+          text = text.replace(old_end, new_end, 1)
+
+          old_unauth = """    return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+              status: 401,
+              headers: {
+                'Content-Type': 'application/json; charset=utf-8',
+                'Cache-Control': 'no-store',
+                'WWW-Authenticate': 'Bearer',
+              },
+            });
+"""
+          new_unauth = """    return withMcpHeaders(new Response(JSON.stringify({ error: 'Unauthorized' }), {
+              status: 401,
+              headers: {
+                'Content-Type': 'application/json; charset=utf-8',
+                'WWW-Authenticate': 'Bearer',
+              },
+            }));
+"""
+          if old_unauth not in text:
+              raise SystemExit('unauthorized block not found')
+          text = text.replace(old_unauth, new_unauth, 1)
+
+          old_return = "  return handler(request);"
+          new_return = "  return withMcpHeaders(await mcpHandler.fetch(request));"
+          if old_return not in text:
+              raise SystemExit('handler return not found')
+          text = text.replace(old_return, new_return, 1)
+
+          old_exports = "export { authenticatedHandler as GET, authenticatedHandler as POST };"
+          new_exports = "export { authenticatedHandler as GET, authenticatedHandler as POST, authenticatedHandler as DELETE };"
+          if old_exports not in text:
+              raise SystemExit('route exports not found')
+          text = text.replace(old_exports, new_exports, 1)
+
+          old_options = """export function OPTIONS() {
+            return new Response(null, {
+              status: 204,
+              headers: {
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Headers': 'authorization, content-type, mcp-protocol-version',
+                'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+                'Cache-Control': 'no-store',
+              },
+            });
+          }
+"""
+          new_options = """export function OPTIONS() {
+            return new Response(null, {
+              status: 204,
+              headers: MCP_CORS_HEADERS,
+            });
+          }
+"""
+          if old_options not in text:
+              raise SystemExit('OPTIONS block not found')
+          text = text.replace(old_options, new_options, 1)
+
+          route_path.write_text(text)
+
+          path_route = Path('app/api/mcp/[token]/route.ts')
+          path_route.write_text("""import {
+            DELETE as rootDelete,
+            GET as rootGet,
+            OPTIONS as rootOptions,
+            POST as rootPost,
+          } from '../route';
+
+          // Keep the token in the configured endpoint path. The root MCP handler
+          // validates /api/mcp/:token directly, so no URL rewrite is necessary.
+          export const GET = rootGet;
+          export const POST = rootPost;
+          export const DELETE = rootDelete;
+          export const OPTIONS = rootOptions;
+          """)
+
+          test_path = Path('tests/mcp.spec.ts')
+          tests = test_path.read_text()
+
+          marker = """    expect(response.ok()).toBeTruthy();
+
+            const body = await response.json();
+            expect(body.jsonrpc).toBe('2.0');
+"""
+          replacement = """    expect(response.ok()).toBeTruthy();
+            expect(response.headers()['content-type']).toContain('application/json');
+            expect(response.headers()['access-control-allow-origin']).toBe('*');
+
+            const body = await response.json();
+            expect(body.jsonrpc).toBe('2.0');
+"""
+          if marker not in tests:
+              raise SystemExit('modern discovery test marker not found')
+          tests = tests.replace(marker, replacement, 1)
+
+          insertion = """
+
+            test('exposes ChatGPT-compatible MCP preflight headers', async ({ request }) => {
+              const response = await request.fetch(PATH_MCP_URL, {
+                method: 'OPTIONS',
+                headers: { Origin: 'https://chatgpt.com' },
+              });
+
+              expect(response.status()).toBe(204);
+              expect(response.headers()['access-control-allow-origin']).toBe('*');
+              const allowed = response.headers()['access-control-allow-headers'];
+              expect(allowed).toContain('accept');
+              expect(allowed).toContain('mcp-method');
+              expect(allowed).toContain('mcp-name');
+              expect(allowed).toContain('last-event-id');
+              expect(response.headers()['access-control-allow-methods']).toContain('DELETE');
+            });
+          """
+          closing = "\n});\n"
+          if not tests.endswith(closing):
+              raise SystemExit('test suite closing marker not found')
+          tests = tests[:-len(closing)] + insertion + closing
+          test_path.write_text(tests)
+          PY
+
+      - name: Remove temporary patch workflow
+        run: rm .github/workflows/patch-chatgpt-mcp.yml
+
+      - name: Commit patched transport
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add app/api/mcp/route.ts 'app/api/mcp/[token]/route.ts' tests/mcp.spec.ts .github/workflows/patch-chatgpt-mcp.yml
+          git commit -m "fix: align portfolio MCP transport with ChatGPT"
+          git push origin HEAD:fix/chatgpt-mcp-transport
