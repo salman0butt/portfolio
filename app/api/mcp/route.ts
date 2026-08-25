@@ -1,11 +1,11 @@
 import { timingSafeEqual } from 'node:crypto';
-import { createMcpHandler } from 'mcp-handler';
+import { createMcpHandler, McpServer } from '@modelcontextprotocol/server';
 import { z } from 'zod';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
-const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
+const MAX_IMAGE_BYTES = 3 * 1024 * 1024;
 const BLOG_FIELDS = 'id,title,slug,excerpt,content,cover_image_url,category,tags,featured,published,published_at,created_at,updated_at';
 const IMAGE_TYPES = ['image/png', 'image/jpeg', 'image/webp', 'image/gif', 'image/avif'] as const;
 const ALLOWED_IMAGE_TYPES = new Set<string>(IMAGE_TYPES);
@@ -43,10 +43,17 @@ function secureEqual(left: string, right: string) {
 }
 
 function isAuthorized(request: Request) {
-  const urlToken = new URL(request.url).searchParams.get('token');
+  const url = new URL(request.url);
   const expectedUrlToken = process.env.PORTFOLIO_MCP_URL_TOKEN;
+  const urlToken = url.searchParams.get('token');
 
   if (urlToken && expectedUrlToken && secureEqual(urlToken, expectedUrlToken)) {
+    return true;
+  }
+
+  const pathMatch = url.pathname.match(/^\/api\/mcp\/([^/]+)$/);
+  const pathToken = pathMatch?.[1] ? decodeURIComponent(pathMatch[1]) : null;
+  if (pathToken && expectedUrlToken && secureEqual(pathToken, expectedUrlToken)) {
     return true;
   }
 
@@ -236,7 +243,7 @@ async function uploadImage(input: {
   const bytes = Buffer.from(encoded, 'base64');
 
   if (bytes.length === 0) throw new Error('Decoded image is empty.');
-  if (bytes.length > MAX_IMAGE_BYTES) throw new Error('Image exceeds the 5 MB MCP upload limit.');
+  if (bytes.length > MAX_IMAGE_BYTES) throw new Error('Image exceeds the 3 MB MCP upload limit.');
 
   const { bucket } = requireConfig();
   await supabaseFetch(`/storage/v1/object/${encodeURIComponent(bucket)}/${encodeObjectPath(path)}`, {
@@ -300,7 +307,14 @@ async function runTool<T>(operation: () => Promise<T>) {
   }
 }
 
-const handler = createMcpHandler((server) => {
+function createPortfolioMcpServer() {
+  const server = new McpServer(
+    { name: 'salman-portfolio-mcp', version: '2.1.0' },
+    {
+      instructions: 'Manage portfolio blog articles and blog images. Preserve factual content, use drafts for review when appropriate, and require explicit user intent before destructive operations.',
+    },
+  );
+
   server.registerTool(
     'list_blog_posts',
     {
@@ -469,38 +483,56 @@ const handler = createMcpHandler((server) => {
       return { path: normalized, public_url: publicImageUrl(normalized) };
     }),
   );
-}, {
-  serverInfo: {
-    name: 'salman-portfolio-mcp',
-    version: '2.0.0',
-  },
+
+  return server;
+}
+
+const mcpHandler = createMcpHandler(createPortfolioMcpServer, {
+  responseMode: 'json',
+  legacy: 'stateless',
+  onerror: (error) => console.error('Portfolio MCP request failed', error),
 });
+
+const MCP_CORS_HEADERS = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'GET, POST, DELETE, OPTIONS',
+  'Access-Control-Allow-Headers': 'content-type, accept, authorization, mcp-protocol-version, mcp-method, mcp-name, last-event-id',
+  'Access-Control-Max-Age': '600',
+  'Cache-Control': 'no-store',
+} as const;
+
+function withMcpHeaders(response: Response) {
+  const headers = new Headers(response.headers);
+  for (const [name, value] of Object.entries(MCP_CORS_HEADERS)) {
+    headers.set(name, value);
+  }
+
+  return new Response(response.body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers,
+  });
+}
 
 async function authenticatedHandler(request: Request) {
   if (!isAuthorized(request)) {
-    return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+    return withMcpHeaders(new Response(JSON.stringify({ error: 'Unauthorized' }), {
       status: 401,
       headers: {
         'Content-Type': 'application/json; charset=utf-8',
-        'Cache-Control': 'no-store',
         'WWW-Authenticate': 'Bearer',
       },
-    });
+    }));
   }
 
-  return handler(request);
+  return withMcpHeaders(await mcpHandler.fetch(request));
 }
 
-export { authenticatedHandler as GET, authenticatedHandler as POST };
+export { authenticatedHandler as GET, authenticatedHandler as POST, authenticatedHandler as DELETE };
 
 export function OPTIONS() {
   return new Response(null, {
     status: 204,
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Headers': 'authorization, content-type, mcp-protocol-version',
-      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-      'Cache-Control': 'no-store',
-    },
+    headers: MCP_CORS_HEADERS,
   });
 }
