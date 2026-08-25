@@ -28,10 +28,5 @@ export default defineConfig({
     url: 'http://localhost:3000',
     reuseExistingServer: !process.env.CI,
     timeout: 120000,
-    env: {
-      ...process.env,
-      PORTFOLIO_MCP_TOKEN: process.env.PORTFOLIO_MCP_TOKEN || 'playwright-internal-mcp-token',
-      PORTFOLIO_MCP_URL_TOKEN: process.env.PORTFOLIO_MCP_URL_TOKEN || 'playwright-url-mcp-token',
-    },
   },
 });
