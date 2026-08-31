@@ -175,6 +175,31 @@ function isSpecialLine(line: string) {
   return /^(#{1,3}\s|>\s|[-*]\s|\d+\.\s|```|:::|!\[|\|)/.test(line);
 }
 
+function readFencedCode(lines: string[], startIndex: number) {
+  const language = lines[startIndex].slice(3).trim().toLowerCase();
+  const code: string[] = [];
+  let index = startIndex + 1;
+
+  while (index < lines.length && !lines[index].startsWith('```')) {
+    code.push(lines[index]);
+    index += 1;
+  }
+
+  return {
+    language,
+    code: code.join('\n'),
+    nextIndex: index < lines.length ? index + 1 : index,
+  };
+}
+
+function isTypeScript(language: string) {
+  return language === 'ts' || language === 'typescript';
+}
+
+function isPython(language: string) {
+  return language === 'py' || language === 'python';
+}
+
 export default function MarkdownContent({ content }: { content: string }) {
   const lines = content.replace(/\r\n/g, '\n').split('\n');
   const blocks: ReactNode[] = [];
@@ -222,21 +247,30 @@ export default function MarkdownContent({ content }: { content: string }) {
     }
 
     if (line.startsWith('```')) {
-      const language = line.slice(3).trim().toLowerCase();
-      const code: string[] = [];
-      index += 1;
+      const firstBlock = readFencedCode(lines, index);
+      index = firstBlock.nextIndex;
 
-      while (index < lines.length && !lines[index].startsWith('```')) {
-        code.push(lines[index]);
-        index += 1;
+      if (isTypeScript(firstBlock.language) && lines[index]?.startsWith('```')) {
+        const secondBlock = readFencedCode(lines, index);
+        if (isPython(secondBlock.language)) {
+          index = secondBlock.nextIndex;
+          blocks.push(
+            <CodeGroup
+              key={`code-group-${index}`}
+              examples={[
+                { language: firstBlock.language, code: firstBlock.code },
+                { language: secondBlock.language, code: secondBlock.code },
+              ]}
+            />,
+          );
+          continue;
+        }
       }
 
-      index += 1;
-      const value = code.join('\n');
       blocks.push(
-        language === 'diagram' || language === 'architecture'
-          ? <DiagramBlock key={`diagram-${index}`} source={value} />
-          : <CodeBlock key={`code-${index}`} code={value} language={language || undefined} />,
+        firstBlock.language === 'diagram' || firstBlock.language === 'architecture'
+          ? <DiagramBlock key={`diagram-${index}`} source={firstBlock.code} />
+          : <CodeBlock key={`code-${index}`} code={firstBlock.code} language={firstBlock.language || undefined} />,
       );
       continue;
     }
